@@ -4,8 +4,8 @@ import Triangle from "./Triangle"; // Reusable Triangle component
 
 const triangleData = [
   {
-    title: "Home Business",
-    icon:"/assets/Home-Triangle.png",
+    title: "Homes or Businesses",
+    icon: "/assets/Home-Triangle.png",
     items: ["Need urgent repairs", "Home maintenance", "Cleaning", "Any other"],
   },
   {
@@ -22,45 +22,47 @@ const triangleData = [
 
 const WhoIsItForTriangles = () => {
   return (
-    <section className="py-12 bg-white">
-      <div className="max-w-7xl mx-auto px-4">
-        {/* Title */}
-        <div className="relative">
-          <h2 className="text-[35px] md:text-[120px] font-bold text-center mb-8 text-textColor">
-            Who Is It For?
-          </h2>
-          <div
-            className="absolute border-4 bottom-[1px]  left-1/2 transform -translate-x-1/2 w-1/4  rounded-full border-brand"
-          />
+      <section className="w-full py-16 bg-white">
+        <div className="max-w-7xl mx-auto px-6 md:px-8">
+          {/* Main Title */}
+          <div className="text-center">
+            <h1 className="text-[100px] md:text-[100px] text-center font-bold text-textColor mb-6 md:mb-0">
+              Who Is It For?
+            </h1>
+            <p className="text-lg md:text-xl text-gray-500">
+            Designed to help you connect with the right expertise
+            </p>
+          </div>
+
+          {/* Triangles & Descriptions */}
+          <div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-10">
+            {triangleData.map((group, idx) => (
+                <div
+                    key={idx}
+                    className="flex flex-col items-center p-6 rounded-2xl shadow-sm border border-gray-100
+                         transition-transform transform-gpu duration-300 hover:shadow-md hover:scale-105"
+                >
+                  {/* Triangle Icon + Title */}
+                  <Triangle icon={group.icon} title={group.title} />
+
+                  {/* Subtitle or Bullet Points */}
+                  <ul className="mt-6 space-y-2 text-sm md:text-base text-gray-600 leading-relaxed">
+                    {group.items.map((bullet, i) => (
+                        <li key={i} className="list-disc list-inside">
+                          {bullet}
+                        </li>
+                    ))}
+                  </ul>
+                </div>
+            ))}
+          </div>
+
+          {/* Footer Note */}
+          <p className="mt-12 text-center text-xl md:text-2xl text-orange-500 font-semibold italic">
+            Unlimited skills can be entertained
+          </p>
         </div>
-
-
-        {/* Triangles Row */}
-        <div className="flex flex-col md:flex-row justify-center items-center gap-8">
-          {triangleData.map((item,index) => (
-            <span key={index} className="flex flex-col items-centerjustify-center mt-4">
-              {/* Triangle Image */}
-              <Triangle
-                icon={item.icon}
-                title={item.title}
-              />
-
-              {/* Bullet Points Below */}
-              <ul className="list-disc text-textColor font-normal ml-5 hidden md:block items-center justify-center">
-                {item.items.map((bullet, idx) => (
-                  <li key={idx} className="text-[15px] ml-12">{bullet}</li>
-                ))}
-              </ul>
-            </span>
-          ))}
-        </div>
-
-        {/* Footer Note in Orange */}
-        <p className="text-center text-[25px] md:text-[45px] italic text-orangebrand mt-8 font-bold">
-          Unlimited skills can be entertained
-        </p>
-      </div>
-    </section>
+      </section>
   );
 };
 

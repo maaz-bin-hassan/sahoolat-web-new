@@ -55,8 +55,8 @@ export default function HeroSection() {
 
             {/* Content */}
             <div className="relative z-10 flex flex-col items-center text-center px-4">
-                {/* Logo */}
-                <h1 className="mb-3 text-[50px] md:text-[150px] font-bold text-brand">
+                {/* Logo with linear gradient */}
+                <h1 className="mb-3 text-[50px] md:text-[150px] font-bold text-transparent bg-clip-text bg-gradient-to-r from-gray-400 via-brand to-orangebrand">
                     Sahoolat.AI
                 </h1>
 
