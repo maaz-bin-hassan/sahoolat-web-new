@@ -1,5 +1,5 @@
 'use client'
-import React, { useState, Fragment } from 'react'
+import React, {useState, Fragment} from 'react'
 import Image from 'next/image'
 
 // ------------------ Data for Buyer ------------------
@@ -28,8 +28,8 @@ const buyerFeatures = [
 ];
 
 const buyerInfoBoxes = [
-    { icon: "/assets/bids.png", title: "Receive Bids" },
-    { icon: "/assets/profile.png", title: "Watch profile and Hire!" }
+    {icon: "/assets/bids.png", title: "Receive Bids"},
+    {icon: "/assets/profile.png", title: "Watch profile and Hire!"}
 ];
 
 // ------------------ Data for Experts ------------------
@@ -58,8 +58,8 @@ const expertFeatures = [
 ];
 
 const expertInfoBoxes = [
-    { icon: "/assets/notification.png", title: "Get Job Notifications" },
-    { icon: "/assets/bid2.png", title: "Bid from your side!" }
+    {icon: "/assets/notification.png", title: "Get Job Notifications"},
+    {icon: "/assets/bid2.png", title: "Bid from your side!"}
 ];
 
 export default function Text() {
@@ -75,11 +75,11 @@ export default function Text() {
                 <div className="flex flex-col items-center justify-center">
                     {/* Main Heading */}
                     <div className='realative'>
-                        <h1 className="mt-10 text-[35px] md:text-[120px] font-bold text-textColor relative mb-12 text-center">
+                        <h1 className="text-[35px] md:text-[100px] text-center font-bold text-textColor mb-6 md:mb-0">
                             Why Sahoolat.AI
                             <span
                                 className="absolute bottom-[-1px]  left-1/2 transform -translate-x-1/2 w-1/4 border-b-8 rounded-full border-brand"
-                            />                        </h1>
+                            /></h1>
                         {/* Tabs: For Buyer & For Experts */}
                         <div className="flex space-x-10 justify-center items-center">
                             <h1
@@ -90,7 +90,7 @@ export default function Text() {
                                 For Buyer!
                                 <span
                                     className={`mt-4 absolute bottom-[-30px] left-1/2 transform -translate-x-1/2 w-1/2  border-b-8 rounded-full ${activeTab === 'buyer' ? 'border-brand' : 'border-transparent'
-                                        }`}
+                                    }`}
                                 />
                             </h1>
                             <h1
@@ -100,7 +100,7 @@ export default function Text() {
                                 For Experts!
                                 <span
                                     className={`absolute bottom-[-30px] left-1/2 transform -translate-x-1/2 w-1/2 border-b-8 rounded-full ${activeTab === 'expert' ? 'border-brand' : 'border-transparent'
-                                        }`}
+                                    }`}
                                 />
                             </h1>
                         </div>
@@ -108,7 +108,8 @@ export default function Text() {
 
                     {/* Features and Info Boxes */}
                     <div className="mt-10">
-                        <section className="mx-auto max-w-8xl md:max-w-8xl px-4 flex flex-col md:flex-row justify-center">
+                        <section
+                            className="mx-auto max-w-8xl md:max-w-8xl px-4 flex flex-col md:flex-row justify-center">
                             {/* Left Column: Features */}
 
                             <div className='flex flex-col md:flex-row'>
@@ -166,7 +167,7 @@ export default function Text() {
                             </div>
                         </section>
                     </div>
-                </div >
+                </div>
             </div>
         </>
 
