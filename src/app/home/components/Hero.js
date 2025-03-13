@@ -43,16 +43,6 @@ export default function HeroSection() {
 
     return (
         <section className="relative py-12 overflow-hidden w-full h-screen flex items-center justify-center">
-            {/* Background Image */}
-            <div className="absolute inset-0 w-full h-full">
-                <img
-                    src="/assets/heroBackground.png"
-                    alt="Background"
-                    style={{width: 'fit-content', fill: 'cover'}}
-                    className="object-cover"
-                />
-            </div>
-
             {/* Content */}
             <div className="relative z-10 flex flex-col items-center text-center px-4">
                 {/* Logo with linear gradient */}
