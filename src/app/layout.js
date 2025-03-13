@@ -93,7 +93,7 @@ export default function RootLayout({children}) {
             {/* Canonical URL */}
             <link rel="canonical" href={metadata.canonical}/>
         </head>
-        <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+        <body className={`${geistSans.variable} ${geistMono.variable} antialiased  bg-[#F2F6F7]`}>
         {children}
         </body>
         </html>

@@ -34,10 +34,11 @@ export default function HowItWorks() {
     };
 
     return (
-        <section className="py-12 bg-white">
+        <section className="py-0 bg-[#F2F6F7]">
             <h1 className="text-[35px] md:text-[100px] text-center font-bold text-textColor mb-6 md:mb-0">
                 How It Works?
             </h1>
+            {/* Video Section */}
             <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-center">
                 {data.map((item, index) => (
                     <Fragment key={item.id}>
@@ -128,7 +129,7 @@ export default function HowItWorks() {
                     <div className="relative">
                         {/* Close Button */}
                         <button
-                            className="absolute top-2 right-2 bg-white text-black rounded-full w-10 h-10 flex items-center justify-center text-xl font-bold shadow-lg hover:bg-gray-200"
+                            className="absolute top-2 right-2 bg-[#F2F6F7] text-black rounded-full w-10 h-10 flex items-center justify-center text-xl font-bold shadow-lg hover:bg-gray-200"
                             onClick={() => setSelectedImage(null)}
                         >
                             ✕
@@ -142,6 +143,8 @@ export default function HowItWorks() {
                     </div>
                 </div>
             )}
+
+
         </section>
     );
 }

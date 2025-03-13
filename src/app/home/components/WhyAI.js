@@ -13,8 +13,8 @@ const buyerFeatures = [
 ];
 
 const buyerInfoBoxes = [
-    { icon: "/assets/bids.png", title: "Receive Bids" },
-    { icon: "/assets/profile.png", title: "Watch profile and Hire!" }
+    { icon: "/assets/mdi_bell-notification-outline.png", title: "Receive Bids" },
+    { icon: "/assets/bxs_videos.png", title: "Watch profile and Hire!" }
 ];
 
 // Seller Features
@@ -39,7 +39,7 @@ export default function Text() {
     const infoBoxes = activeTab === 'buyer' ? buyerInfoBoxes : expertInfoBoxes;
 
     return (
-        <section className="bg-white mb-16 py-12">
+        <section className="bg-[#F2F6F7] mb-16 py-12">
             <div className="flex flex-col items-center justify-center">
 
                 {/* Main Heading */}
@@ -72,10 +72,12 @@ export default function Text() {
                             key={index}
                             className="flex flex-col items-center p-6 rounded-xl shadow-lg bg-gray-100 transition-all hover:scale-105 border-l-4 border-brand"
                         >
-                            <Image src={feature.icon} alt={feature.title} width={60} height={60} className="object-contain mb-4" />
+                            <Image src={feature.icon} alt={feature.title} width={60} height={60}
+                                   className="object-contain mb-4"/>
                             <h2 className="text-[22px] md:text-[28px] font-bold text-textColor text-center">{feature.title}</h2>
                             <p className="text-[16px] text-gray-600 text-center">{feature.description}</p>
-                            <span className="mt-3 px-3 py-1 text-sm font-semibold text-white bg-brand rounded-full">{feature.tag}</span>
+                            <span
+                                className="mt-3 px-3 py-1 text-sm font-semibold text-white bg-brand rounded-full">{feature.tag}</span>
                         </div>
                     ))}
                 </div>
@@ -86,10 +88,12 @@ export default function Text() {
                             key={index}
                             className="flex flex-col items-center p-6 rounded-xl shadow-lg bg-gray-100 transition-all hover:scale-105 border-l-4 border-brand"
                         >
-                            <Image src={feature.icon} alt={feature.title} width={60} height={60} className="object-contain mb-4" />
+                            <Image src={feature.icon} alt={feature.title} width={60} height={60}
+                                   className="object-contain mb-4"/>
                             <h2 className="text-[22px] md:text-[28px] font-bold text-textColor text-center">{feature.title}</h2>
                             <p className="text-[16px] text-gray-600 text-center">{feature.description}</p>
-                            <span className="mt-3 px-3 py-1 text-sm font-semibold text-white bg-brand rounded-full">{feature.tag}</span>
+                            <span
+                                className="mt-3 px-3 py-1 text-sm font-semibold text-white bg-brand rounded-full">{feature.tag}</span>
                         </div>
                     ))}
                 </div>
@@ -98,16 +102,32 @@ export default function Text() {
                 <div className="flex flex-col md:flex-row items-center mt-12 gap-8 max-w-6xl">
                     {infoBoxes.map((box, index) => (
                         <Fragment key={index}>
-                            <div className="w-[280px] md:w-[350px] bg-white p-6 border-2 border-brand border-dotted rounded-xl shadow-lg text-center transition-all hover:scale-105">
-                                <Image src={box.icon} alt={`${box.title} icon`} width={80} height={80} className="object-contain mx-auto" />
-                                <h2 className="font-bold text-[22px] md:text-[28px] mt-4 text-textColor">{box.title}</h2>
+                            <div
+                                className="w-[280px] md:w-[350px] bg-[#07212f] p-6 border-2 border-brand border-dotted rounded-xl shadow-lg text-center transition-all hover:scale-105">
+                                <Image src={box.icon} alt={`${box.title} icon`} width={80} height={80}
+                                       className="object-contain mx-auto"/>
+                                <h2 className="font-bold text-[22px] md:text-[28px] mt-4 text-white">{box.title}</h2>
                             </div>
 
                             {index !== infoBoxes.length - 1 && (
-                                <Image src="/assets/arrow-right.png" alt="Arrow" width={40} height={40} className="animate-pulse" />
+                                <Image src="/assets/arrow-right.png" alt="Arrow" width={40} height={40}
+                                       className="animate-pulse"/>
                             )}
                         </Fragment>
                     ))}
+                </div>
+            </div>
+
+            <div className="mt-16 flex flex-col items-center">
+                <div className="relative w-full max-w-4xl overflow-hidden rounded-xl shadow-lg">
+                    <iframe
+                        className="w-full h-[300px] md:h-[500px] rounded-xl"
+                        src="https://www.youtube.com/embed/_53unNTKW0M"
+                        title="How It Works"
+                        frameBorder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowFullScreen
+                    ></iframe>
                 </div>
             </div>
         </section>

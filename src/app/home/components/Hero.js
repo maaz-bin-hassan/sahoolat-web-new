@@ -1,6 +1,6 @@
 "use client";
 import Image from "next/image";
-import {useState, useEffect} from "react";
+import { useState, useEffect } from "react";
 
 const storeLinks = [
     {
@@ -18,6 +18,7 @@ const storeLinks = [
 export default function HeroSection() {
     const [isOriginal, setIsOriginal] = useState(true);
     const [typedText, setTypedText] = useState(""); // Initialize with an empty string
+    const [isPopupOpen, setIsPopupOpen] = useState(false); // State to control popup visibility
 
     const fullText = "Your Voice, Your Solution";
 
@@ -37,12 +38,16 @@ export default function HeroSection() {
         return () => clearInterval(typingInterval);
     }, []);
 
-    const handleImageClick = () => {
-        setIsOriginal((prev) => !prev);
+    const handleMicClick = () => {
+        setIsPopupOpen(true); // Show the popup when mic is clicked
+    };
+
+    const handleClosePopup = () => {
+        setIsPopupOpen(false); // Close the popup
     };
 
     return (
-        <section className="relative py-12 overflow-hidden w-full h-screen flex items-center justify-center">
+        <section className="relative bg-[#F2F6F7] py-0 overflow-hidden w-full h-screen flex items-center justify-center">
             {/* Content */}
             <div className="relative z-10 flex flex-col items-center text-center px-4">
                 {/* Logo with linear gradient */}
@@ -83,13 +88,13 @@ export default function HeroSection() {
 
                 {/* Mic & Waves Section */}
                 <div className="flex items-center justify-center mb-6 space-x-4">
-                    {/* Mic */}
-                    <div className="relative cursor-pointer">
+                    {/* Mic (Click to Open Popup) */}
+                    <div className="relative cursor-pointer" onClick={handleMicClick}>
                         <img
                             src={'/assets/Mic.png'}
                             alt="Microphone"
-                            style={{height: '140px', width: '540px'}}
-                            className="object-contain"
+                            style={{ height: '140px', width: '540px' }}
+                            className="object-contain transition-transform transform hover:scale-105"
                         />
                     </div>
                 </div>
@@ -113,6 +118,37 @@ export default function HeroSection() {
                     ))}
                 </div>
             </div>
+
+            {/* Popup Modal */}
+            {isPopupOpen && (
+                <div className="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50">
+                    <div className="relative bg-white p-6 rounded-lg shadow-xl max-w-md w-full text-center">
+                        {/* Close Button */}
+                        <button
+                            className="absolute top-2 right-2 bg-gray-200 text-black rounded-full w-8 h-8 flex items-center justify-center text-lg font-bold hover:bg-gray-300"
+                            onClick={handleClosePopup}
+                        >
+                            ✕
+                        </button>
+
+                        {/* Animated Image from Cloud URL */}
+                        <h2 className="text-2xl font-bold text-brand mb-4">Listening...</h2>
+                        <img
+                            src="https://i.gifer.com/7efs.gif" // Example animated image
+                            alt="Listening Animation"
+                            className="w-full max-w-[200px] mx-auto"
+                        />
+
+                        {/* Close Popup Button */}
+                        <button
+                            className="mt-4 px-6 py-2 bg-orangebrand text-white font-bold rounded-lg hover:bg-orange-600 transition-all"
+                            onClick={handleClosePopup}
+                        >
+                            Close
+                        </button>
+                    </div>
+                </div>
+            )}
 
             <style jsx>{`
                 .float-animation {
