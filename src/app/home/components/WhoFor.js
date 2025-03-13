@@ -22,14 +22,14 @@ const triangleData = [
 
 const WhoIsItForTriangles = () => {
   return (
-      <section className="w-full py-16 bg-white">
+      <section className="w-full text-white bg-[#07212f] py-16">
         <div className="max-w-7xl mx-auto px-6 md:px-8">
           {/* Main Title */}
           <div className="text-center">
-            <h1 className="text-[100px] md:text-[100px] text-center font-bold text-textColor mb-6 md:mb-0">
+            <h1 className="text-[100px] md:text-[100px] text-center font-bold text-white mb-6 md:mb-0">
               Who Is It For?
             </h1>
-            <p className="text-lg md:text-xl text-gray-500">
+            <p className="text-lg md:text-xl text-white">
             Designed to help you connect with the right expertise
             </p>
           </div>
@@ -39,14 +39,14 @@ const WhoIsItForTriangles = () => {
             {triangleData.map((group, idx) => (
                 <div
                     key={idx}
-                    className="flex flex-col items-center p-6 rounded-2xl shadow-sm border border-gray-100
+                    className="flex flex-col items-center p-6 rounded-2xl shadow-sm
                          transition-transform transform-gpu duration-300 hover:shadow-md hover:scale-105"
                 >
                   {/* Triangle Icon + Title */}
                   <Triangle icon={group.icon} title={group.title} />
 
                   {/* Subtitle or Bullet Points */}
-                  <ul className="mt-6 space-y-2 text-sm md:text-base text-gray-600 leading-relaxed">
+                  <ul className="mt-6 space-y-2 text-sm md:text-base text-white leading-relaxed">
                     {group.items.map((bullet, i) => (
                         <li key={i} className="list-disc list-inside">
                           {bullet}

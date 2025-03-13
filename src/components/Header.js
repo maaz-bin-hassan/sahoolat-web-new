@@ -18,7 +18,7 @@ const Header = () => {
     ];
 
     return (
-        <header className="bg-white shadow-md">
+        <header className="bg-white">
             <nav className="max-w-screen-2xl mx-auto px-6 lg:px-16 py-3 flex items-center justify-between">
                 {/* Logo */}
                 <Link href="/" className="flex items-center">
@@ -68,7 +68,7 @@ const Header = () => {
 
                 {/* Mobile Menu */}
                 {isMenuOpen && (
-                    <div className="absolute top-16 left-0 w-full bg-white shadow-lg lg:hidden">
+                    <div className="absolute top-16 left-0 w-full bg-[#F2F6F7] shadow-lg lg:hidden">
                         <ul className="flex flex-col items-center space-y-4 py-4 font-bold text-black">
                             {navItems.map((item, index) => (
                                 <NavItem key={index} href={item.href} label={item.label} />

@@ -47,7 +47,7 @@ export default function App() {
     return (
         <div className="relative w-full h-screen">
             {isLoading ? (
-                <div className="fixed inset-0 flex items-center justify-center bg-white z-50">
+                <div className="fixed inset-0 flex items-center justify-center bg-[#F2F6F7] z-50">
                     <Image
                         src="/assets/logo.png" // Replace with your splash image path
                         alt="Splash Screen"
@@ -64,7 +64,7 @@ export default function App() {
             {/* Popup for Phone Number */}
             {showPopup && (
                 <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-                    <div className="bg-white p-6 rounded-lg shadow-lg w-[90%] md:w-[400px]">
+                    <div className="bg-[#F2F6F7] p-6 rounded-lg shadow-lg w-[90%] md:w-[400px]">
                         <div className="flex justify-center">
                             <Image src="/assets/logo.png" alt="Logo" width={100} height={100} />
                         </div>
