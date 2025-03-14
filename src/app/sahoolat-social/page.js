@@ -1,7 +1,7 @@
 "use client";
-import React, { useEffect, useRef, useState } from "react";
-import { FaHome, FaCompass, FaUser, FaPlus, FaCog, FaHeart, FaRegComment, FaShare } from "react-icons/fa";
-import { BiPlay, BiPause, BiVolumeMute, BiVolumeFull } from "react-icons/bi";
+import React, {useEffect, useRef, useState} from "react";
+import {FaHome, FaCompass, FaUser, FaPlus, FaCog, FaHeart, FaRegComment, FaShare} from "react-icons/fa";
+import {BiPlay, BiPause, BiVolumeMute, BiVolumeFull} from "react-icons/bi";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -24,13 +24,14 @@ export default function SahoolatSocial() {
     const [commentsOpen, setCommentsOpen] = useState(false);
 
     useEffect(() => {
-        const options = { root: containerRef.current, rootMargin: "0px", threshold: 0.7 };
+        const options = {root: containerRef.current, rootMargin: "0px", threshold: 0.7};
 
         const observer = new IntersectionObserver((entries) => {
             entries.forEach((entry) => {
                 const video = entry.target;
                 if (entry.isIntersecting) {
-                    video.play().catch(() => {});
+                    video.play().catch(() => {
+                    });
                     const index = videoRefs.current.indexOf(video);
                     if (index !== -1) setCurrentIndex(index);
                 } else {
@@ -73,19 +74,19 @@ export default function SahoolatSocial() {
                 {/* Navigation */}
                 <nav className="flex flex-col space-y-6 px-4">
                     <button className="flex items-center text-gray-600 hover:text-black transition">
-                        <FaHome size={24} className="mr-3" /> <span className="text-lg">Home</span>
+                        <FaHome size={24} className="mr-3"/> <span className="text-lg">Home</span>
                     </button>
                     <button className="flex items-center text-gray-600 hover:text-black transition">
-                        <FaCompass size={24} className="mr-3" /> <span className="text-lg">Explore</span>
+                        <FaCompass size={24} className="mr-3"/> <span className="text-lg">Explore</span>
                     </button>
                     <button className="flex items-center text-gray-600 hover:text-black transition">
-                        <FaPlus size={24} className="mr-3" /> <span className="text-lg">Upload</span>
+                        <FaPlus size={24} className="mr-3"/> <span className="text-lg">Upload</span>
                     </button>
                     <button className="flex items-center text-gray-600 hover:text-black transition">
-                        <FaUser size={24} className="mr-3" /> <span className="text-lg">Profile</span>
+                        <FaUser size={24} className="mr-3"/> <span className="text-lg">Profile</span>
                     </button>
                     <button className="flex items-center text-gray-600 hover:text-black transition mt-auto">
-                        <FaCog size={24} className="mr-3" /> <span className="text-lg">Settings</span>
+                        <FaCog size={24} className="mr-3"/> <span className="text-lg">Settings</span>
                     </button>
                 </nav>
             </div>
@@ -93,14 +94,15 @@ export default function SahoolatSocial() {
             {/* Main Video Section */}
             <div className="flex-1 flex justify-center items-center ml-48">
                 <div ref={containerRef} className="w-full h-screen overflow-y-scroll"
-                     style={{ scrollSnapType: "y mandatory", WebkitOverflowScrolling: "touch" }}>
+                     style={{scrollSnapType: "y mandatory", WebkitOverflowScrolling: "touch"}}>
                     {videoUrls.map((url, idx) => (
                         <section key={idx} className="w-full h-screen flex items-center justify-center"
-                                 style={{ scrollSnapAlign: "start" }}>
+                                 style={{scrollSnapAlign: "start"}}>
 
                             {/* Video Container */}
                             {/* Video Container (Increased Size) */}
-                            <div className="relative w-full max-w-[600px] aspect-[10/16] rounded-xl overflow-hidden shadow-lg bg-black">
+                            <div
+                                className="relative w-full max-w-[600px] aspect-[10/16] rounded-xl overflow-hidden shadow-lg bg-black">
                                 <video
                                     ref={(el) => (videoRefs.current[idx] = el)}
                                     src={url}
@@ -115,26 +117,32 @@ export default function SahoolatSocial() {
                                 />
 
                                 {/* Right-Side Icons */}
-                                <div className="absolute right-3 top-1/2 -translate-y-1/2 flex flex-col items-center space-y-6 text-white text-2xl">
-                                    <button className="p-3 rounded-full bg-black bg-opacity-40 hover:bg-opacity-60 transition">
-                                        <FaHeart />
+                                <div
+                                    className="absolute right-3 top-1/2 -translate-y-1/2 flex flex-col items-center space-y-6 text-white text-2xl">
+                                    <button
+                                        className="p-3 rounded-full bg-black bg-opacity-40 hover:bg-opacity-60 transition">
+                                        <FaHeart/>
                                     </button>
-                                    <button onClick={toggleComments} className="p-3 rounded-full bg-black bg-opacity-40 hover:bg-opacity-60 transition">
-                                        <FaRegComment />
+                                    <button onClick={toggleComments}
+                                            className="p-3 rounded-full bg-black bg-opacity-40 hover:bg-opacity-60 transition">
+                                        <FaRegComment/>
                                     </button>
-                                    <button className="p-3 rounded-full bg-black bg-opacity-40 hover:bg-opacity-60 transition">
-                                        <FaShare />
+                                    <button
+                                        className="p-3 rounded-full bg-black bg-opacity-40 hover:bg-opacity-60 transition">
+                                        <FaShare/>
                                     </button>
                                 </div>
 
                                 {/* Bottom Overlay Controls */}
                                 <div className="absolute bottom-0 left-0 w-full text-white">
-                                    <div className="bg-gradient-to-t from-black via-black/60 to-transparent px-4 pt-8 pb-4">
+                                    <div
+                                        className="bg-gradient-to-t from-black via-black/60 to-transparent px-4 pt-8 pb-4">
                                         <p className="font-bold text-lg">Video Title</p>
                                         <p className="text-sm text-gray-300">Engage with the best professionals.</p>
                                         <div className="flex space-x-2 mt-3">
-                                            <button onClick={() => setMuted(!muted)} className="p-2 rounded-full bg-white bg-opacity-20 hover:bg-opacity-40 transition">
-                                                {muted ? <BiVolumeMute size={22} /> : <BiVolumeFull size={22} />}
+                                            <button onClick={() => setMuted(!muted)}
+                                                    className="p-2 rounded-full bg-white bg-opacity-20 hover:bg-opacity-40 transition">
+                                                {muted ? <BiVolumeMute size={22}/> : <BiVolumeFull size={22}/>}
                                             </button>
                                         </div>
                                     </div>
@@ -146,10 +154,12 @@ export default function SahoolatSocial() {
             </div>
 
             {/* Comments Section (Dynamically Opens) */}
-            <div className={`fixed top-0 right-0 h-full bg-white shadow-lg border-l border-gray-300 flex flex-col transform transition-transform ${
-                commentsOpen ? "translate-x-0 w-[30%]" : "translate-x-full w-0"
-            }`}>
-                <button className="text-black self-end m-3 px-3 py-1 bg-gray-200 rounded-full hover:bg-gray-300" onClick={toggleComments}>
+            <div
+                className={`fixed top-0 right-0 h-full bg-white shadow-lg border-l border-gray-300 flex flex-col transform transition-transform ${
+                    commentsOpen ? "translate-x-0 w-[30%]" : "translate-x-full w-0"
+                }`}>
+                <button className="text-black self-end m-3 px-3 py-1 bg-gray-200 rounded-full hover:bg-gray-300"
+                        onClick={toggleComments}>
                     ✕
                 </button>
                 <h2 className="text-xl font-bold p-4 border-b">Comments</h2>
