@@ -1,6 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import { motion } from "framer-motion";
+import { FaPaperPlane } from "react-icons/fa"; // Importing the Send icon
 import Header from "@/components/Header";
 
 const faqData = [
@@ -75,7 +76,7 @@ const FAQChatbot = () => {
                                     animate={{ opacity: 1, y: 0 }}
                                     transition={{ duration: 0.3 }}
                                     style={{
-                                        marginLeft: `${msg.type==='user' && 'auto'}`
+                                        marginLeft: msg.type === "user" ? "auto" : "0"
                                     }}
                                     className={`p-4 rounded-xl max-w-[60%] ${
                                         msg.type === "user"
@@ -118,9 +119,9 @@ const FAQChatbot = () => {
                         />
                         <button
                             type="submit"
-                            className="ml-3 bg-[#057e7e] text-white px-5 py-2 rounded-full font-semibold shadow-md hover:bg-[#056565] transition-all"
+                            className="ml-3 bg-[#057e7e] text-white p-3 rounded-full shadow-md hover:bg-[#056565] transition-all flex items-center justify-center"
                         >
-                            Send
+                            <FaPaperPlane className="w-5 h-5" /> {/* Send Icon */}
                         </button>
                     </form>
                 </motion.div>
