@@ -10,9 +10,8 @@ const Header = () => {
 
     const navItems = [
         { href: "/", label: "Home" },
-        { href: "/about", label: "About" },
+        { href: "/about-us", label: "About" },
         { href: "/careers", label: "Careers" },
-        { href: "/team", label: "Team" },
         { href: "/sahoolat-social", label: "Social Media" },
         { href: "/contact", label: "Contact" },
     ];
