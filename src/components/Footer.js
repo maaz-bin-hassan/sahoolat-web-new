@@ -107,7 +107,7 @@ function Footer() {
                                 href={link.href}
                                 className="hover:text-brand transition-colors "
                                 aria-label={link.label}
-                                
+
                             >
                                 {link.icon}
                             </a>
@@ -120,10 +120,12 @@ function Footer() {
                 <div className="mt-10 text-center text-sm text-gray-300">
                     <p>
                         2025 All copyrights are reserved by
+                        <a target="_blank" href={"https://novasyncdynamics.com"}>
                         <span className="font-bold text-white">
                             {" "}
                             NovaSync Dynamics Private Limited
                         </span>
+                        </a>
                     </p>
                 </div>
             </div>

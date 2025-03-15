@@ -14,7 +14,7 @@ const Header = () => {
         { href: "/about-us", label: "About" },
         { href: "/careers", label: "Careers" },
         { href: "/sahoolat-social", label: "Social Media" },
-        { href: "/contact", label: "Contact" },
+        { href: "/book-call", label: "Book a call" },
     ];
 
     return (
