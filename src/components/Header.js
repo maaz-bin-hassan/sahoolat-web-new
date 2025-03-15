@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { FaDownload } from "react-icons/fa";
+import LaunchingTimer from "@/components/LaunchingTimer";
 
 const Header = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
