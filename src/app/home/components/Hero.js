@@ -1,6 +1,7 @@
 "use client";
 import Image from "next/image";
 import { useState, useEffect } from "react";
+import LaunchingTimer from "@/components/LaunchingTimer";
 
 const storeLinks = [
     {
@@ -49,6 +50,8 @@ export default function HeroSection() {
     return (
         <section className="relative bg-[#F2F6F7] py-0 overflow-hidden w-full h-screen flex items-center justify-center">
             {/* Content */}
+            <LaunchingTimer />
+
             <div className="relative z-10 flex flex-col items-center text-center px-4">
                 {/* Logo with linear gradient */}
                 <h1 className="mb-3 text-[50px] md:text-[150px] font-bold text-transparent bg-clip-text bg-gradient-to-r from-gray-400 via-brand to-orangebrand">
@@ -85,7 +88,6 @@ export default function HeroSection() {
                 <p className="mt-5 mb-5 text-brand font-bold text-[20px] md:text-[30px]">
                     Find Skilled Experts or Get Hired – Just by Speaking!
                 </p>
-
                 {/* Mic & Waves Section */}
                 <div className="flex items-center justify-center mb-6 space-x-4">
                     {/* Mic (Click to Open Popup) */}

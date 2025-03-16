@@ -1,5 +1,6 @@
 import {Geist, Geist_Mono} from "next/font/google";
 import "./globals.css";
+import Script from "next/script";
 
 const geistSans = Geist({
     variable: "--font-geist-sans",
@@ -94,6 +95,9 @@ export default function RootLayout({children}) {
             <link rel="canonical" href={metadata.canonical}/>
         </head>
         <body className={`${geistSans.variable} ${geistMono.variable} antialiased  bg-[#F2F6F7]`}>
+        <div className="z-[50000000000000000000000000]">
+            <Script src="https://sahoolat-chatbot.vercel.app/chatbot.js"></Script>
+        </div>
         {children}
         </body>
         </html>

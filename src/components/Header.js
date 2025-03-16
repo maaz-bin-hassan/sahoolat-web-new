@@ -4,17 +4,17 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { FaDownload } from "react-icons/fa";
+import LaunchingTimer from "@/components/LaunchingTimer";
 
 const Header = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
 
     const navItems = [
         { href: "/", label: "Home" },
-        { href: "/about", label: "About" },
-        { href: "/careers", label: "Careers" },
-        { href: "/team", label: "Team" },
+        { href: "/about-us", label: "About" },
         { href: "/sahoolat-social", label: "Social Media" },
-        { href: "/contact", label: "Contact" },
+        { href: "/book-call", label: "Book a call" },
+        { href: "/faqs", label: "FAQs" },
     ];
 
     return (
