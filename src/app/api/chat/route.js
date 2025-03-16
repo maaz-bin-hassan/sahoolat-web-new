@@ -1,50 +1,85 @@
-import { NextResponse } from 'next/server';
-import { getSession, updateSession } from '@/utils/sessionManager';
-import OpenAI from 'openai';
+import { NextResponse } from "next/server";
+import { getSession, updateSession } from "@/utils/sessionManager";
+import OpenAI from "openai";
 import { SYSTEM_PROMPT } from "@/utils/SystemPrompts";
 
+// Initialize OpenAI
 const openai = new OpenAI({
     apiKey: process.env.OPENAI_API_KEY,
 });
 
+// ✅ Enable CORS
+function setCorsHeaders(response) {
+    response.headers.set("Access-Control-Allow-Origin", "*");
+    response.headers.set("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+    response.headers.set("Access-Control-Allow-Headers", "Content-Type, Authorization");
+    return response;
+}
+
+// ✅ Handle OPTIONS Request (CORS Preflight)
+export async function OPTIONS() {
+    return setCorsHeaders(new NextResponse(null, { status: 204 }));
+}
+
+// ✅ Handle POST Request (Chat API)
 export async function POST(request) {
-    const { fingerprint, message } = await request.json();
-
-    if (!fingerprint || !message) {
-        return NextResponse.json({ error: 'Fingerprint and message are required.' }, { status: 400 });
-    }
-
-    const session = getSession(fingerprint);
-    const messages = session.messages;
-
-    // Modify system prompt to enforce HTML response
-    const htmlSystemPrompt = SYSTEM_PROMPT + `
-        \n\n**IMPORTANT:** Always respond using HTML format. Wrap responses inside structured tags like <p>, <strong>, <ul>, <li>, and <div>. Use simple and clean formatting for better readability.`;
-
-    const openaiPayload = [
-        { role: 'system', content: htmlSystemPrompt },
-        ...messages,
-        { role: 'user', content: message },
-    ];
-
     try {
+        const { fingerprint, message } = await request.json();
+
+        if (!fingerprint || !message) {
+            return setCorsHeaders(
+                NextResponse.json({ error: "Fingerprint and message are required." }, { status: 400 })
+            );
+        }
+
+        // Fetch user session
+        const session = getSession(fingerprint);
+        const messages = session.messages;
+
+        // **Force AI to return HTML**
+        const htmlSystemPrompt = SYSTEM_PROMPT +`
+\n\n**IMPORTANT:** Always respond using **HTML format**. 
+Wrap responses inside structured tags like:
+<ul>
+  <li>Use <strong>bold</strong> for important text.</li>
+  <li>Use <p> for paragraphs.</li>
+  <li>Use <ul> and <li> for lists.</li>
+</ul>
+Make sure the response is user-friendly and visually appealing in a chatbot UI.
+`;
+
+        // Construct messages for OpenAI
+        const openaiPayload = [
+            { role: "system", content: htmlSystemPrompt },
+            ...messages,
+            { role: "user", content: message },
+        ];
+
+        // Send request to OpenAI
         const completion = await openai.chat.completions.create({
-            model: 'gpt-4o',
+            model: "gpt-4o",
             messages: openaiPayload,
         });
 
-        let assistantMessage = completion.choices[0].message.content;
+        const assistantMessage = completion.choices[0].message.content;
 
-        // Update session with HTML response
+        // Update session messages
         const updatedMessages = [
             ...messages,
-            { role: 'user', content: message },
-            { role: 'assistant', content: assistantMessage },
+            { role: "user", content: message },
+            { role: "assistant", content: assistantMessage },
         ];
         updateSession(fingerprint, updatedMessages);
 
-        return NextResponse.json({ response: assistantMessage }, { status: 200 });
+        // ✅ Return AI response in HTML format
+        return setCorsHeaders(
+            NextResponse.json({ response: assistantMessage }, { status: 200 })
+        );
+
     } catch (error) {
-        return NextResponse.json({ error: 'Failed to generate response.' }, { status: 500 });
+        console.error("Error processing request:", error);
+        return setCorsHeaders(
+            NextResponse.json({ error: "Internal Server Error" }, { status: 500 })
+        );
     }
 }
