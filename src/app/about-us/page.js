@@ -100,59 +100,6 @@ export default function HowItWorks() {
                 </span>
                 </div>
 
-                {/* Founders Section */}
-                <div className="max-w-7xl mx-auto px-4 md:px-8 mt-16 mb-10">
-                    <h3 className="text-center text-2xl md:text-4xl font-bold text-gray-800 mb-12">
-                        Meet Our Founders
-                    </h3>
-
-                    <div className="flex flex-col md:flex-row justify-center items-center gap-8">
-                        {/* CEO Card */}
-                        <div
-                            className="w-full md:w-1/2 bg-white rounded-lg shadow-md p-6 flex flex-col items-center text-center">
-                            <img
-                                src="/founders/fahad.png"
-                                alt="CEO"
-                                className="w-44 h-44 object-cover rounded-full mb-4"
-                            />
-                            <h4 className="text-xl font-bold text-teal-600 mb-1">
-                                Founder and CEO
-                            </h4>
-                            <p className="text-lg font-semibold text-gray-700 mb-2">
-                                Muhammad Fahad Shahzad
-                            </p>
-                            <p className="text-gray-600 leading-relaxed">
-                                As the visionary of Sahoolat AI, Fahad leads the company’s
-                                direction with a focus on cutting-edge technology and
-                                exceptional user experience—driving everything from
-                                voice-enabled search to service discovery.
-                            </p>
-                        </div>
-
-                        {/* Managing Director Card */}
-                        <div
-                            className="w-full md:w-1/2 bg-white rounded-lg shadow-md p-6 flex flex-col items-center text-center">
-                            <img
-                                src="/founders/zoya.jpeg"
-                                alt="Managing Director"
-                                className="w-44 h-44 object-cover rounded-full mb-4"
-                            />
-                            <h4 className="text-xl font-bold text-teal-600 mb-1">
-                                Co-Founder and MD
-                            </h4>
-                            <p className="text-lg font-semibold text-gray-700 mb-2">
-                                Zoya
-                            </p>
-                            <p className="text-gray-600 leading-relaxed">
-                                An avid problem-solver and strategist, Zoya oversees daily
-                                operations and drives our platform’s growth. His passion
-                                for innovation keeps Sahoolat AI evolving to meet your needs.
-                            </p>
-                        </div>
-
-                    </div>
-                </div>
-
             </section>
             <Footer/>
 
