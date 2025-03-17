@@ -107,8 +107,8 @@ const FAQChatbot = () => {
               <motion.div
                 key={index}
                 className={`p-4 rounded-xl relative flex items-start gap-2 ${msg.type === "user"
-                  ? "ml-auto w-fit max-w-[70%] bg-[#0ea288] text-white text-right shadow-md"
-                  : "mr-auto w-fit max-w-[70%] bg-[#f0f0f0] text-black text-left shadow-md"}`}
+                  ? "ml-auto w-fit max-w-[90%] md:max-w-[70%] bg-[#0ea288] text-white text-right shadow-md"
+                  : "mr-auto w-fit max-w-full md:max-w-[70%] bg-[#f0f0f0] text-black text-left shadow-md"}`}
               >
                 {msg.type === "bot" && (
                   <div className="flex-shrink-0">
