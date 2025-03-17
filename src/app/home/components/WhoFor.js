@@ -26,7 +26,7 @@ const WhoIsItForTriangles = () => {
       <div className="max-w-7xl mx-auto px-6 md:px-8">
         {/* Main Title */}
         <div className="text-center">
-          <h1 className="text-[100px] md:text-[100px] text-center font-bold text-white mb-6 md:mb-0">
+          <h1 className="text-[50px] md:text-[100px] text-center font-bold text-white mb-6 md:mb-0">
             Who Is It For?
           </h1>
           <p className="text-lg md:text-xl text-white">
