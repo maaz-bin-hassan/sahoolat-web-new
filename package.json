@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "cookies-next": "^5.1.0",
     "framer-motion": "^12.4.7",
     "memory-cache": "^0.2.0",
     "next": "15.2.2",
@@ -18,6 +19,7 @@
     "react-icons": "^5.5.0",
     "react-toastify": "^11.0.5",
     "react-type-animation": "^3.2.0",
+    "rsuite": "^5.78.1",
     "swiper": "^11.2.4"
   },
   "devDependencies": {
