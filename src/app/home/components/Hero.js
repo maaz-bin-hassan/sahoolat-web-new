@@ -1,7 +1,8 @@
 "use client";
 import Image from "next/image";
-import {useEffect, useState} from "react";
+import { useState } from "react";
 import LaunchingTimer from "@/components/LaunchingTimer";
+import { TypeAnimation } from "react-type-animation";
 
 const storeLinks = [
   {
@@ -15,29 +16,10 @@ const storeLinks = [
     href: "#",
   },
 ];
+const phrases = ["Your Voice, Your Solution"];
 
 export default function HeroSection() {
-  const [isOriginal, setIsOriginal] = useState(true);
-  const [typedText, setTypedText] = useState(""); // Initialize with an empty string
-  const [isPopupOpen, setIsPopupOpen] = useState(false); // State to control popup visibility
-
-  const fullText = "Yoour Voice, Your Solution";
-
-  useEffect(() => {
-    let index = 0;
-    setTypedText(""); // Ensure it's cleared before starting
-
-    const typingInterval = setInterval(() => {
-      if (index < fullText.length) {
-        setTypedText((prev) => prev + fullText.charAt(index)); // Append characters correctly
-        index++;
-      } else {
-        clearInterval(typingInterval);
-      }
-    }, 100); // Adjust speed as needed
-
-    return () => clearInterval(typingInterval);
-  }, []);
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
 
   const handleMicClick = () => {
     setIsPopupOpen(true); // Show the popup when mic is clicked
@@ -46,6 +28,7 @@ export default function HeroSection() {
   const handleClosePopup = () => {
     setIsPopupOpen(false); // Close the popup
   };
+
 
   return (
     <section className="relative bg-[#F2F6F7] py-0 overflow-hidden w-full h-screen flex items-center justify-center">
@@ -70,11 +53,14 @@ export default function HeroSection() {
           />
           <div className="relative inline-block">
             <p className="text-[25px] font-bold md:text-[40px] text-orangebrand inline-block">
-              {typedText}
-              <span className="animate-blink">{typedText.length < fullText.length ? "|" : ""}</span>
+              <TypeAnimation
+                sequence={phrases}
+                repeat={1}
+                speed={100}
+                wrapper="span"
+              />
             </p>
-            <div
-              className="hidden md:inline absolute md:-top-8 md:-right-12 w-6 h-6 md:w-16 md:h-16 float-animation">
+            <div className="hidden md:inline absolute md:-top-8 md:-right-12 w-6 h-6 md:w-16 md:h-16 float-animation">
               <Image
                 src="/assets/starOrange.png"
                 alt="Sparkle Icon"
