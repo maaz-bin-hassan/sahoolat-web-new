@@ -5,102 +5,102 @@ import Image from "next/image";
 import Home from "./home/page";
 
 export default function App() {
-    const [isLoading, setIsLoading] = useState(true);
-    const [showPopup, setShowPopup] = useState(false);
-    const [phoneNumber, setPhoneNumber] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
+  const [showPopup, setShowPopup] = useState(false);
+  const [phoneNumber, setPhoneNumber] = useState("");
 
-    useEffect(() => {
-        const handleLoad = () => setIsLoading(false);
+  useEffect(() => {
+    const handleLoad = () => setIsLoading(false);
 
-        if (document.readyState === "complete") {
-            handleLoad();
-        } else {
-            window.addEventListener("load", handleLoad);
-            return () => window.removeEventListener("load", handleLoad);
-        }
-    }, []);
+    if (document.readyState === "complete") {
+      handleLoad();
+    } else {
+      window.addEventListener("load", handleLoad);
+      return () => window.removeEventListener("load", handleLoad);
+    }
+  }, []);
 
-    useEffect(() => {
-        const received = localStorage.getItem("received");
-        if (!received) {
-            const popupTimer = setTimeout(() => {
-                setShowPopup(true);
-            }, 15000);
-            return () => clearTimeout(popupTimer);
-        }
-    }, []);
+  useEffect(() => {
+    const received = localStorage.getItem("received");
+    if (!received) {
+      const popupTimer = setTimeout(() => {
+        setShowPopup(true);
+      }, 15000);
+      return () => clearTimeout(popupTimer);
+    }
+  }, []);
 
-    // Handle submission of phone number
-    const handleSubmit = () => {
-        if (phoneNumber.length < 10) {
-            alert("Please enter a valid phone number.");
-            return;
-        }
+  // Handle submission of phone number
+  const handleSubmit = () => {
+    if (phoneNumber.length < 10) {
+      alert("Please enter a valid phone number.");
+      return;
+    }
 
-        // Store flag in localStorage
-        localStorage.setItem("received", "true");
+    // Store flag in localStorage
+    localStorage.setItem("received", "true");
 
-        // Close the popup
-        setShowPopup(false);
-    };
+    // Close the popup
+    setShowPopup(false);
+  };
 
-    return (
-        <div className="relative w-full h-screen">
-            {isLoading ? (
-                <div className="fixed inset-0 flex items-center justify-center bg-[#F2F6F7] z-50">
-                    <Image
-                        src="/assets/logo.png" // Replace with your splash image path
-                        alt="Splash Screen"
-                        width={500}
-                        height={500}
-                        className="object-contain"
-                        priority
-                    />
-                </div>
-            ) : (
-                <Home />
-            )}
-
-            {/* Popup for Phone Number */}
-            {showPopup && (
-                <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-                    <div className="bg-[#F2F6F7] p-6 rounded-lg shadow-lg w-[90%] md:w-[400px]">
-                        <div className="flex justify-center">
-                            <Image src="/assets/logo.png" alt="Logo" width={100} height={100} />
-                        </div>
-                        <h2 className="text-xl font-semibold text-center mt-4">
-                            Get Sahoolat.AI Updates On Your Phone.
-                        </h2>
-                        <p className="text-center text-gray-600 mt-2">WhatsApp Number:</p>
-                        <div className="flex items-center border border-gray-300 p-2 rounded mt-2">
-                            <span className="mr-2">+92</span>
-                            <input
-                                type="text"
-                                placeholder="3000000000"
-                                className="w-full outline-none"
-                                value={phoneNumber}
-                                onChange={(e) => setPhoneNumber(e.target.value)}
-                            />
-                        </div>
-
-                        {/* Buttons */}
-                        <div className="flex justify-between mt-4">
-                            <button
-                                className="text-red-500 font-semibold"
-                                onClick={() => setShowPopup(false)}
-                            >
-                                Not Now
-                            </button>
-                            <button
-                                className="bg-[#057e7e] text-white px-5 py-2 rounded-lg"
-                                onClick={handleSubmit}
-                            >
-                                Yes
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            )}
+  return (
+    <div className="relative w-full h-screen">
+      {isLoading ? (
+        <div className="fixed inset-0 flex items-center justify-center bg-[#F2F6F7] z-50">
+          <Image
+            src="/assets/logo.png" // Replace with your splash image path
+            alt="Splash Screen"
+            width={500}
+            height={500}
+            className="object-contain"
+            priority
+          />
         </div>
-    );
+      ) : (
+        <Home />
+      )}
+
+      {/* Popup for Phone Number */}
+      {showPopup && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+          <div className="bg-[#F2F6F7] p-6 rounded-lg shadow-lg w-[90%] md:w-[400px]">
+            <div className="flex justify-center">
+              <Image src="/assets/logo.png" alt="Logo" width={100} height={100} />
+            </div>
+            <h2 className="text-xl font-semibold text-center mt-4">
+              Get Sahoolat.AI Updates On Your Phone.
+            </h2>
+            <p className="text-center text-gray-600 mt-2">WhatsApp Number:</p>
+            <div className="flex items-center border border-gray-300 p-2 rounded mt-2">
+              <span className="mr-2">+92</span>
+              <input
+                type="text"
+                placeholder="3000000000"
+                className="w-full outline-none"
+                value={phoneNumber}
+                onChange={(e) => setPhoneNumber(e.target.value)}
+              />
+            </div>
+
+            {/* Buttons */}
+            <div className="flex justify-between mt-4">
+              <button
+                className="text-red-500 font-semibold"
+                onClick={() => setShowPopup(false)}
+              >
+                Not Now
+              </button>
+              <button
+                className="bg-[#057e7e] text-white px-5 py-2 rounded-lg"
+                onClick={handleSubmit}
+              >
+                Yes
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
 }
