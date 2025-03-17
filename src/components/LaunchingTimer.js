@@ -29,7 +29,7 @@ function LaunchingTimer() {
           animate={{opacity: 1, y: 0}}
           exit={{opacity: 0, y: -20}}
           transition={{duration: 0.4}}
-          className="fixed top-20 lg:right-1 transform -translate-x-1/2 w-[85%] lg:w-[90%] max-w-md bg-[#023663]/80 backdrop-blur-lg text-white p-2 lg:p-5 rounded-xl shadow-2xl border border-white/20 z-[100]"
+          className="fixed top-20 lg:right-1 transform -translate-x-1/2 w-[85%] lg:w-[90%] max-w-md bg-[#0ea288] backdrop-blur-lg text-white p-2 lg:p-5 rounded-xl shadow-2xl border border-white/20 z-[100]"
         >
           {/* Close Button */}
           <button
@@ -61,16 +61,16 @@ function LaunchingTimer() {
                       initial={{scale: 0.8, opacity: 0}}
                       animate={{scale: 1, opacity: 1}}
                       transition={{duration: 0.4}}
-                      className="bg-[#0e374a] rounded-lg shadow-lg border border-white/10 text-center w-[55px] lg:w-[70px] p-2"
+                      className="bg-[#0e374a]/50 rounded-lg shadow-lg border border-white/10 text-center w-[55px] lg:w-[70px] p-2"
                     >
                       <motion.span
                         animate={{scale: [1, 1.1, 1]}}
                         transition={{repeat: Infinity, duration: 1.5}}
-                        className="block text-teal-400 text-lg lg:text-2xl font-bold"
+                        className="block text-white text-lg lg:text-2xl font-bold"
                       >
                         {value}
                       </motion.span>
-                      <span className="text-[8px] lg:text-xs uppercase text-gray-300">
+                      <span className="text-[8px] lg:text-xs uppercase text-white">
                         {unit}
                       </span>
                     </motion.div>

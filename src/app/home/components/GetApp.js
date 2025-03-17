@@ -4,6 +4,7 @@ import React from 'react';
 export default function GetApp() {
   return (
     <section
+      id={"download"}
       className="relative overflow-hidden text-center py-16 md:py-24 bg-gradient-to-r from-teal-500 via-teal-400 to-orange-400">
       {/* Decorative Background Shape (Optional) */}
       <div
