@@ -21,7 +21,7 @@ export default function HeroSection() {
   const [typedText, setTypedText] = useState(""); // Initialize with an empty string
   const [isPopupOpen, setIsPopupOpen] = useState(false); // State to control popup visibility
 
-  const fullText = "Your Voice, Your Solution";
+  const fullText = "Yoour Voice, Your Solution";
 
   useEffect(() => {
     let index = 0;

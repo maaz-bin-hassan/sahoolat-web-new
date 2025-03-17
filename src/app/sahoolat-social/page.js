@@ -1,10 +1,17 @@
 "use client";
-import React, {useEffect, useRef, useState} from "react";
-import {FaCog, FaCompass, FaHeart, FaHome, FaPlus, FaRegComment, FaShare, FaUser} from "react-icons/fa";
-import {BiVolumeFull, BiVolumeMute} from "react-icons/bi";
+import React, { useEffect, useRef, useState } from "react";
+import { FaCog, FaCompass, FaHeart, FaHome, FaPlus, FaRegComment, FaShare, FaUser } from "react-icons/fa";
+import { BiVolumeFull, BiVolumeMute } from "react-icons/bi";
 import Image from "next/image";
 import Link from "next/link";
 
+
+const menu = [
+  { text: "Home", icon: FaHome, href: "#home" },
+  { text: "Explore", icon: FaCompass, href: "#explore" },
+  { text: "Upload", icon: FaPlus, href: "#upload" },
+  { text: "Profile", icon: FaUser, href: "#profile" },
+];
 
 function formatTime(seconds) {
   const mins = Math.floor(seconds / 60);
@@ -29,7 +36,7 @@ const videoUrls = [
   "https://lyudo-images.s3.eu-north-1.amazonaws.com/videos/home+cares/Pedicure+At+Home+%F0%9F%91%8CPamper+Routine+In+Pregnancy+%23shorts+%23ytshorts+%23youtubeshorts+%23beauty.mp4",
   "https://lyudo-images.s3.eu-north-1.amazonaws.com/videos/home+cares/To+See+How+2.5D+Design+Looks+%F0%9F%91%80.mp4",
   "https://lyudo-images.s3.eu-north-1.amazonaws.com/videos/home+cares/videoplayback.mp4",
-  "https://lyudo-images.s3.eu-north-1.amazonaws.com/videos/home+cares/Ye+kya+kr+diya+%F0%9F%98%82%F0%9F%A4%A3%23noorah_albalushiya+%23shortvideo+%23funny+%23shortvideo+%23comedy.mp4"
+  "https://lyudo-images.s3.eu-north-1.amazonaws.com/videos/home+cares/Ye+kya+kr+diya+%F0%9F%98%82%F0%9F%A4%A3%23noorah_albalushiya+%23shortvideo+%23funny+%23shortvideo+%23comedy.mp4",
 ];
 
 export default function SahoolatSocial() {
@@ -41,29 +48,35 @@ export default function SahoolatSocial() {
 
   // For 2-loop logic
   const [playCounts, setPlayCounts] = useState(
-    new Array(videoUrls.length).fill(0)
+    new Array(videoUrls.length).fill(0),
   );
   const [pausedByAuto, setPausedByAuto] = useState(
-    new Array(videoUrls.length).fill(false)
+    new Array(videoUrls.length).fill(false),
   );
 
   const [currentIndex, setCurrentIndex] = useState(0);
 
   // Loader
   const [loadingVideos, setLoadingVideos] = useState(
-    new Array(videoUrls.length).fill(true)
+    new Array(videoUrls.length).fill(true),
   );
 
   // Durations & currentTimes => progress bar
   const [durations, setDurations] = useState(
-    new Array(videoUrls.length).fill(0)
+    new Array(videoUrls.length).fill(0),
   );
   const [currentTimes, setCurrentTimes] = useState(
-    new Array(videoUrls.length).fill(0)
+    new Array(videoUrls.length).fill(0),
   );
 
   // Comments
   const [commentsOpen, setCommentsOpen] = useState(false);
+
+  const [activeLink, setActiveLink] = useState("#home");
+
+  const handleMenuClick = (link) => {
+    setActiveLink(link);
+  };
 
   // ----------------------------------------
   // HELPER: Update actual video muted property
@@ -82,7 +95,7 @@ export default function SahoolatSocial() {
   // IntersectionObserver => auto-play
   // ----------------------------------------
   useEffect(() => {
-    const options = {root: containerRef.current, threshold: 0.7};
+    const options = { root: containerRef.current, threshold: 0.7 };
     const observer = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
         const video = entry.target;
@@ -230,7 +243,7 @@ export default function SahoolatSocial() {
   return (
     <div className="relative w-full h-screen flex bg-gray-50">
       {/* SIDEBAR */}
-      <div className="w-48 h-screen bg-white shadow-xl flex flex-col py-6 fixed left-0">
+      <div className="w-60 h-screen bg-white shadow-xl flex flex-col py-6 fixed left-0">
         <Link href={"/"}>
           <div className="flex items-center justify-center mb-10">
             <Image
@@ -241,27 +254,20 @@ export default function SahoolatSocial() {
             />
           </div>
         </Link>
-        <nav className="flex flex-col space-y-6 px-4">
-          <button className="flex items-center text-gray-600 hover:text-black transition">
-            <FaHome size={24} className="mr-3"/>
-            <span className="text-lg">Home</span>
-          </button>
-          <button className="flex items-center text-gray-600 hover:text-black transition">
-            <FaCompass size={24} className="mr-3"/>
-            <span className="text-lg">Explore</span>
-          </button>
-          <button className="flex items-center text-gray-600 hover:text-black transition">
-            <FaPlus size={24} className="mr-3"/>
-            <span className="text-lg">Upload</span>
-          </button>
-          <button className="flex items-center text-gray-600 hover:text-black transition">
-            <FaUser size={24} className="mr-3"/>
-            <span className="text-lg">Profile</span>
-          </button>
-          <button className="flex items-center text-gray-600 hover:text-black transition mt-auto">
-            <FaCog size={24} className="mr-3"/>
-            <span className="text-lg">Settings</span>
-          </button>
+        <nav className="flex flex-col space-y-1 px-4">
+          {menu.map(item => (
+            <button
+              key={item.text}
+              onClick={() => handleMenuClick(item.href)}
+              className={`flex items-center p-3 text-gray-600 transition ${activeLink === item.href ? "text-white font-bold bg-[#0ea288] rounded-lg shadow-md" : ""}`}
+            >
+              <item.icon size={24} className="mr-3" />
+
+              <span className="text-lg">
+                {item.text}
+              </span>
+            </button>
+          ))}
         </nav>
       </div>
 
@@ -279,10 +285,10 @@ export default function SahoolatSocial() {
             <section
               key={idx}
               className="w-full h-screen flex items-center justify-center"
-              style={{scrollSnapAlign: "start"}}
+              style={{ scrollSnapAlign: "start" }}
             >
               <div
-                className="relative w-full max-w-[600px] aspect-[10/16] rounded-xl overflow-hidden shadow-lg bg-black">
+                className="relative w-full max-w-[450px] h-[90%] rounded-xl overflow-hidden shadow-lg bg-black">
                 {/* Loader */}
                 {loadingVideos[idx] && (
                   <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50">
@@ -309,16 +315,16 @@ export default function SahoolatSocial() {
                 <div
                   className="absolute right-3 top-1/2 -translate-y-1/2 flex flex-col items-center space-y-6 text-white text-2xl">
                   <button className="p-3 rounded-full bg-black bg-opacity-40 hover:bg-opacity-60 transition">
-                    <FaHeart/>
+                    <FaHeart />
                   </button>
                   <button
                     onClick={toggleComments}
                     className="p-3 rounded-full bg-black bg-opacity-40 hover:bg-opacity-60 transition"
                   >
-                    <FaRegComment/>
+                    <FaRegComment />
                   </button>
                   <button className="p-3 rounded-full bg-black bg-opacity-40 hover:bg-opacity-60 transition">
-                    <FaShare/>
+                    <FaShare />
                   </button>
                 </div>
 
@@ -328,7 +334,7 @@ export default function SahoolatSocial() {
                     onClick={() => setIsMuted(!isMuted)}
                     className="p-2 rounded-full bg-black bg-opacity-40 hover:bg-opacity-60 transition"
                   >
-                    {isMuted ? <BiVolumeMute/> : <BiVolumeFull/>}
+                    {isMuted ? <BiVolumeMute /> : <BiVolumeFull />}
                   </button>
                 </div>
 
@@ -336,16 +342,16 @@ export default function SahoolatSocial() {
                 <div className="absolute bottom-3 left-[60px] right-2 flex items-center">
                   <input
                     type="range"
-                    className="w-full h-1.5 text-textColor"
+                    className="w-full h-1.5 text-textColor transition-all duration-300"
                     min={0}
                     step={0.1}
                     max={durations[idx] || 0}
                     value={currentTimes[idx] || 0}
                     onInput={(e) => handleScrub(idx, e.target.value)}
                   />
-                  <span className="text-white text-sm ml-2">
-                    {formatTime(currentTimes[idx])} / {formatTime(durations[idx])}
-                  </span>
+                  {/*<span className="text-white text-sm ml-2">*/}
+                  {/*  {formatTime(currentTimes[idx])} / {formatTime(durations[idx])}*/}
+                  {/*</span>*/}
                 </div>
               </div>
             </section>

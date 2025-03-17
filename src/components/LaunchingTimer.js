@@ -61,7 +61,7 @@ function LaunchingTimer() {
                       initial={{scale: 0.8, opacity: 0}}
                       animate={{scale: 1, opacity: 1}}
                       transition={{duration: 0.4}}
-                      className="p-3 bg-[#0e374a] rounded-lg shadow-lg border border-white/10 text-center w-18"
+                      className="bg-[#0e374a] rounded-lg shadow-lg border border-white/10 text-center w-[70px] p-2"
                     >
                       <motion.span
                         animate={{scale: [1, 1.1, 1]}}
