@@ -1,19 +1,19 @@
 "use client";
-import {useState} from "react";
+import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import {usePathname} from "next/navigation";
+import { usePathname } from "next/navigation";
 import { FaDownload, FaTimes } from "react-icons/fa";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const navItems = [
-    {href: "/", label: "Home"},
-    {href: "/about-us", label: "About"},
-    {href: "/sahoolat-social", label: "Social Media"},
-    {href: "/book-call", label: "Book a call"},
-    {href: "/faqs", label: "FAQs"},
+    { href: "/", label: "Home" },
+    { href: "/about-us", label: "About" },
+    { href: "/sahoolat-social", label: "Social Media" },
+    { href: "/book-call", label: "Book a call" },
+    { href: "/faqs", label: "FAQs" },
   ];
 
   return (
@@ -38,10 +38,8 @@ const Header = () => {
 
         {/* Right-side Download Button (Desktop) */}
         <div className="hidden lg:flex">
-          <button
-            className="download-btn flex items-center gap-3 px-6 py-3 text-white text-xl font-bold rounded-full shadow-lg transition-all duration-300"
-          >
-            <FaDownload className="text-2xl"/> Download App
+          <button className="download-btn flex items-center gap-3 px-6 py-3 text-white text-xl font-bold rounded-full shadow-lg transition-all duration-300">
+            <FaDownload className="text-2xl" /> Download App
           </button>
         </div>
 
@@ -68,48 +66,21 @@ const Header = () => {
 
         {/* Mobile Menu */}
         {isMenuOpen && (
-          <div className="absolute top-16 left-0 w-full bg-[#F2F6F7] shadow-lg lg:hidden">
-            <ul className="flex flex-col items-center space-y-4 py-4 font-bold text-black">
+          <div className="absolute top-16 left-0 w-full z-50 bg-white shadow-lg lg:hidden">
+            <ul className="flex flex-col items-center space-y-4 py-4 font-bold text-white">
               {navItems.map((item, index) => (
-                <NavItem key={index} href={item.href} label={item.label}/>
+                <NavItem key={index} href={item.href} label={item.label} />
               ))}
             </ul>
           </div>
         )}
       </nav>
-
-      {/* CSS for Animated Gradient Button */}
-      <style jsx>{`
-          .download-btn {
-              background-size: 300% 300%;
-              background-image: linear-gradient(
-                      45deg,
-                      #ff8939,
-                      #0e6a68,
-                      #ff8939,
-                      #0e6a68
-              );
-              animation: animated-gradient 5s ease infinite;
-          }
-
-          @keyframes animated-gradient {
-              0% {
-                  background-position: 0% 50%;
-              }
-              50% {
-                  background-position: 100% 50%;
-              }
-              100% {
-                  background-position: 0% 50%;
-              }
-          }
-      `}</style>
     </header>
   );
 };
 
 /** NavItem Component */
-const NavItem = ({href, label}) => {
+const NavItem = ({ href, label }) => {
   // Current route
   const pathname = usePathname();
 
