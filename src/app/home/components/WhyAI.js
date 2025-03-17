@@ -93,7 +93,7 @@ export default function Text() {
       <div className="flex flex-col items-center justify-center">
 
         {/* Main Heading */}
-        <h1 className="text-[100px] md:text-[100px] text-center font-bold text-textColor mb-6 md:mb-0">
+        <h1 className="text-[50px] md:text-[100px] text-center font-bold text-textColor mb-6 md:mb-0">
           Why Sahoolat.AI?
         </h1>
 
@@ -116,7 +116,7 @@ export default function Text() {
         </div>
 
         {/* Features Section (3-2 Grid) */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 max-w-6xl">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 max-w-6xl p-3">
           {features.slice(0, 3).map((feature, index) => (
             <div
               key={index}
@@ -132,7 +132,7 @@ export default function Text() {
           ))}
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 mt-8 max-w-4xl">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 mt-8 max-w-4xl p-3">
           {features.slice(3, 5).map((feature, index) => (
             <div
               key={index}
@@ -168,7 +168,7 @@ export default function Text() {
         </div>
       </div>
 
-      <div className="mt-16 flex flex-col items-center">
+      <div className="mt-16 flex flex-col items-center px-4 md:px-2">
         <div className="relative w-full max-w-4xl overflow-hidden rounded-xl shadow-lg">
           <iframe
             className="w-full h-[300px] md:h-[500px] rounded-xl"
@@ -177,7 +177,7 @@ export default function Text() {
             frameBorder="0"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
             allowFullScreen
-          ></iframe>
+          />
         </div>
       </div>
     </section>

@@ -1,5 +1,5 @@
 "use client";
-import React, {Fragment, useState} from "react";
+import React, { Fragment, useState } from "react";
 import Image from "next/image";
 
 export default function HowItWorks() {
@@ -29,7 +29,7 @@ export default function HowItWorks() {
 
   const handleMicClick = () => {
     setMicSrc((prev) =>
-      prev === "/assets/Mic.png" ? "/assets/Mic2.png" : "/assets/Mic2.png"
+      prev === "/assets/Mic.png" ? "/assets/Mic2.png" : "/assets/Mic2.png",
     );
   };
 
@@ -72,7 +72,7 @@ export default function HowItWorks() {
                   {item.title}
                 </h3>
                 <p
-                  className="text-[16px] text-center text-textColor font-bold mt-2 md:hidden transition-all duration-300">
+                  className="text-[16px] px-4 text-center text-textColor font-bold mt-2 md:hidden transition-all duration-300">
                   {item.description}
                 </p>
               </div>
@@ -117,12 +117,12 @@ export default function HowItWorks() {
           (src, index) => (
             <img
               key={index}
-              className={`rounded-lg cursor-pointer transition-all duration-300 hover:scale-105 ${index === 1 ? "w-[420px] h-[780px]" : "w-[380px] h-[750px]"}`}
+              className={`rounded-lg cursor-pointer transition-all duration-300 hover:scale-105 ${index === 1 ? "w-[380px] md:w-[420px] h-[780px]" : "w-[380px] h-[750px]"}`}
               src={src}
               alt={`Step ${index + 1}`}
               onClick={() => setSelectedImage(src)} // Open full-screen image on click
             />
-          )
+          ),
         )}
       </div>
 

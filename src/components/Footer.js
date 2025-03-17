@@ -53,7 +53,7 @@ function Footer() {
           {/* Quick Links */}
           <div>
             <h2 className="text-[35px] font-semibold mb-6">Quick Links</h2>
-            <ul className="space-y-7 text-[20px] font-bold underline">
+            <ul className="space-y-7 text-[16px] xl:text-[20px] font-bold">
               {quickLinks.map((link, index) => (
                 <li key={index}>
                   <a href={link.href} className="hover:underline">
@@ -68,10 +68,10 @@ function Footer() {
           {/* Popular Services */}
           <div>
             <h2 className="text-[35px] font-bold mb-6">Popular Services</h2>
-            <ul className="space-y-3 text-[12px] font-bold list-disc ">
+            <ul className="space-y-3 text-[16px] font-bold list-disc ">
               {popularServices.map((service, index) => (
                 <li key={index} className="ml-[25px]">
-                  <a href={service.href} className="hover:underline">
+                  <a href={service.href} className="no-underline hover:underline">
                     {service.label}
                   </a>
                 </li>
@@ -83,7 +83,7 @@ function Footer() {
           {/* Company & Legal */}
           <div>
             <h2 className="text-[35px] font-bold mb-6">Company &amp; Legal</h2>
-            <ul className="space-y-7 text-[20px]  font-bold underline">
+            <ul className="space-y-7 text-[16px] xl:text-[20px] font-bold">
               {companyLinks.map((item, index) => (
                 <li key={index}>
                   <a href={item.href} className="hover:underline">

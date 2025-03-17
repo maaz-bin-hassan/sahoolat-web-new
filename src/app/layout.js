@@ -38,7 +38,7 @@ export const metadata = {
     siteName: "Sahoolat AI",
     images: [
       {
-        url: "/assets/og-image.png", // Replace with actual social media image
+        url: "/assets/og-image.png", // Replace with actual socialyour media image
         width: 1200,
         height: 630,
         alt: "Sahoolat AI - AI-powered job matching platform",
