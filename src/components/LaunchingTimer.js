@@ -29,7 +29,7 @@ function LaunchingTimer() {
           animate={{opacity: 1, y: 0}}
           exit={{opacity: 0, y: -20}}
           transition={{duration: 0.4}}
-          className="fixed top-20 right-1 transform -translate-x-1/2 w-[90%] max-w-md bg-[#023663]/80 backdrop-blur-lg text-white p-5 rounded-xl shadow-2xl border border-white/20"
+          className="fixed top-20 right-1 transform -translate-x-1/2 w-[90%] max-w-md bg-[#023663]/80 backdrop-blur-lg text-white p-5 rounded-xl shadow-2xl border border-white/20 z-[100]"
         >
           {/* Close Button */}
           <button
@@ -61,7 +61,7 @@ function LaunchingTimer() {
                       initial={{scale: 0.8, opacity: 0}}
                       animate={{scale: 1, opacity: 1}}
                       transition={{duration: 0.4}}
-                      className="p-3 bg-[#0e374a] rounded-lg shadow-lg border border-white/10 text-center w-16"
+                      className="p-3 bg-[#0e374a] rounded-lg shadow-lg border border-white/10 text-center w-18"
                     >
                       <motion.span
                         animate={{scale: [1, 1.1, 1]}}
