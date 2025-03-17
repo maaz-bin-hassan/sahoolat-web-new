@@ -38,9 +38,16 @@ const Header = () => {
 
         {/* Right-side Download Button (Desktop) */}
         <div className="hidden lg:flex">
-          <button className="download-btn flex items-center gap-3 px-6 py-3 text-white text-xl font-bold rounded-full shadow-lg transition-all duration-300">
+          <a
+            href="#download"
+            className="download-btn flex items-center gap-3 px-6 py-3 text-white text-xl font-bold rounded-full shadow-lg transition-all duration-300"
+            onClick={(e) => {
+              e.preventDefault();
+              document.getElementById("download").scrollIntoView({ behavior: "smooth" });
+            }}
+          >
             <FaDownload className="text-2xl" /> Download App
-          </button>
+          </a>
         </div>
 
         {/* Mobile Menu Button */}

@@ -56,7 +56,7 @@ export default function HeroSection() {
               <TypeAnimation
                 sequence={phrases}
                 repeat={1}
-                speed={100}
+                speed={50}
                 wrapper="span"
               />
             </p>
@@ -89,23 +89,23 @@ export default function HeroSection() {
         </div>
 
         {/* Download Section */}
-        <p className="mb-6 mt-2 text-xl md:text-4xl font-bold text-textColor">
-          Download for free!
-        </p>
+        {/*<p className="mb-6 mt-2 text-xl md:text-4xl font-bold text-textColor">*/}
+        {/*  Download for free!*/}
+        {/*</p>*/}
 
         {/* App Store Buttons */}
-        <div className="flex space-x-4 md:space-x-36">
-          {storeLinks.map((link, index) => (
-            <a key={index} href={link.href}>
-              <Image
-                {...link}
-                width={400}
-                height={114}
-                className="cursor-pointer w-[150px] h-[50px] lg:w-[400px] lg:h-[100px]"
-              />
-            </a>
-          ))}
-        </div>
+        {/*<div className="flex space-x-4 md:space-x-36">*/}
+        {/*  {storeLinks.map((link, index) => (*/}
+        {/*    <a key={index} href={link.href}>*/}
+        {/*      <Image*/}
+        {/*        {...link}*/}
+        {/*        width={400}*/}
+        {/*        height={114}*/}
+        {/*        className="cursor-pointer w-[150px] h-[50px] lg:w-[400px] lg:h-[100px]"*/}
+        {/*      />*/}
+        {/*    </a>*/}
+        {/*  ))}*/}
+        {/*</div>*/}
       </div>
 
       {/* Popup Modal */}
