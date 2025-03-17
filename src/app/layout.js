@@ -97,6 +97,7 @@ export default function RootLayout({children}) {
         <body className={`${geistSans.variable} ${geistMono.variable} antialiased  bg-[#F2F6F7]`}>
         <div className="z-[50000000000000000000000000]">
             <Script src="https://sahoolat-chatbot.vercel.app/chatbot.js"></Script>
+            {/*<Script src="http://localhost:3002/chatbot.js"></Script>*/}
         </div>
         {children}
         </body>

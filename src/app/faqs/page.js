@@ -1,8 +1,11 @@
 "use client";
-import React, { useState } from "react";
+import React, {useState, useEffect, useRef} from "react";
 import { motion } from "framer-motion";
-import { FaPaperPlane } from "react-icons/fa"; // Importing the Send icon
+import { FaPaperPlane } from "react-icons/fa";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import Header from "@/components/Header";
+import Image from "next/image";
 
 const faqData = [
     { question: "What is Sahoolat AI?", answer: "Sahoolat AI is Pakistan’s first AI-powered voice-based freelance platform, designed to connect buyers with service providers seamlessly through audio communication." },
@@ -15,116 +18,107 @@ const faqData = [
     { question: "Can I invest in this platform?", answer: `Yes, you may schedule a 1-1 video meeting call with CEO Fahad Shahzad <a href="mailto:ceo@novasyncdynamics.com" class="text-blue-600 underline">ceo@novasyncdynamics.com</a>` }
 ];
 
+
 const FAQChatbot = () => {
     const [messages, setMessages] = useState([]);
     const [input, setInput] = useState("");
     const [showShortcuts, setShowShortcuts] = useState(true);
+    const [fingerprint, setFingerprint] = useState("");
+    const [loading, setLoading] = useState(false);
+    const messagesEndRef = useRef(null);
 
-    const handleQuestionClick = (question, answer) => {
-        setMessages([...messages, { type: "user", text: question }, { type: "bot", text: answer }]);
-        setShowShortcuts(false); // Hide shortcut questions after first interaction
-    };
+    useEffect(() => {
+        const fp = localStorage.getItem("fingerprint") || `fp-${Date.now()}`;
+        localStorage.setItem("fingerprint", fp);
+        setFingerprint(fp);
 
-    const handleUserInput = (e) => {
-        e.preventDefault();
-        if (input.trim() === "") return;
+        fetch("/api/create-session", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ fingerprint: fp }),
+        });
+    }, []);
 
-        const botResponse = faqData.find(faq => faq.question.toLowerCase().includes(input.toLowerCase()))
-            ? faqData.find(faq => faq.question.toLowerCase().includes(input.toLowerCase())).answer
-            : "I'm sorry, but I don't have an answer to that. Please check our support page!";
+    useEffect(() => {
+        messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    }, [messages]);
 
-        setMessages([...messages, { type: "user", text: input }, { type: "bot", text: botResponse }]);
+    const sendMessage = async (message) => {
+        setMessages((prev) => [...prev, { type: "user", text: message }]);
+        setLoading(true);
+
+        try {
+            const res = await fetch("/api/chat", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ fingerprint, message }),
+            });
+
+            if (!res.ok) throw new Error("Network response was not ok");
+
+            const { response } = await res.json();
+            setMessages((prev) => [...prev, { type: "bot", text: response }]);
+        } catch (error) {
+            toast.error("Network issue occurred. Please try again!");
+        } finally {
+            setLoading(false);
+        }
+
         setInput("");
-        setShowShortcuts(false); // Hide shortcut questions after first interaction
+        setShowShortcuts(false);
     };
 
     return (
         <>
             <Header />
+            <ToastContainer position="top-center" autoClose={3000} />
             <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-[#E3F2FD] to-[#BBDEFB] text-[#057e7e] px-6 py-8">
+                <motion.h1 className="text-4xl font-bold text-center mb-2">💬 Ask Sahoolat AI</motion.h1>
 
-                {/* Title */}
-                <motion.h1
-                    initial={{ opacity: 0, y: -20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6 }}
-                    className="text-4xl font-bold text-center mb-2"
-                >
-                    💬 Ask Sahoolat AI
-                </motion.h1>
-                <p className="text-gray-600 text-center mb-4">
-                    Get instant answers to your questions! Select a topic below or type your query. 👇
-                </p>
-
-                {/* Chat Container */}
-                <motion.div
-                    initial={{ opacity: 0, scale: 0.95 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ duration: 0.6 }}
-                    className="w-[75%] h-[75vh] bg-white rounded-xl shadow-xl flex flex-col p-6 border border-gray-200"
-                >
-
-                    {/* Chat Messages */}
+                <div className="w-[75%] h-[75vh] bg-white rounded-xl shadow-xl flex flex-col p-6 border border-gray-200">
                     <div className="flex-1 overflow-y-auto space-y-3 p-4">
-                        {messages.length === 0 ? (
-                            <p className="text-gray-500 text-center">Start a conversation by selecting a question below! 👇</p>
-                        ) : (
-                            messages.map((msg, index) => (
-                                <motion.div
-                                    key={index}
-                                    initial={{ opacity: 0, y: 10 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    transition={{ duration: 0.3 }}
-                                    style={{
-                                        marginLeft: msg.type === "user" ? "auto" : "0"
-                                    }}
-                                    className={`p-4 rounded-xl max-w-[60%] ${
-                                        msg.type === "user"
-                                            ? "self-end bg-[#057e7e] text-white text-right shadow-md"
-                                            : "self-start bg-gray-500 text-white text-left shadow-md"
-                                    }`}
-                                >
+                        {messages.map((msg, index) => (
+                            <motion.div
+                                key={index}
+                                className={`p-4 rounded-xl relative flex items-start gap-2 ${msg.type === "user"
+                                    ? "ml-auto w-fit max-w-[70%] bg-[#0ea288] text-white text-right shadow-md"
+                                    : "mr-auto w-fit max-w-[70%] bg-[#f0f0f0] text-black text-left shadow-md"}`}
+                            >
+                                {msg.type === "bot" && (
+                                    <div className="flex-shrink-0">
+                                        <Image
+                                            src={"/assets/logo.png"}
+                                            alt="Sahoolat AI Logo"
+                                            width={30}
+                                            height={30}
+                                            className="mt-1"
+                                        />
+                                    </div>
+                                )}
+                                <div className="flex-1">
                                     <span dangerouslySetInnerHTML={{ __html: msg.text }} />
-                                </motion.div>
-                            ))
-                        )}
+                                </div>
+                            </motion.div>
+                        ))}
+                        <div ref={messagesEndRef} />
+                        {loading && <div className="text-center text-gray-500">⏳ Thinking...</div>}
                     </div>
 
-                    {/* Shortcut Buttons (Hidden After First Message) */}
                     {showShortcuts && (
                         <div className="flex flex-wrap justify-center gap-2 mb-4">
-                            {faqData.map(({ question, answer }, index) => (
-                                <motion.button
-                                    key={index}
-                                    initial={{ opacity: 0, scale: 0.8 }}
-                                    animate={{ opacity: 1, scale: 1 }}
-                                    transition={{ duration: 0.3, delay: index * 0.05 }}
-                                    className="px-6 py-3 text-lg rounded-full bg-white border border-gray-300 hover:border-[#057e7e] hover:bg-[#057e7e] hover:text-white font-semibold shadow-md transition-all"
-                                    onClick={() => handleQuestionClick(question, answer)}
-                                >
+                            {faqData.map(({ question }, index) => (
+                                <button key={index} className="px-6 py-3 rounded-full bg-white border border-gray-300 hover:bg-[#057e7e] hover:text-white font-semibold shadow-md" onClick={() => sendMessage(question)}>
                                     {question}
-                                </motion.button>
+                                </button>
                             ))}
                         </div>
                     )}
 
-                    {/* User Input Field */}
-                    <form onSubmit={handleUserInput} className="flex items-center border-t border-gray-300 pt-3 px-3">
-                        <input
-                            type="text"
-                            value={input}
-                            onChange={(e) => setInput(e.target.value)}
-                            placeholder="Type your question..."
-                            className="flex-1 p-3 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#057e7e]"
-                        />
-                        <button
-                            type="submit"
-                            className="ml-3 bg-[#057e7e] text-white p-3 rounded-full shadow-md hover:bg-[#056565] transition-all flex items-center justify-center"
-                        >
-                            <FaPaperPlane className="w-5 h-5" /> {/* Send Icon */}
-                        </button>
+                    <form onSubmit={(e) => { e.preventDefault(); sendMessage(input); }} className="flex items-center border-t border-gray-300 pt-3 px-3">
+                        <input type="text" value={input} onChange={(e) => setInput(e.target.value)} placeholder="Type your question..." className="flex-1 p-3 rounded-full border border-gray-300" disabled={loading} />
+                        <button type="submit" disabled={loading || input.trim() === ""} className="ml-3 bg-[#057e7e] text-white p-3 rounded-full shadow-md">{loading ? <div className="animate-spin rounded-full h-5 w-5 border-t-2 border-white"></div> : <FaPaperPlane className="w-5 h-5" />}</button>
                     </form>
-                </motion.div>
+                </div>
             </div>
         </>
     );
