@@ -78,7 +78,7 @@ export default function Testimonials() {
         <div className="flex items-center mb-6">
           <button
             onClick={prev}
-            className="transition-colors duration-200 p-2 hover:bg-brand hover:text-white rounded mr-4"
+            className="transition-colors duration-200 p-2 rounded mr-4"
           >
             <img
               src="/assets/arrow-left.png"
@@ -114,7 +114,7 @@ export default function Testimonials() {
 
           <button
             onClick={next}
-            className="transition-colors duration-200 p-2 hover:bg-brand hover:text-white rounded ml-4"
+            className="transition-colors duration-200 p-2 rounded ml-4"
           >
             <img
               src="/assets/arrow-right.png"

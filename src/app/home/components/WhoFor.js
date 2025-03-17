@@ -39,16 +39,16 @@ const WhoIsItForTriangles = () => {
           {triangleData.map((group, idx) => (
             <div
               key={idx}
-              className="flex flex-col items-center p-6 rounded-2xl shadow-sm
+              className="flex flex-1 gap-4 md:gap-0 md:flex-col items-center md:p-6 rounded-2xl shadow-sm
                          transition-transform transform-gpu duration-300 hover:shadow-md hover:scale-105"
             >
               {/* Triangle Icon + Title */}
               <Triangle icon={group.icon} title={group.title}/>
 
               {/* Subtitle or Bullet Points */}
-              <ul className="mt-6 space-y-2 text-sm md:text-base text-white leading-relaxed">
+              <ul className="mt-6 space-y-2 text-sm md:text-base text-white leading-relaxed flex-2">
                 {group.items.map((bullet, i) => (
-                  <li key={i} className="list-disc list-inside">
+                  <li key={i} className="list-disc list-inside ">
                     {bullet}
                   </li>
                 ))}

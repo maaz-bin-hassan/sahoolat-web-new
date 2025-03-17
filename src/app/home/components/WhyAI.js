@@ -168,7 +168,7 @@ export default function Text() {
         </div>
       </div>
 
-      <div className="mt-16 flex flex-col items-center">
+      <div className="mt-16 flex flex-col items-center px-4 md:px-2">
         <div className="relative w-full max-w-4xl overflow-hidden rounded-xl shadow-lg">
           <iframe
             className="w-full h-[300px] md:h-[500px] rounded-xl"
@@ -177,7 +177,7 @@ export default function Text() {
             frameBorder="0"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
             allowFullScreen
-          ></iframe>
+          />
         </div>
       </div>
     </section>
