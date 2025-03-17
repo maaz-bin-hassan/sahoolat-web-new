@@ -160,8 +160,13 @@ export default function Text() {
               </div>
 
               {index !== infoBoxes.length - 1 && (
-                <Image src="/assets/arrow-right.png" alt="Arrow" width={40} height={40}
-                       className="animate-pulse"/>
+                <Image
+                  src={window.innerWidth < 768 ? "/assets/arrow-down.png" : "/assets/arrow-right.png"}
+                  alt="Arrow"
+                  width={40}
+                  height={40}
+                  className="animate-pulse"
+                />
               )}
             </Fragment>
           ))}
