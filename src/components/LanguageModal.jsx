@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -7,10 +7,17 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
+import { useTranslate } from "@/hooks/useTranslate";
 
 const LanguageModal = () => {
+  const { langChange } = useTranslate();
   const [openModal, setOpenModal] = useState(true);
 
+  const handleLanguageChange = (lang) => {
+    localStorage.setItem("googtrans", lang);
+    langChange(lang);
+    setOpenModal(false);
+  };
 
   return (
     <div>
@@ -20,11 +27,19 @@ const LanguageModal = () => {
             <DialogTitle className={"text-[30px]"}>Choose Language</DialogTitle>
             <DialogDescription className={"flex items-center justify-center h-full"}>
               <div className={"flex gap-3 md:gap-6"}>
-                <Button className={"bg-[#0ea288] hover:bg-[#0e6d69] border-none outline-none focus:border-none p-6 md:p-8 text-lg"} size={"lg"}>
+                <Button
+                  onClick={() => {
+                    handleLanguageChange("/auto/en");
+                  }}
+                  className={"bg-[#0ea288] hover:bg-[#0e6d69] border-none outline-none focus:border-none p-6 md:p-8 text-lg"} size={"lg"}>
                   English (EN)
                 </Button>
 
-                <Button className={"bg-[#0ea288] hover:bg-[#0e6d69] border-none outline-none focus:border-none p-6 md:p-8 text-lg"} size={"lg"}>
+                <Button
+                  onClick={() => {
+                    handleLanguageChange("/auto/ur");
+                  }}
+                  className={"bg-[#0ea288] hover:bg-[#0e6d69] border-none outline-none focus:border-none p-6 md:p-8 text-lg"} size={"lg"}>
                   Urdu (اردو)
                 </Button>
               </div>
