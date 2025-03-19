@@ -45,7 +45,6 @@ export default function SahoolatSocial() {
 
   // For toggling audio, we won't rely on muted={muted}. We'll do manual DOM manipulation.
   const [isMuted, setIsMuted] = useState(true);
-
   // For 2-loop logic
   const [playCounts, setPlayCounts] = useState(
     new Array(videoUrls.length).fill(0),
