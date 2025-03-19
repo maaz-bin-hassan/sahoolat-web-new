@@ -68,7 +68,7 @@ export default function HowItWorks() {
                   />
                 )}
                 <h3
-                  className="mt-3 text-center text-[20px] md:text-[30px] font-bold text-textColor transition-all duration-300">
+                  className={`mt-3 text-center text-[20px] md:text-[28px] font-bold text-textColor transition-all duration-300`}>
                   {item.title}
                 </h3>
                 <p
@@ -100,15 +100,15 @@ export default function HowItWorks() {
 
       {/* Call to Action */}
       <div className="flex my-10 justify-center">
-                <span className="text-3xl md:text-[50px] mr-1 text-orangebrand font-bold">
-                    Say It.&nbsp;
-                </span>
-        <span className="text-3xl md:text-[50px] mr-1 text-brand font-bold">
-                    Find it.&nbsp;
-                </span>
         <span className="text-3xl md:text-[50px] mr-1 text-orangebrand font-bold">
-                    Get it done!
-                </span>
+          Say It.&nbsp;
+        </span>
+        <span className="text-3xl md:text-[50px] mr-1 text-brand font-bold">
+          Find it.&nbsp;
+        </span>
+        <span className="text-3xl md:text-[50px] mr-1 text-orangebrand font-bold">
+          Get it done!
+        </span>
       </div>
 
       {/* Image Grid with Popup */}
@@ -146,8 +146,6 @@ export default function HowItWorks() {
           </div>
         </div>
       )}
-
-
     </section>
   );
 }

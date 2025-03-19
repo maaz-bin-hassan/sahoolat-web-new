@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { FaDownload, FaTimes } from "react-icons/fa";
+import BtnLanguage from "@/components/BtnLanguage";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -37,7 +38,9 @@ const Header = () => {
         </ul>
 
         {/* Right-side Download Button (Desktop) */}
-        <div className="hidden lg:flex">
+        <div className="hidden lg:flex lg:items-center gap-3">
+          <BtnLanguage />
+
           <a
             href="#download"
             className="download-btn flex items-center gap-3 px-6 py-3 text-white text-xl font-bold rounded-full shadow-lg transition-all duration-300"
