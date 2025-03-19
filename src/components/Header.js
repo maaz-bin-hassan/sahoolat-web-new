@@ -81,6 +81,7 @@ const Header = () => {
               {navItems.map((item, index) => (
                 <NavItem key={index} href={item.href} label={item.label} />
               ))}
+              <BtnLanguage />
             </ul>
           </div>
         )}
