@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { getCookie, hasCookie, setCookie } from "cookies-next";
 
 export const useTranslate = () => {
   const [selected, setSelected] = useState(null);
@@ -30,7 +29,7 @@ export const useTranslate = () => {
   };
 
   const langChange = (lang) => {
-    setCookie("googtrans", decodeURIComponent(lang));
+    localStorage.setItem("googtrans", decodeURIComponent(lang));
     setSelected(lang);
     window.location.reload();
   };
