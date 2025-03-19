@@ -16,6 +16,8 @@ export default function HeroSection() {
   const [messages, setMessages] = useState([]);
   const [fingerprint, setFingerprint] = useState("");
   const [savedMessage, setSavedMessage] = useState("");
+  const [isSpeaking, setIsSpeaking] = useState(false);
+  const audioRef = useRef(null); // store the current TTS audio
 
   // Refs for AudioContext, Recorder instance, and media stream.
   const audioContextRef = useRef(null);
@@ -37,96 +39,162 @@ export default function HeroSection() {
 
   const sendTextMessageToGpt = async (message) => {
     setMessages((prev) => [...prev, { type: "user", text: message }]);
-    setLoading(true);
     try {
       const res = await fetch("/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ fingerprint, message }),
       });
-      if (!res.ok) throw new Error("Network response was not ok");
+      if (!res.ok) throw new Error("GPT API network error");
       const { response } = await res.json();
       setMessages((prev) => [...prev, { type: "bot", text: response }]);
+      return response;
     } catch (error) {
-      toast.error("Network issue occurred. Please try again!");
-    } finally {
-      setLoading(false);
+      toast.error("Network issue with GPT. Please try again!");
+      return null;
     }
   };
 
-  // Start recording using Recorder.js (to produce WAV)
   const startRecording = async () => {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      // Verify that the stream is valid
-      if (!stream || typeof stream.getTracks !== "function") {
-        throw new Error("Invalid media stream");
-      }
       streamRef.current = stream;
-      // Create an AudioContext instance
       const audioContext = new (window.AudioContext || window.webkitAudioContext)();
       audioContextRef.current = audioContext;
-      // Initialize Recorder.js with the AudioContext
+
       const recorder = new Recorder(audioContext, {});
       recorderRef.current = recorder;
-      // Initialize recorder with the MediaStream (pass stream directly)
+
       await recorder.init(stream);
       await recorder.start();
       setIsRecording(true);
+      toast.info("Recording started...");
     } catch (err) {
       console.error("Error accessing microphone or initializing recorder", err);
       toast.error("Microphone access denied or recorder initialization failed.");
     }
   };
 
-  // Stop recording, export the WAV blob, and release resources
   const stopRecording = async () => {
-    if (recorderRef.current) {
-      try {
-        // Recorder.js stop returns an object with a 'blob' property containing a WAV file
-        const { blob } = await recorderRef.current.stop();
-        setRecordedBlob(blob);
-        setIsRecording(false);
-        // Stop all tracks in the media stream to release the microphone
-        if (streamRef.current) {
-          streamRef.current.getTracks().forEach((track) => track.stop());
-        }
-        // Close the AudioContext to free up resources
-        if (audioContextRef.current) {
-          audioContextRef.current.close();
-        }
-        toast.success("Your voice is saved in wav format");
-        setSavedMessage("Your voice is saved in wav format");
-      } catch (err) {
-        console.error("Error stopping recorder", err);
-        toast.error("Failed to stop recorder properly.");
+    if (!recorderRef.current) return;
+
+    try {
+      const { blob } = await recorderRef.current.stop();
+      setIsRecording(false);
+
+      // stop the mic stream
+      if (streamRef.current) {
+        streamRef.current.getTracks().forEach((track) => track.stop());
       }
+      // close the AudioContext
+      if (audioContextRef.current) {
+        audioContextRef.current.close();
+      }
+
+      toast.success("Recording stopped and saved (WAV).");
+
+      // Now you can send 'blob' to your STT & GPT pipeline
+      await handleRecordedAudio(blob);
+    } catch (err) {
+      toast.error("Failed to stop recorder properly.");
+      console.error(err);
+    }
+  };
+  const handleRecordedAudio = async (audioBlob) => {
+    setLoading(true);
+    try {
+      // 3A. Speech to Text
+      const transcribedText = await speechToTextApiCall(audioBlob);
+      // 3B. Send text to GPT
+      const gptReply = await sendTextMessageToGpt(transcribedText);
+      // 3C. If GPT returns a reply, do TTS
+      if (gptReply) {
+        await playTtsAudio(gptReply);
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error("Error processing your audio or GPT request.");
+    } finally {
+      setLoading(false);
     }
   };
 
-  // Toggle recording state when button is clicked
-  const handleToggleRecording = async () => {
-    if (typeof window!=="undefined" && !localStorage.getItem("fingerprint")) {
-      await createFingerprint();
+  // -----------------------------------------
+  // 4. SPEECH-TO-TEXT API CALL
+  // -----------------------------------------
+  const speechToTextApiCall = async (blob) => {
+    const formData = new FormData();
+    formData.append("audio", blob, "recording.wav");
+    formData.append("language", "en");
+
+    const res = await fetch("/api/audio-to-text", {
+      method: "POST",
+      body: formData,
+    });
+    if (!res.ok) throw new Error("Failed to transcribe audio");
+    const data = await res.json();
+    return data.text; // The transcribed text from Whisper
+  };
+
+  const playTtsAudio = async (text) => {
+    try {
+      setIsSpeaking(true); // TTS is about to start
+      const res = await fetch("/api/text-to-audio", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text, language: "en" }),
+      });
+      if (!res.ok) throw new Error("TTS API error");
+
+      const audioBlob = await res.blob();
+      const audioUrl = URL.createObjectURL(audioBlob);
+
+      // If something is already playing, stop it
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current.currentTime = 0;
+      }
+      const audio = new Audio(audioUrl);
+      audioRef.current = audio;
+      audio.play();
+      audio.onended = () => {
+        setIsSpeaking(false);
+        URL.revokeObjectURL(audioUrl);
+      };
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed to generate TTS audio.");
+      setIsSpeaking(false);
     }
+  };
+
+  const handleToggleRecording = async () => {
+    // If TTS is currently speaking, stop it
+    await createFingerprint();
+    if (isSpeaking && audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current.currentTime = 0;
+      setIsSpeaking(false);
+      toast.info("Stopped TTS playback.");
+      return;
+    }
+
+    // Otherwise, toggle recording on/off
     if (!isRecording) {
-      setSavedMessage(""); // Clear any previous message
       await startRecording();
     } else {
       await stopRecording();
-      setIsPopupOpen(false);
     }
   };
 
-  // Open popup to start recording
   const handleMicClick = () => {
     setIsPopupOpen(true);
   };
 
-  // Close popup (and stop recording if active)
   const handleClosePopup = () => {
     setIsPopupOpen(false);
     if (isRecording) {
+      setIsSpeaking(false);
       stopRecording();
     }
   };
@@ -200,22 +268,41 @@ export default function HeroSection() {
             <button
               className="absolute top-2 right-2 bg-gray-200 text-black rounded-full w-8 h-8 flex items-center justify-center text-lg font-bold hover:bg-gray-300"
               onClick={handleClosePopup}
+              disabled={loading} // Disable while loading
             >
               ✕
             </button>
+
             <h2 className="text-2xl font-bold text-brand mb-4">
-              {isRecording ? "Recording..." : "Listening..."}
+              {isRecording ? (
+                "Recording..."
+              ) : (
+                <>
+                  {isSpeaking ? "Please listen..." : "Press Talk to Speak"}
+                  <img
+                    src="https://i.gifer.com/7efs.gif"
+                    alt="Listening Animation"
+                    className="w-full max-w-[200px] mx-auto"
+                  />
+                </>
+              )}
             </h2>
-            <img
-              src="https://i.gifer.com/7efs.gif"
-              alt="Listening Animation"
-              className="w-full max-w-[200px] mx-auto"
-            />
+
+            {/* Only show the GIF when recording */}
+            {isRecording && (
+              <img
+                src="https://i.gifer.com/7efs.gif"
+                alt="Listening Animation"
+                className="w-full max-w-[200px] mx-auto"
+              />
+            )}
+
             <div className="flex justify-between">
               <div>
                 <button
                   className="mt-4 px-6 py-2 bg-orangebrand text-white font-bold rounded-lg hover:bg-orange-600 transition-all"
                   onClick={handleClosePopup}
+                  disabled={loading} // Disable while loading
                 >
                   Close
                 </button>
@@ -224,6 +311,7 @@ export default function HeroSection() {
                 <button
                   className="mt-4 px-8 py-2 bg-orangebrand text-white font-bold rounded-lg hover:bg-orange-600 transition-all"
                   onClick={handleToggleRecording}
+                  disabled={loading} // Disable while loading
                 >
                   {isRecording ? "Stop Voice" : "Talk"}
                 </button>
