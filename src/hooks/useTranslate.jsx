@@ -6,7 +6,10 @@ export const useTranslate = () => {
 
   useEffect(() => {
     var addScript = document.createElement("script");
-    addScript.setAttribute("src", "//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit");
+    addScript.setAttribute(
+      "src",
+      "//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit",
+    );
     document.body.appendChild(addScript);
     window.googleTranslateElementInit = googleTranslateElementInit;
 
@@ -18,17 +21,22 @@ export const useTranslate = () => {
   }, []);
 
   const googleTranslateElementInit = () => {
-    new window.google.translate.TranslateElement({
-      pageLanguage: "auto",
-      autoDisplay: false,
-      includedLanguages: "en,ur",
-    }, "google_translate_element");
+    new window.google.translate.TranslateElement(
+      {
+        pageLanguage: "auto",
+        autoDisplay: false,
+        includedLanguages: "en,ur",
+      },
+      "google_translate_element",
+    );
   };
 
   const langChange = (lang) => {
     setCookie("googtrans", decodeURIComponent(lang));
     setSelected(lang);
-    window.location.reload();
+    if (typeof window !== "undefined") {
+      window.location.reload();
+    }
   };
 
   return { langChange, selected };
