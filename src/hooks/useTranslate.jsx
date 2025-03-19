@@ -1,17 +1,17 @@
 import { useEffect, useState } from "react";
-import { getCookie, hasCookie, setCookie } from "cookies-next";
 
 export const useTranslate = () => {
   const [selected, setSelected] = useState(null);
 
   useEffect(() => {
-    var addScript = document.createElement("script");
+    const addScript = document.createElement("script");
     addScript.setAttribute("src", "//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit");
     document.body.appendChild(addScript);
     window.googleTranslateElementInit = googleTranslateElementInit;
 
-    if (hasCookie("googtrans")) {
-      setSelected(getCookie("googtrans"));
+    const storedLang = localStorage.getItem("googtrans");
+    if (storedLang) {
+      setSelected(storedLang);
     } else {
       setSelected("/auto/en");
     }
@@ -26,9 +26,13 @@ export const useTranslate = () => {
   };
 
   const langChange = (lang) => {
-    setCookie("googtrans", decodeURIComponent(lang));
+    localStorage.setItem("googtrans", decodeURIComponent(lang));
     setSelected(lang);
-    window.location.reload();
+    const translateElement = document.querySelector(".goog-te-combo");
+    if (translateElement) {
+      translateElement.value = lang;
+      translateElement.dispatchEvent(new Event("change"));
+    }
   };
 
   return { langChange, selected };
