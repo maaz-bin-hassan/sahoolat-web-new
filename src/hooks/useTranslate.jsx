@@ -4,6 +4,7 @@ export const useTranslate = () => {
   const [selected, setSelected] = useState(null);
 
   useEffect(() => {
+    const storedLang = localStorage.getItem("googtrans");
     var addScript = document.createElement("script");
     addScript.setAttribute(
       "src",
@@ -12,7 +13,6 @@ export const useTranslate = () => {
     document.body.appendChild(addScript);
     window.googleTranslateElementInit = googleTranslateElementInit;
 
-    const storedLang = localStorage.getItem("googtrans");
     if (storedLang) {
       setSelected(storedLang);
     } else {
@@ -29,7 +29,7 @@ export const useTranslate = () => {
   };
 
   const langChange = (lang) => {
-    localStorage.setItem("googtrans", decodeURIComponent(lang));
+    localStorage.setItem("googtrans", lang);
     setSelected(lang);
     window.location.reload();
   };
