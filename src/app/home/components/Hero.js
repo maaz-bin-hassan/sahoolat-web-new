@@ -23,14 +23,16 @@ export default function HeroSection() {
   const streamRef = useRef(null);
 
   const createFingerprint = async () => {
-    const fp = localStorage.getItem("fingerprint") || `fp-${Date.now()}`;
-    localStorage.setItem("fingerprint", fp);
-    setFingerprint(fp);
-    await fetch("/api/create-session", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ fingerprint: fp }),
-    });
+    if (typeof window !== "undefined") {
+      const fp = localStorage.getItem("fingerprint") || `fp-${Date.now()}`;
+      localStorage.setItem("fingerprint", fp);
+      setFingerprint(fp);
+      await fetch("/api/create-session", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ fingerprint: fp }),
+      });
+    }
   };
 
   const sendTextMessageToGpt = async (message) => {

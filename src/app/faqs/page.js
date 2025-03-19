@@ -52,15 +52,17 @@ const FAQChatbot = () => {
   const messagesEndRef = useRef(null);
 
   useEffect(() => {
-    const fp = localStorage.getItem("fingerprint") || `fp-${Date.now()}`;
-    localStorage.setItem("fingerprint", fp);
-    setFingerprint(fp);
+    if(typeof window!=='undefined'){
+      const fp = localStorage.getItem("fingerprint") || `fp-${Date.now()}`;
+      localStorage.setItem("fingerprint", fp);
+      setFingerprint(fp);
 
-    fetch("/api/create-session", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ fingerprint: fp }),
-    });
+      fetch("/api/create-session", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ fingerprint: fp }),
+      });
+    }
   }, []);
 
   useEffect(() => {

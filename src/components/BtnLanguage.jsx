@@ -25,7 +25,7 @@ const BtnLanguage = () => {
   const [language, setLanguage] = useState("English");
 
   useEffect(() => {
-    const storedLang = localStorage.getItem("googtrans");
+    const storedLang = typeof window!=='undefined' && localStorage.getItem("googtrans");
     if (storedLang) {
       const currentLang = languages.find((lang) => lang.code === storedLang);
       if (currentLang) {
