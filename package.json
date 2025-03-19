@@ -31,7 +31,7 @@
     "rsuite": "^5.78.1",
     "swiper": "^11.2.4",
     "tailwind-merge": "^3.0.2",
-    "tailwindcss-animate": "^1.0.7",
+    "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {
     "eslint-plugin-prettier": "^5.2.3",
