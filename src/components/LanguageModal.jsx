@@ -14,7 +14,6 @@ const LanguageModal = () => {
   const [openModal, setOpenModal] = useState(!localStorage.getItem("googtrans"));
 
   const handleLanguageChange = (lang) => {
-    localStorage.setItem("googtrans", lang);
     langChange(lang);
     setOpenModal(false);
   };
