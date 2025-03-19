@@ -3,7 +3,7 @@ import {createSession} from '@/utils/sessionManager';
 
 // Helper function to set CORS headers
 function setCorsHeaders(response) {
-  response.headers.set("Access-Control-Allow-Origin", "https://sahoolatai.com");
+  response.headers.set("Access-Control-Allow-Origin", "https://www.sahoolatai.com");
   response.headers.set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE");
   response.headers.set("Access-Control-Allow-Headers", "Content-Type, Authorization, Accept");
   return response;
