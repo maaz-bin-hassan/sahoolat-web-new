@@ -102,7 +102,7 @@ export default function RootLayout({ children }) {
         {/*<Script src="http://localhost:3002/chatbot.js"></Script>*/}
       </div>
 
-      <GoogleTranslate />
+      {/*<GoogleTranslate />*/}
 
       {children}
     </body>
