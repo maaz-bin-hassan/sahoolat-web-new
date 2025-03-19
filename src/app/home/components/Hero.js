@@ -17,16 +17,23 @@ export default function HeroSection() {
     setIsPopupOpen(false); // Close the popup
   };
 
+  const handleRecordVoice = () => {
+    //todo: 1. Record voice in wav format or mp3 format
+    //2. Send the voice to speech to text api created here
+    //3. Receive the text and send to chat api with session
+    //4. Receive the text in response and send to text to speech api
+    //5. Receive the audio and play the audio
+    setIsPopupOpen(false);
+  };
 
   return (
     <section className="relative bg-[#F2F6F7] py-0 overflow-hidden w-full h-screen flex items-center justify-center">
       {/* Content */}
-      <LaunchingTimer/>
+      <LaunchingTimer />
 
       <div className="relative z-10 flex flex-col items-center text-center px-4">
         {/* Logo with linear gradient */}
-        <h1
-          className="mb-3 text-[50px] md:text-[150px] font-bold text-transparent bg-clip-text bg-gradient-to-r from-gray-400 via-brand to-orangebrand">
+        <h1 className="mb-3 text-[50px] md:text-[150px] font-bold text-transparent bg-clip-text bg-gradient-to-r from-gray-400 via-brand to-orangebrand">
           Sahoolat.AI
         </h1>
 
@@ -68,32 +75,14 @@ export default function HeroSection() {
           {/* Mic (Click to Open Popup) */}
           <div className="relative cursor-pointer" onClick={handleMicClick}>
             <img
-              src={'/assets/Mic.png'}
+              src={"/assets/Mic.png"}
               alt="Microphone"
-              style={{height: '140px', width: '540px'}}
+              style={{ height: "140px", width: "540px" }}
               className="object-contain transition-transform transform hover:scale-105"
             />
           </div>
         </div>
 
-        {/* Download Section */}
-        {/*<p className="mb-6 mt-2 text-xl md:text-4xl font-bold text-textColor">*/}
-        {/*  Download for free!*/}
-        {/*</p>*/}
-
-        {/* App Store Buttons */}
-        {/*<div className="flex space-x-4 md:space-x-36">*/}
-        {/*  {storeLinks.map((link, index) => (*/}
-        {/*    <a key={index} href={link.href}>*/}
-        {/*      <Image*/}
-        {/*        {...link}*/}
-        {/*        width={400}*/}
-        {/*        height={114}*/}
-        {/*        className="cursor-pointer w-[150px] h-[50px] lg:w-[400px] lg:h-[100px]"*/}
-        {/*      />*/}
-        {/*    </a>*/}
-        {/*  ))}*/}
-        {/*</div>*/}
       </div>
 
       {/* Popup Modal */}
@@ -116,43 +105,55 @@ export default function HeroSection() {
               className="w-full max-w-[200px] mx-auto"
             />
 
-            {/* Close Popup Button */}
-            <button
-              className="mt-4 px-6 py-2 bg-orangebrand text-white font-bold rounded-lg hover:bg-orange-600 transition-all"
-              onClick={handleClosePopup}
-            >
-              Close
-            </button>
+            <div className="flex justify-between">
+              {/* Close Popup Button */}
+              <div>
+                <button
+                  className="mt-4 px-6 py-2 bg-orangebrand text-white font-bold rounded-lg hover:bg-orange-600 transition-all"
+                  onClick={handleClosePopup}
+                >
+                  Close
+                </button>
+              </div>
+              <div>
+                <button
+                  className="mt-4 px-8 py-2 bg-orangebrand text-white font-bold rounded-lg hover:bg-orange-600 transition-all"
+                  onClick={handleRecordVoice}
+                >
+                  Talk
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       )}
 
       <style jsx>{`
-          .float-animation {
-              animation: float 3s ease-in-out infinite;
-          }
+        .float-animation {
+          animation: float 3s ease-in-out infinite;
+        }
 
-          .animate-blink {
-              animation: blink 0.8s step-end infinite;
-          }
+        .animate-blink {
+          animation: blink 0.8s step-end infinite;
+        }
 
-          @keyframes float {
-              0% {
-                  transform: translateY(0);
-              }
-              50% {
-                  transform: translateY(-6px);
-              }
-              100% {
-                  transform: translateY(0);
-              }
+        @keyframes float {
+          0% {
+            transform: translateY(0);
           }
+          50% {
+            transform: translateY(-6px);
+          }
+          100% {
+            transform: translateY(0);
+          }
+        }
 
-          @keyframes blink {
-              50% {
-                  opacity: 0;
-              }
+        @keyframes blink {
+          50% {
+            opacity: 0;
           }
+        }
       `}</style>
     </section>
   );
