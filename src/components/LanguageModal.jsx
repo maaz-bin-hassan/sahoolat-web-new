@@ -11,7 +11,7 @@ import { useTranslate } from "@/hooks/useTranslate";
 
 const LanguageModal = () => {
   const { langChange } = useTranslate();
-  const [openModal, setOpenModal] = useState(!localStorage.getItem("googtrans"));
+  const [openModal, setOpenModal] = useState(typeof window!=='undefined' && !localStorage.getItem("googtrans"));
 
   const handleLanguageChange = (lang) => {
     langChange(lang);

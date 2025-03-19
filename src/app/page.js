@@ -22,7 +22,7 @@ export default function App() {
   }, []);
 
   useEffect(() => {
-    const received = localStorage.getItem("received");
+    const received =typeof window!=='undefined' && localStorage.getItem("received");
     if (!received) {
       const popupTimer = setTimeout(() => {
         setShowPopup(true);

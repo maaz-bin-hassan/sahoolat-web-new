@@ -106,7 +106,7 @@ export default function HeroSection() {
 
   // Toggle recording state when button is clicked
   const handleToggleRecording = async () => {
-    if (!localStorage.getItem("fingerprint")) {
+    if (typeof window!=="undefined" && !localStorage.getItem("fingerprint")) {
       await createFingerprint();
     }
     if (!isRecording) {
