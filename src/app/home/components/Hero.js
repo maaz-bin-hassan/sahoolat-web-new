@@ -1,7 +1,7 @@
 "use client";
 import Image from "next/image";
 import { useState, useRef, useEffect } from "react";
-import Recorder from "recorder-js"; // Ensure recorder-js is installed (npm install recorder-js)
+import Recorder from "recorder-js";
 import LaunchingTimer from "@/components/LaunchingTimer";
 import { TypeAnimation } from "react-type-animation";
 import { toast } from "react-toastify";
