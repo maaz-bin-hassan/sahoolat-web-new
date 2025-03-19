@@ -4,18 +4,6 @@ import { useState } from "react";
 import LaunchingTimer from "@/components/LaunchingTimer";
 import { TypeAnimation } from "react-type-animation";
 
-const storeLinks = [
-  {
-    src: "/assets/app-store.png",
-    alt: "App Store",
-    href: "#",
-  },
-  {
-    src: "/assets/google-play.png",
-    alt: "Google Play",
-    href: "#",
-  },
-];
 const phrases = ["Your Voice, Your Solution"];
 
 export default function HeroSection() {

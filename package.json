@@ -10,8 +10,10 @@
   },
   "dependencies": {
     "cookies-next": "^5.1.0",
+    "formidable": "^3.5.2",
     "framer-motion": "^12.4.7",
     "memory-cache": "^0.2.0",
+    "mime": "^4.0.6",
     "next": "15.2.2",
     "openai": "^4.87.3",
     "react": "^19.0.0",
@@ -26,6 +28,7 @@
     "eslint-plugin-prettier": "^5.2.3",
     "postcss": "^8",
     "prettier": "^3.5.3",
-    "tailwindcss": "^3.4.1"
+    "tailwindcss": "^3.4.1",
+    "typescript": "5.8.2"
   }
 }
