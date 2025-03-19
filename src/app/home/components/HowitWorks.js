@@ -68,7 +68,7 @@ export default function HowItWorks() {
                   />
                 )}
                 <h3
-                  className={`mt-3 text-center text-[20px] md:text-[28px] font-bold text-textColor transition-all duration-300`}>
+                  className={`mt-3 text-center text-[20px] md:text-[24px] font-bold text-textColor transition-all duration-300`}>
                   {item.title}
                 </h3>
                 <p
