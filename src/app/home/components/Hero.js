@@ -158,7 +158,12 @@ export default function HeroSection() {
           />
           <div className="relative inline-block">
             <p className="text-[25px] font-bold md:text-[40px] text-orangebrand inline-block">
-              <TypeAnimation sequence={phrases} repeat={1} speed={50} wrapper="span" />
+              <TypeAnimation
+                sequence={phrases}
+                repeat={1}
+                speed={50}
+                wrapper="span"
+              />
             </p>
             <div className="hidden md:inline absolute md:-top-8 md:-right-12 w-6 h-6 md:w-16 md:h-16 float-animation">
               <Image
@@ -226,28 +231,31 @@ export default function HeroSection() {
         </div>
       )}
       <style jsx>{`
-          .float-animation {
-              animation: float 3s ease-in-out infinite;
+        .float-animation {
+          animation: float 3s ease-in-out infinite;
+        }
+
+        .animate-blink {
+          animation: blink 0.8s step-end infinite;
+        }
+
+        @keyframes float {
+          0% {
+            transform: translateY(0);
           }
-          .animate-blink {
-              animation: blink 0.8s step-end infinite;
+          50% {
+            transform: translateY(-6px);
           }
-          @keyframes float {
-              0% {
-                  transform: translateY(0);
-              }
-              50% {
-                  transform: translateY(-6px);
-              }
-              100% {
-                  transform: translateY(0);
-              }
+          100% {
+            transform: translateY(0);
           }
-          @keyframes blink {
-              50% {
-                  opacity: 0;
-              }
+        }
+
+        @keyframes blink {
+          50% {
+            opacity: 0;
           }
+        }
       `}</style>
     </section>
   );

@@ -8,7 +8,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { Check, ChevronDown, Globe } from "lucide-react";
-import { useTranslate } from "@/hooks/useTranslate";
+import useTranslate from "@/hooks/useTranslate";
 
 const languages = [
   { name: "English", code: "/auto/en", tr: "en" },
