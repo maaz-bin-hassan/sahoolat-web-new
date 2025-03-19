@@ -13,6 +13,11 @@ import { useTranslate } from "@/hooks/useTranslate";
 const languages = [
   { name: "English", code: "/auto/en", tr: "en" },
   { name: "Urdu", code: "/auto/ur", tr: "اردو" },
+  { name: "Hindi", code: "/auto/hi", tr: "हिन्दी" },
+  { name: "Bengali", code: "/auto/bn", tr: "বাংলা" },
+  { name: "Thai", code: "/auto/th", tr: "ไทย" },
+  { name: "French", code: "/auto/fr", tr: "fr" },
+  { name: "Arabic", code: "/auto/ar", tr: "العربية" },
 ];
 
 const BtnLanguage = () => {

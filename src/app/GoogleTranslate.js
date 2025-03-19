@@ -24,7 +24,7 @@ const GoogleTranslate = () => {
     new window.google.translate.TranslateElement({
       pageLanguage: "auto",
       autoDisplay: false,
-      includedLanguages: "en,ur",
+      includedLanguages: "en,ur,hi,bn,th,fr,ar",
     }, "google_translate_element");
   };
 
