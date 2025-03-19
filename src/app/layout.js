@@ -145,7 +145,7 @@ export default function RootLayout({ children }) {
       <Script src="https://sahoolat-chatbot.vercel.app/chatbot.js" />
     </div>
 
-    {/* <GoogleTranslate /> */}
+     <GoogleTranslate />
     {children}
     </body>
     </html>
