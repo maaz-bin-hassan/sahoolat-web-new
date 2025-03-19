@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -18,6 +18,16 @@ const languages = [
 const BtnLanguage = () => {
   const { langChange } = useTranslate();
   const [language, setLanguage] = useState("English");
+
+  useEffect(() => {
+    const storedLang = localStorage.getItem("googtrans");
+    if (storedLang) {
+      const currentLang = languages.find((lang) => lang.code === storedLang);
+      if (currentLang) {
+        setLanguage(currentLang.name);
+      }
+    }
+  }, []);
 
   const getCurrentLanguage = () => {
     const current = languages.find((lang) => lang.name === language);
