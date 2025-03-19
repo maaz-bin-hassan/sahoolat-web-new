@@ -3,6 +3,7 @@ import Image from "next/image";
 import { useState } from "react";
 import LaunchingTimer from "@/components/LaunchingTimer";
 import { TypeAnimation } from "react-type-animation";
+import { toast } from "react-toastify";
 
 const phrases = ["Your Voice, Your Solution"];
 
@@ -16,13 +17,50 @@ export default function HeroSection() {
   const handleClosePopup = () => {
     setIsPopupOpen(false); // Close the popup
   };
+  const [loading, setLoading] = useState(false);
+  const [messages, setMessages] = useState([]);
+  const [fingerprint, setFingerprint] = useState("");
 
-  const handleRecordVoice = () => {
+  const createFingerprint = async () => {
+    const fp = localStorage.getItem("fingerprint") || `fp-${Date.now()}`;
+    localStorage.setItem("fingerprint", fp);
+    setFingerprint(fp);
+    await fetch("/api/create-session", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ fingerprint: fp }),
+    });
+  }
+
+  const sendTextMessageToGpt = async (message) => {
+    setMessages((prev) => [...prev, { type: "user", text: message }]);
+    setLoading(true);
+    try {
+      const res = await fetch("/api/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ fingerprint, message }),
+      });
+      if (!res.ok) throw new Error("Network response was not ok");
+      const { response } = await res.json();
+      setMessages((prev) => [...prev, { type: "bot", text: response }]);
+    } catch (error) {
+      toast.error("Network issue occurred. Please try again!");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleRecordVoice = async () => {
     //todo: 1. Record voice in wav format or mp3 format
+    if(!localStorage.getItem("fingerprint")){
+      await createFingerprint()
+    }
     //2. Send the voice to speech to text api created here
-    //3. Receive the text and send to chat api with session
+    //3. Receive the text and send to sendTextMessageToGpt(message)
+
     //4. Receive the text in response and send to text to speech api
-    //5. Receive the audio and play the audio
+    //5. Receive the audio and play the audio to user
     setIsPopupOpen(false);
   };
 
