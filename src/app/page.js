@@ -14,8 +14,10 @@ export default function App() {
     if (document.readyState === "complete") {
       handleLoad();
     } else {
-      window.addEventListener("load", handleLoad);
-      return () => window.removeEventListener("load", handleLoad);
+      if (typeof window !== "undefined") {
+        window.addEventListener("load", handleLoad);
+        return () => window.removeEventListener("load", handleLoad);
+      }
     }
   }, []);
 
