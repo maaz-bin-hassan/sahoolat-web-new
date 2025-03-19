@@ -10,6 +10,7 @@ import WhoFor from './components/WhoFor';
 import Testimonials from './components/Testimonials';
 import GetApp from './components/GetApp';
 import NewsLetter from './components/NewsLetter';
+import LanguageModal from "@/components/LanguageModal";
 
 
 function Page() {
@@ -22,6 +23,8 @@ function Page() {
 
   return (
     <>
+      <LanguageModal />
+
       <motion.div {...animationProps}>
         <Header/>
       </motion.div>
