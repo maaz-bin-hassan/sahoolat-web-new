@@ -8,6 +8,10 @@ export default function Page() {
   const [animationData, setAnimationData] = useState(null);
   const [rms, setRms] = useState("0.000");
   const [status, setStatus] = useState("Calibrating...");
+  const llmAudioRef = useRef(null); // LLM audio ref
+  const llmAudioAnalyser = useRef(null);
+  const llmAudioContext = useRef(null);
+  const llmAnimationFrame = useRef(null);
 
   const voiceThresholdRef = useRef(0.04);
   const silenceTimeout = useRef(null);
@@ -87,9 +91,16 @@ export default function Page() {
             }
           }
 
-          const voiceDetected = rmsValue > voiceThresholdRef.current;
+          const voiceDetected = rmsValue > (voiceThresholdRef.current + 0.015); // Added noise margin
 
           if (voiceDetected) {
+            if (llmAudioRef.current && !llmAudioRef.current.paused) {
+              llmAudioRef.current.pause();
+              llmAudioRef.current.currentTime = 0;
+              console.log("⛔ Stopped LLM voice due to user speaking");
+              stopLLMAnimation();
+            }
+
             setStatus("Voice Detected");
             if (!isSpeaking.current) {
               startRecording();
@@ -163,7 +174,7 @@ export default function Page() {
         voiceStartedAt.current = null;
       }
 
-      recorder.current.ondataavailable = (event) => {
+      recorder.current.ondataavailable = async (event) => {
         const blob = new Blob([event.data], { type: "audio/webm" });
         const sizeKB = blob.size / 1024;
         const totalVoiceSec = voiceActiveTime.current / 1000;
@@ -172,7 +183,7 @@ export default function Page() {
         console.log("📦 Blob Size:", sizeKB.toFixed(2), "KB");
 
         if (totalVoiceSec > 0.6 && sizeKB >= 10) {
-          saveRecording(blob);
+          await sendToLLM(blob);
         } else {
           console.warn("🛑 Short or invalid input, recording skipped.");
         }
@@ -186,15 +197,97 @@ export default function Page() {
     }
   };
 
-  const saveRecording = (blob) => {
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    const fileName = `voice-recording-${Date.now()}.webm`;
-    a.href = url;
-    a.download = fileName;
-    a.click();
-    URL.revokeObjectURL(url);
-    console.log("💾 Saved:", fileName);
+  const sendToLLM = async (blob) => {
+    setStatus("Sending to LLM...");
+    try {
+      const formData = new FormData();
+      formData.append("audio", blob, `recording-${Date.now()}.webm`);
+      formData.append("fingerprint", "demo-session");
+      formData.append("language", "en");
+
+      const response = await fetch("/api/voice-conversation", {
+        method: "POST",
+        body: formData,
+      });
+
+      const data = await response.json();
+      if (data.audioBase64) {
+        const audio = new Audio(`data:audio/mp3;base64,${data.audioBase64}`);
+        llmAudioRef.current = audio;
+        setupLLMVisualizer(audio);
+        audio.play();
+
+// Stop LLM playback if recording goes over 1.5 sec
+        const llmInterruptTimer = setInterval(() => {
+          if (isSpeaking.current && voiceStartedAt.current) {
+            const activeDuration = Date.now() - voiceStartedAt.current;
+            if (activeDuration > 1500) {
+              if (!audio.paused) {
+                audio.pause();
+                audio.currentTime = 0;
+                stopLLMAnimation();
+                clearInterval(llmInterruptTimer);
+                console.log("🛑 Stopped LLM playback because user spoke over 1.5s");
+              }
+            }
+          }
+          if (audio.ended || audio.paused) {
+            clearInterval(llmInterruptTimer);
+          }
+        }, 100);
+        setStatus("Response received & playing...");
+      } else {
+        setStatus("No audio response.");
+      }
+    } catch (err) {
+      console.error("Error sending to LLM:", err);
+      setStatus("Failed to get LLM response.");
+    }
+  };
+
+  const setupLLMVisualizer = (audio) => {
+    if (llmAudioContext.current) {
+      llmAudioContext.current.close();
+    }
+
+    const context = new AudioContext();
+    const source = context.createMediaElementSource(audio);
+    const analyser = context.createAnalyser();
+    source.connect(analyser);
+    analyser.connect(context.destination);
+    analyser.fftSize = 512;
+
+    const bufferLength = analyser.frequencyBinCount;
+    const dataArray = new Uint8Array(bufferLength);
+
+    const animate = () => {
+      analyser.getByteTimeDomainData(dataArray);
+      let sumSquares = 0;
+      for (let i = 0; i < bufferLength; i++) {
+        const val = (dataArray[i] - 128) / 128;
+        sumSquares += val * val;
+      }
+      const rmsValue = Math.sqrt(sumSquares / bufferLength);
+      const minSpeed = 0.2;
+      const maxSpeed = 2.5;
+      const speed = Math.min(maxSpeed, Math.max(minSpeed, rmsValue * 20));
+      if (lottieRef.current) {
+        lottieRef.current.setSpeed(speed);
+      }
+      llmAnimationFrame.current = requestAnimationFrame(animate);
+    };
+
+    llmAudioContext.current = context;
+    llmAudioAnalyser.current = analyser;
+    llmAnimationFrame.current = requestAnimationFrame(animate);
+  };
+
+  const stopLLMAnimation = () => {
+    if (llmAnimationFrame.current) cancelAnimationFrame(llmAnimationFrame.current);
+    if (llmAudioContext.current) llmAudioContext.current.close();
+    llmAnimationFrame.current = null;
+    llmAudioContext.current = null;
+    llmAudioAnalyser.current = null;
   };
 
   return (
