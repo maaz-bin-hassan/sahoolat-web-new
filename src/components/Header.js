@@ -47,7 +47,10 @@ const Header = () => {
             className="download-btn flex items-center gap-3 px-6 py-3 text-white text-xl font-bold rounded-full shadow-lg transition-all duration-300"
             onClick={(e) => {
               e.preventDefault();
-              document.getElementById("download").scrollIntoView({ behavior: "smooth" });
+              typeof window !== "undefined" &&
+                document
+                  .getElementById("download")
+                  .scrollIntoView({ behavior: "smooth" });
             }}
           >
             <FaDownload className="text-2xl" /> Download App
@@ -107,7 +110,7 @@ const NavItem = ({ href, label }) => {
         className={`block py-2 transition-colors text-xl md:text-lg border-b-2 ${
           isActive
             ? // ACTIVE: bottom border + color
-            "border-[#057e7e] text-[#057e7e]"
+              "border-[#057e7e] text-[#057e7e]"
             : "border-transparent text-[#08202f] hover:border-[#057e7e] hover:text-[#057e7e]"
         }`}
       >
