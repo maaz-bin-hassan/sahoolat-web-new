@@ -1,223 +1,380 @@
 "use client";
+
 import Image from "next/image";
 import { useState, useRef, useEffect } from "react";
-import Recorder from "recorder-js";
-import LaunchingTimer from "@/components/LaunchingTimer";
 import { TypeAnimation } from "react-type-animation";
 import { toast } from "react-toastify";
+import LaunchingTimer from "@/components/LaunchingTimer";
 
+/**
+ * Overall States:
+ *  - "IDLE": Not in use (popup closed).
+ *  - "CALIBRATING": 1 second of measuring baseline noise.
+ *  - "LISTENING": Actively recording user speech, checking for silence.
+ *  - "PROCESSING": Sending final audio to server.
+ *  - "PLAYING": Playing TTS from server.
+ */
 const phrases = ["Your Voice, Your Solution"];
 
+// 1 second to measure environment noise floor
+const CALIBRATION_DURATION = 1000;
+// Then we do "LISTENING" until 2s of silence
+const MAX_SILENCE_MS = 2000;
+const CHECK_SILENCE_INTERVAL = 200;
+
 export default function HeroSection() {
+  const [appState, setAppState] = useState("IDLE");
   const [isPopupOpen, setIsPopupOpen] = useState(false);
-  const [isRecording, setIsRecording] = useState(false);
-  const [recordedBlob, setRecordedBlob] = useState(null);
-  const [loading, setLoading] = useState(false);
-  const [messages, setMessages] = useState([]);
+
   const [fingerprint, setFingerprint] = useState("");
-  const [savedMessage, setSavedMessage] = useState("");
-  const [isSpeaking, setIsSpeaking] = useState(false);
-  const audioRef = useRef(null); // store the current TTS audio
+  const [messages, setMessages] = useState([]); // { role: 'user'|'assistant', text: string }
 
-  // Refs for AudioContext, Recorder instance, and media stream.
+  // Audio references
+  const mediaRecorderRef = useRef(null);
+  const audioChunksRef = useRef([]);
   const audioContextRef = useRef(null);
-  const recorderRef = useRef(null);
-  const streamRef = useRef(null);
+  const sourceNodeRef = useRef(null);
+  const processorNodeRef = useRef(null);
+  const audioRef = useRef(null);
 
-  const createFingerprint = async () => {
-    if (typeof window !== "undefined") {
-      const fp = localStorage.getItem("fingerprint") || `fp-${Date.now()}`;
-      localStorage.setItem("fingerprint", fp);
-      setFingerprint(fp);
-      await fetch("/api/create-session", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ fingerprint: fp }),
-      });
+  // For VAD logic
+  const lastVoiceActivityRef = useRef(Date.now());
+  const baselineSumRef = useRef(0);
+  const baselineCountRef = useRef(0);
+  // If calibration fails or user’s environment is extremely quiet, fallback threshold
+  const dynamicThresholdRef = useRef(0.05);
+
+  // On mount, get or create a fingerprint
+  useEffect(() => {
+    const existingFp = localStorage.getItem("fingerprint");
+    if (existingFp) {
+      setFingerprint(existingFp);
+    } else {
+      const newFp = `fp-${Date.now()}`;
+      localStorage.setItem("fingerprint", newFp);
+      setFingerprint(newFp);
     }
-  };
+  }, []);
 
-  const sendTextMessageToGpt = async (message) => {
-    setMessages((prev) => [...prev, { type: "user", text: message }]);
-    try {
-      const res = await fetch("/api/chat", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ fingerprint, message }),
-      });
-      if (!res.ok) throw new Error("GPT API network error");
-      const { response } = await res.json();
-      setMessages((prev) => [...prev, { type: "bot", text: response }]);
-      return response;
-    } catch (error) {
-      toast.error("Network issue with GPT. Please try again!");
-      return null;
+  // Cleanup if unmount
+  useEffect(() => {
+    return () => {
+      stopAllMedia();
+    };
+  }, []);
+
+  // If popup opens -> calibrate & record; if closed -> IDLE
+  useEffect(() => {
+    if (isPopupOpen) {
+      startCalibration();
+    } else {
+      stopAllMedia();
+      setAppState("IDLE");
     }
-  };
+  }, [isPopupOpen]);
 
-  const startRecording = async () => {
+  // ============================
+  // 1) CALIBRATION
+  // ============================
+  async function startCalibration() {
+    console.log("[startCalibration] Starting calibration for 1s...");
+    setAppState("CALIBRATING");
+
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      streamRef.current = stream;
       const audioContext = new (window.AudioContext || window.webkitAudioContext)();
       audioContextRef.current = audioContext;
 
-      const recorder = new Recorder(audioContext, {});
-      recorderRef.current = recorder;
+      const sourceNode = audioContext.createMediaStreamSource(stream);
+      sourceNodeRef.current = sourceNode;
 
-      await recorder.init(stream);
-      await recorder.start();
-      setIsRecording(true);
-      toast.info("Recording started...");
-    } catch (err) {
-      console.error("Error accessing microphone or initializing recorder", err);
-      toast.error("Microphone access denied or recorder initialization failed.");
-    }
-  };
+      // Optional bandpass filter to remove hum/hiss
+      const filterNode = audioContext.createBiquadFilter();
+      filterNode.type = "bandpass";
+      filterNode.frequency.value = 1500;
+      filterNode.Q.value = 1;
 
-  const stopRecording = async () => {
-    if (!recorderRef.current) return;
+      // ScriptProcessor to measure RMS
+      const processorNode = audioContext.createScriptProcessor(2048, 1, 1);
+      processorNodeRef.current = processorNode;
 
-    try {
-      const { blob } = await recorderRef.current.stop();
-      setIsRecording(false);
+      baselineSumRef.current = 0;
+      baselineCountRef.current = 0;
 
-      // stop the mic stream
-      if (streamRef.current) {
-        streamRef.current.getTracks().forEach((track) => track.stop());
-      }
-      // close the AudioContext
-      if (audioContextRef.current) {
-        audioContextRef.current.close();
-      }
+      processorNode.onaudioprocess = (e) => {
+        const input = e.inputBuffer.getChannelData(0);
+        let sum = 0;
+        for (let i = 0; i < input.length; i++) {
+          sum += input[i] * input[i];
+        }
+        const rms = Math.sqrt(sum / input.length);
 
-      toast.success("Recording stopped and saved (WAV).");
-
-      // Now you can send 'blob' to your STT & GPT pipeline
-      await handleRecordedAudio(blob);
-    } catch (err) {
-      toast.error("Failed to stop recorder properly.");
-      console.error(err);
-    }
-  };
-  const handleRecordedAudio = async (audioBlob) => {
-    setLoading(true);
-    try {
-      // 3A. Speech to Text
-      const transcribedText = await speechToTextApiCall(audioBlob);
-      // 3B. Send text to GPT
-      const gptReply = await sendTextMessageToGpt(transcribedText);
-      // 3C. If GPT returns a reply, do TTS
-      if (gptReply) {
-        await playTtsAudio(gptReply);
-      }
-    } catch (error) {
-      console.error(error);
-      toast.error("Error processing your audio or GPT request.");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // -----------------------------------------
-  // 4. SPEECH-TO-TEXT API CALL
-  // -----------------------------------------
-  const speechToTextApiCall = async (blob) => {
-    const formData = new FormData();
-    formData.append("audio", blob, "recording.wav");
-    formData.append("language", "en");
-
-    const res = await fetch("/api/audio-to-text", {
-      method: "POST",
-      body: formData,
-    });
-    if (!res.ok) throw new Error("Failed to transcribe audio");
-    const data = await res.json();
-    return data.text; // The transcribed text from Whisper
-  };
-
-  const playTtsAudio = async (text) => {
-    try {
-      setIsSpeaking(true); // TTS is about to start
-      const res = await fetch("/api/text-to-audio", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ text, language: "en" }),
-      });
-      if (!res.ok) throw new Error("TTS API error");
-
-      const audioBlob = await res.blob();
-      const audioUrl = URL.createObjectURL(audioBlob);
-
-      // If something is already playing, stop it
-      if (audioRef.current) {
-        audioRef.current.pause();
-        audioRef.current.currentTime = 0;
-      }
-      const audio = new Audio(audioUrl);
-      audioRef.current = audio;
-      audio.play();
-      audio.onended = () => {
-        setIsSpeaking(false);
-        URL.revokeObjectURL(audioUrl);
+        baselineSumRef.current += rms;
+        baselineCountRef.current++;
       };
-    } catch (error) {
-      console.error(error);
-      toast.error("Failed to generate TTS audio.");
-      setIsSpeaking(false);
-    }
-  };
 
-  const handleToggleRecording = async () => {
-    // If TTS is currently speaking, stop it
-    await createFingerprint();
-    if (isSpeaking && audioRef.current) {
-      audioRef.current.pause();
-      audioRef.current.currentTime = 0;
-      setIsSpeaking(false);
-      toast.info("Stopped TTS playback.");
+      // Connect chain: source -> filter -> processor -> destination
+      sourceNode.connect(filterNode);
+      filterNode.connect(processorNode);
+      processorNode.connect(audioContext.destination);
+
+      // Also create MediaRecorder (don’t start until calibration done)
+      audioChunksRef.current = [];
+      const mediaRecorder = new MediaRecorder(stream, {
+        mimeType: "audio/webm; codecs=opus",
+      });
+      mediaRecorderRef.current = mediaRecorder;
+      mediaRecorder.ondataavailable = (e) => {
+        if (e.data.size > 0) {
+          audioChunksRef.current.push(e.data);
+        }
+      };
+      mediaRecorder.onstop = finalizeRecording;
+
+      // End calibration after 1s
+      setTimeout(() => {
+        console.log("[CALIBRATION] Timer fired -> finishCalibration()");
+        finishCalibration();
+      }, CALIBRATION_DURATION);
+
+    } catch (err) {
+      console.error("[startCalibration] Mic access error:", err);
+      toast.error("Could not access microphone.");
+      setAppState("IDLE");
+    }
+  }
+
+  function finishCalibration() {
+    if (baselineCountRef.current === 0) {
+      // fallback
+      dynamicThresholdRef.current = 0.05;
+      console.warn("No calibration data, fallback threshold=0.05");
+    } else {
+      // average environment RMS
+      const avg = baselineSumRef.current / baselineCountRef.current;
+      // multiply by 2 or 3 to only detect speech well above baseline
+      dynamicThresholdRef.current = avg * 2.0;
+      console.log(
+        `[finishCalibration] averageNoise=${avg.toFixed(4)}, threshold=${dynamicThresholdRef.current.toFixed(4)}`
+      );
+    }
+
+    // Start actual recording
+    if (mediaRecorderRef.current) {
+      mediaRecorderRef.current.start();
+    }
+    setAppState("LISTENING");
+    toast.info("Listening... Speak now.");
+
+    // Switch the processor to “listening” mode
+    if (processorNodeRef.current) {
+      processorNodeRef.current.onaudioprocess = (e) => {
+        const input = e.inputBuffer.getChannelData(0);
+        let sum = 0;
+        for (let i = 0; i < input.length; i++) {
+          sum += input[i] * input[i];
+        }
+        const rms = Math.sqrt(sum / input.length);
+
+        // If RMS > dynamicThreshold, we consider it “speaking”
+        if (rms > dynamicThresholdRef.current) {
+          lastVoiceActivityRef.current = Date.now();
+        }
+      };
+    }
+    lastVoiceActivityRef.current = Date.now();
+    checkForSilence();
+  }
+
+  // ============================
+  // 2) LISTEN & AUTO-STOP
+  // ============================
+  function checkForSilence() {
+    if (appState !== "LISTENING") return;
+
+    const now = Date.now();
+    const elapsedSilentMs = now - lastVoiceActivityRef.current;
+    // console.log(`[checkForSilence] ${elapsedSilentMs}ms of silence so far`);
+    if (elapsedSilentMs > MAX_SILENCE_MS) {
+      console.log("[checkForSilence] 2s of silence => stopListening");
+      stopListening();
+    } else {
+      setTimeout(checkForSilence, CHECK_SILENCE_INTERVAL);
+    }
+  }
+
+  function stopListening() {
+    if (appState !== "LISTENING") return;
+    setAppState("PROCESSING");
+
+    if (mediaRecorderRef.current && mediaRecorderRef.current.state !== "inactive") {
+      mediaRecorderRef.current.stop();
+      // fallback in case onstop doesn't fire
+      setTimeout(() => {
+        if (appState === "PROCESSING") {
+          finalizeRecording();
+        }
+      }, 1000);
+    }
+  }
+
+  // ============================
+  // 3) FINALIZE & SEND
+  // ============================
+  function finalizeRecording() {
+    console.log("[finalizeRecording] Called");
+    stopMicCapture();
+
+    if (!audioChunksRef.current.length) {
+      console.warn("No audio recorded; likely no speech or an error occurred.");
+      setAppState("IDLE");
       return;
     }
 
-    // Otherwise, toggle recording on/off
-    if (!isRecording) {
-      await startRecording();
-    } else {
-      await stopRecording();
-    }
-  };
+    const blob = new Blob(audioChunksRef.current, { type: "audio/webm" });
+    audioChunksRef.current = [];
 
+    console.log("Sending audio blob to server...");
+    handleRecordedAudio(blob);
+  }
+
+  function stopMicCapture() {
+    if (processorNodeRef.current) {
+      processorNodeRef.current.disconnect();
+      processorNodeRef.current = null;
+    }
+    if (sourceNodeRef.current) {
+      sourceNodeRef.current.disconnect();
+      sourceNodeRef.current = null;
+    }
+    if (audioContextRef.current) {
+      audioContextRef.current.close();
+      audioContextRef.current = null;
+    }
+    if (mediaRecorderRef.current) {
+      if (mediaRecorderRef.current.state !== "inactive") {
+        mediaRecorderRef.current.stop();
+      }
+      mediaRecorderRef.current = null;
+    }
+  }
+
+  async function handleRecordedAudio(blob) {
+    try {
+      const formData = new FormData();
+      formData.append("audio", blob, "recording.webm");
+      formData.append("fingerprint", fingerprint);
+      formData.append("language", "en");
+
+      const res = await fetch("/api/voice-conversation", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!res.ok) {
+        throw new Error("voice-conversation API responded with an error.");
+      }
+
+      const data = await res.json();
+      const { assistantMessage, audioBase64 } = data || {};
+
+      setMessages((prev) => [
+        ...prev,
+        { role: "user", text: "(audio input)" },
+        { role: "assistant", text: assistantMessage || "[No text returned]" },
+      ]);
+
+      // If TTS audio is returned, play it
+      if (audioBase64) {
+        playTTS(audioBase64);
+      } else {
+        setAppState("IDLE");
+      }
+    } catch (error) {
+      console.error("[handleRecordedAudio] Error:", error);
+      toast.error("Error processing voice conversation.");
+      setAppState("IDLE");
+    }
+  }
+
+  // ============================
+  // 4) PLAY TTS
+  // ============================
+  function playTTS(base64Audio) {
+    try {
+      const audioUrl = `data:audio/mp3;base64,${base64Audio}`;
+      const audio = new Audio(audioUrl);
+      audioRef.current = audio;
+
+      setAppState("PLAYING");
+
+      audio.play().catch((err) => {
+        console.error("Audio playback error:", err);
+        setAppState("IDLE");
+      });
+
+      audio.onended = () => {
+        setAppState("IDLE");
+      };
+    } catch (err) {
+      console.error("Error playing TTS:", err);
+      setAppState("IDLE");
+    }
+  }
+
+  // Utility: completely stop media
+  function stopAllMedia() {
+    stopMicCapture();
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current.currentTime = 0;
+      audioRef.current = null;
+    }
+  }
+
+  // ============================
+  // UI Helpers
+  // ============================
   const handleMicClick = () => {
     setIsPopupOpen(true);
   };
 
   const handleClosePopup = () => {
     setIsPopupOpen(false);
-    if (isRecording) {
-      setIsSpeaking(false);
-      stopRecording();
+  };
+
+  // A fallback manual stop button if needed
+  const handleManualStop = () => {
+    if (appState === "LISTENING") {
+      stopListening();
     }
   };
 
-  // Cleanup on component unmount
-  useEffect(() => {
-    return () => {
-      if (streamRef.current) {
-        streamRef.current.getTracks().forEach((track) => track.stop());
-      }
-      if (audioContextRef.current) {
-        audioContextRef.current.close();
-      }
-    };
-  }, []);
+  function getStatusLabel() {
+    switch (appState) {
+      case "CALIBRATING":
+        return "Calibrating...";
+      case "LISTENING":
+        return "Listening...";
+      case "PROCESSING":
+        return "Processing...";
+      case "PLAYING":
+        return "Speaking...";
+      default:
+        return "Ready";
+    }
+  }
 
   return (
     <section className="relative bg-[#F2F6F7] py-0 overflow-hidden w-full h-screen flex items-center justify-center">
       <LaunchingTimer />
+
+      {/* Hero Content */}
       <div className="relative z-10 flex flex-col items-center text-center px-4">
         <h1 className="mb-3 text-[50px] md:text-[150px] font-bold text-transparent bg-clip-text bg-gradient-to-r from-gray-400 via-brand to-orangebrand">
           Sahoolat.AI
         </h1>
+
         <div className="relative flex flex-col items-center">
           <Image
             src="/assets/starOrange.png"
@@ -245,107 +402,112 @@ export default function HeroSection() {
             </div>
           </div>
         </div>
+
         <p className="mt-5 mb-5 text-brand font-bold text-[20px] md:text-[30px]">
           Find Skilled Experts or Get Hired – Just by Speaking!
         </p>
+
         <div className="flex items-center justify-center mb-6 space-x-4">
           <div className="relative cursor-pointer" onClick={handleMicClick}>
             <img
-              src={"/assets/Mic.png"}
+              src="/assets/Mic.png"
               alt="Microphone"
               style={{ height: "140px", width: "540px" }}
               className="object-contain transition-transform transform hover:scale-105"
             />
           </div>
         </div>
-        {savedMessage && (
-          <p className="mt-4 text-green-500 font-semibold">{savedMessage}</p>
-        )}
       </div>
+
+      {/* Popup */}
       {isPopupOpen && (
-        <div className="fixed inset-0 bg-black px-4 md:px-0 bg-opacity-80 flex items-center justify-center z-50">
+        <div className="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50 px-4">
           <div className="relative bg-white p-6 rounded-lg shadow-xl max-w-md w-full text-center">
             <button
               className="absolute top-2 right-2 bg-gray-200 text-black rounded-full w-8 h-8 flex items-center justify-center text-lg font-bold hover:bg-gray-300"
               onClick={handleClosePopup}
-              disabled={loading} // Disable while loading
             >
               ✕
             </button>
 
             <h2 className="text-2xl font-bold text-brand mb-4">
-              {isRecording ? (
-                "Recording..."
-              ) : (
-                <>
-                  {isSpeaking ? "Please listen..." : "Press Talk to Speak"}
-                  <img
-                    src="https://i.gifer.com/7efs.gif"
-                    alt="Listening Animation"
-                    className="w-full max-w-[200px] mx-auto"
-                  />
-                </>
-              )}
+              {getStatusLabel()}
             </h2>
 
-            {/* Only show the GIF when recording */}
-            {isRecording && (
+            {/* If calibrating, listening, or playing, show an animated icon */}
+            {(appState === "CALIBRATING" ||
+              appState === "LISTENING" ||
+              appState === "PLAYING") && (
               <img
                 src="https://i.gifer.com/7efs.gif"
-                alt="Listening Animation"
+                alt="Voice Animation"
                 className="w-full max-w-[200px] mx-auto"
               />
             )}
 
-            <div className="flex justify-between">
-              <div>
-                <button
-                  className="mt-4 px-6 py-2 bg-orangebrand text-white font-bold rounded-lg hover:bg-orange-600 transition-all"
-                  onClick={handleClosePopup}
-                  disabled={loading} // Disable while loading
-                >
-                  Close
-                </button>
-              </div>
-              <div>
-                <button
-                  className="mt-4 px-8 py-2 bg-orangebrand text-white font-bold rounded-lg hover:bg-orange-600 transition-all"
-                  onClick={handleToggleRecording}
-                  disabled={loading} // Disable while loading
-                >
-                  {isRecording ? "Stop Voice" : "Talk"}
-                </button>
-              </div>
-            </div>
+            {appState === "CALIBRATING" && (
+              <p className="text-gray-600 mt-3">Measuring background noise…</p>
+            )}
+            {appState === "LISTENING" && (
+              <p className="text-gray-600 mt-3">
+                Speak now. We’ll auto-stop after 2s of silence.
+              </p>
+            )}
+            {appState === "PROCESSING" && (
+              <p className="text-gray-600 mt-3">
+                Converting speech → text → answer → speech...
+              </p>
+            )}
+            {appState === "PLAYING" && (
+              <p className="text-gray-600 mt-3">
+                Speaking response back to you…
+              </p>
+            )}
+
+            {appState === "LISTENING" && (
+              <button
+                onClick={handleManualStop}
+                className="mt-5 px-4 py-2 bg-red-600 text-white rounded-md"
+              >
+                Stop (Manual Fallback)
+              </button>
+            )}
           </div>
         </div>
       )}
+
+      {/* Conversation Log (messages) */}
+      <div className="absolute bottom-2 left-2 bg-white/60 p-4 w-[90%] max-w-xl rounded-lg overflow-auto max-h-64">
+        {messages.map((msg, idx) => (
+          <div key={idx} className="mb-3">
+            <strong>{msg.role === "assistant" ? "AI:" : "You:"}</strong>{" "}
+            {msg.role === "assistant" ? (
+              <div
+                className="ml-2 inline-block"
+                dangerouslySetInnerHTML={{ __html: msg.text }}
+              />
+            ) : (
+              <span className="ml-2">{msg.text}</span>
+            )}
+          </div>
+        ))}
+      </div>
+
       <style jsx>{`
-        .float-animation {
-          animation: float 3s ease-in-out infinite;
-        }
-
-        .animate-blink {
-          animation: blink 0.8s step-end infinite;
-        }
-
-        @keyframes float {
-          0% {
-            transform: translateY(0);
+          .float-animation {
+              animation: float 3s ease-in-out infinite;
           }
-          50% {
-            transform: translateY(-6px);
+          @keyframes float {
+              0% {
+                  transform: translateY(0);
+              }
+              50% {
+                  transform: translateY(-6px);
+              }
+              100% {
+                  transform: translateY(0);
+              }
           }
-          100% {
-            transform: translateY(0);
-          }
-        }
-
-        @keyframes blink {
-          50% {
-            opacity: 0;
-          }
-        }
       `}</style>
     </section>
   );
