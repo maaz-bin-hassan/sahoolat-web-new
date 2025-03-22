@@ -39,6 +39,8 @@ export default function Page() {
   }, []);
 
   useEffect(() => {
+    if (typeof window === "undefined") return;
+
     let audioContext = null;
     let analyser = null;
     let mic = null;
