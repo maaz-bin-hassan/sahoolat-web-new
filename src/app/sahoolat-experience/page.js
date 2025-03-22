@@ -296,7 +296,7 @@ export default function Page() {
   return (
     <>
       <Header />
-        <div className="relative min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-gray-900 to-gray-800 text-white px-6">
+      <div className="relative min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-gray-900 to-gray-800 text-white px-6">
         {/* Status Panel */}
         <div className="absolute top-6 sm:top-8 left-6 sm:left-8 bg-gray-800/90 px-6 py-4 rounded-xl shadow-lg border border-gray-600 backdrop-blur-md">
           <p className="text-sm font-medium text-gray-300 tracking-wide">
