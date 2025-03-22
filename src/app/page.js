@@ -11,7 +11,7 @@ export default function App() {
 
   useEffect(() => {
     const handleLoad = () => setIsLoading(false);
-    if (document.readyState === "complete") {
+    if (typeof window !== "undefined" && document.readyState === "complete") {
       handleLoad();
     } else {
       if (typeof window !== "undefined") {

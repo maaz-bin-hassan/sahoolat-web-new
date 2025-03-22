@@ -16,7 +16,7 @@ const geistMono = Geist_Mono({
 // Top-level metadata object
 export const metadata = {
   // This tells Next.js the base URL to use when resolving images, links, etc.
-  metadataBase: new URL("https://sahoolatai.com"),
+  metadataBase: new URL("https://www.sahoolatai.com"),
 
   title: "Sahoolat AI - Find Skilled Experts or Get Hired Instantly",
   description:

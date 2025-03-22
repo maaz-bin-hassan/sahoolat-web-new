@@ -8,12 +8,12 @@ const GoogleTranslate = () => {
 
   useEffect(() => {
     if (typeof window !== "undefined") {
-      var addScript = document.createElement("script");
+      var addScript = typeof window !== "undefined" && document.createElement("script");
       addScript.setAttribute(
         "src",
         "//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit",
       );
-      document.body.appendChild(addScript);
+      typeof window !== "undefined" && document.body.appendChild(addScript);
       window.googleTranslateElementInit = googleTranslateElementInit;
 
       if (hasCookie("googtrans")) {
