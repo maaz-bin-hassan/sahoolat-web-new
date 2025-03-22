@@ -171,7 +171,7 @@ export default function Page() {
         console.log("🧠 Total speaking time:", totalVoiceSec.toFixed(2), "sec");
         console.log("📦 Blob Size:", sizeKB.toFixed(2), "KB");
 
-        if (totalVoiceSec >= 2 && sizeKB >= 10) {
+        if (totalVoiceSec > 0.6 && sizeKB >= 10) {
           saveRecording(blob);
         } else {
           console.warn("🛑 Short or invalid input, recording skipped.");
