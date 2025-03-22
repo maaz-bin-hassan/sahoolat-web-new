@@ -58,7 +58,9 @@ export default function Page() {
           console.log("⏹️ MediaRecorder stopped.");
         };
 
-        audioContext = new (typeof window!=='undefined' && window.AudioContext || window.webkitAudioContext)();
+        if (typeof window !== 'undefined') {
+          audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        }
         analyser = audioContext.createAnalyser();
         mic = audioContext.createMediaStreamSource(stream);
         mic.connect(analyser);
