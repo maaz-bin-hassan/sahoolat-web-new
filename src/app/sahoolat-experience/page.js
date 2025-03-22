@@ -2,6 +2,8 @@
 
 import { useEffect, useRef, useState } from "react";
 import Lottie from "lottie-react";
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 
 export default function Page() {
   const lottieRef = useRef(null);
@@ -91,7 +93,7 @@ export default function Page() {
             }
           }
 
-          const voiceDetected = rmsValue > (voiceThresholdRef.current + 0.015); // Added noise margin
+          const voiceDetected = rmsValue > voiceThresholdRef.current + 0.015; // Added noise margin
 
           if (voiceDetected) {
             if (llmAudioRef.current && !llmAudioRef.current.paused) {
@@ -151,7 +153,8 @@ export default function Page() {
     return () => {
       cancelAnimationFrame(animationFrameId);
       if (audioContext) audioContext.close();
-      if (mediaStream.current) mediaStream.current.getTracks().forEach((t) => t.stop());
+      if (mediaStream.current)
+        mediaStream.current.getTracks().forEach((t) => t.stop());
     };
   }, []);
 
@@ -217,7 +220,7 @@ export default function Page() {
         setupLLMVisualizer(audio);
         audio.play();
 
-// Stop LLM playback if recording goes over 1.5 sec
+        // Stop LLM playback if recording goes over 1.5 sec
         const llmInterruptTimer = setInterval(() => {
           if (isSpeaking.current && voiceStartedAt.current) {
             const activeDuration = Date.now() - voiceStartedAt.current;
@@ -291,34 +294,50 @@ export default function Page() {
   };
 
   return (
-    <div className="relative flex items-center justify-center min-h-screen bg-gradient-to-br from-gray-900 to-gray-800 text-white">
-      <div className="absolute top-10 left-10 bg-gray-700/80 px-5 py-3 rounded-lg shadow-md border border-gray-500">
-        <p className="text-sm text-gray-300">Mic Input Level</p>
-        <p className="text-2xl font-semibold text-lime-400">{rms}</p>
-        <p className="text-xs text-gray-400 mt-1">{status}</p>
-      </div>
+    <>
+      <Header />
+        <div className="relative min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-gray-900 to-gray-800 text-white px-6">
+        {/* Status Panel */}
+        <div className="absolute top-6 sm:top-8 left-6 sm:left-8 bg-gray-800/90 px-6 py-4 rounded-xl shadow-lg border border-gray-600 backdrop-blur-md">
+          <p className="text-sm font-medium text-gray-300 tracking-wide">
+            Mic Input Level
+          </p>
+          <p className="text-3xl font-bold text-lime-400 leading-tight">{rms}</p>
+          <p className="text-xs text-gray-400 mt-1 italic">{status}</p>
+        </div>
 
-      <div
-        className={`transition-all duration-200 shadow-2xl rounded-full p-4 ${
-          status === "Voice Detected" ? "shadow-lime-500/40" : "shadow-gray-500/20"
-        }`}
-      >
-        {animationData ? (
-          <Lottie
-            animationData={animationData}
-            loop
-            autoplay
-            lottieRef={lottieRef}
-            style={{ width: 300, height: 300 }}
-          />
-        ) : (
-          <p className="text-lg">Loading animation...</p>
-        )}
-      </div>
+        {/* Lottie Animation */}
+        <div
+          className={`transition-all duration-300 rounded-full p-6 shadow-xl ${
+            status === "Voice Detected"
+              ? "shadow-lime-500/50 bg-gray-900/30"
+              : "shadow-gray-700/30 bg-gray-800/30"
+          }`}
+        >
+          {animationData ? (
+            <Lottie
+              animationData={animationData}
+              loop
+              autoplay
+              lottieRef={lottieRef}
+              style={{ width: 320, height: 320 }}
+            />
+          ) : (
+            <p className="text-lg text-center">Loading animation...</p>
+          )}
+        </div>
 
-      <h1 className="absolute bottom-10 text-center text-xl font-bold text-gray-300">
-        Speak to Record — Pauses Automatically on Silence
-      </h1>
-    </div>
+        {/* Footer Info */}
+        <div className="mt-10 text-center">
+          <h1 className="text-xl font-semibold text-gray-200 mb-2">
+            Speak to Record
+          </h1>
+          <p className="text-sm text-gray-400">
+            Voice detection starts automatically. Pauses on silence.
+          </p>
+        </div>
+      </div>
+      <Footer />
+    </>
   );
 }

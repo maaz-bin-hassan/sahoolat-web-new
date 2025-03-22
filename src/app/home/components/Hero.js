@@ -1,11 +1,11 @@
 "use client";
 
 import Image from "next/image";
-import { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { TypeAnimation } from "react-type-animation";
 import { toast } from "react-toastify";
 import LaunchingTimer from "@/components/LaunchingTimer";
-
+import Link from 'next/link'
 /**
  * Overall States:
  *  - "IDLE": Not in use (popup closed).
@@ -136,7 +136,6 @@ export default function HeroSection() {
         console.log("[CALIBRATION] Timer fired -> finishCalibration()");
         finishCalibration();
       }, CALIBRATION_DURATION);
-
     } catch (err) {
       console.error("[startCalibration] Mic access error:", err);
       toast.error("Could not access microphone.");
@@ -155,7 +154,7 @@ export default function HeroSection() {
       // multiply by 2 or 3 to only detect speech well above baseline
       dynamicThresholdRef.current = avg * 2.0;
       console.log(
-        `[finishCalibration] averageNoise=${avg.toFixed(4)}, threshold=${dynamicThresholdRef.current.toFixed(4)}`
+        `[finishCalibration] averageNoise=${avg.toFixed(4)}, threshold=${dynamicThresholdRef.current.toFixed(4)}`,
       );
     }
 
@@ -371,7 +370,8 @@ export default function HeroSection() {
 
       {/* Hero Content */}
       <div className="relative z-10 flex flex-col items-center text-center px-4">
-        <h1 className="mb-3 text-[50px] md:text-[150px] font-bold text-transparent bg-clip-text bg-gradient-to-r from-gray-400 via-brand to-orangebrand">
+        <h1
+          className="mb-3 text-[50px] md:text-[150px] font-bold text-transparent bg-clip-text bg-gradient-to-r from-gray-400 via-brand to-orangebrand">
           Sahoolat.AI
         </h1>
 
@@ -408,95 +408,39 @@ export default function HeroSection() {
         </p>
 
         <div className="flex items-center justify-center mb-6 space-x-4">
-          <div className="relative cursor-pointer" onClick={handleMicClick}>
-            <img
-              src="/assets/Mic.png"
-              alt="Microphone"
-              style={{ height: "140px", width: "540px" }}
-              className="object-contain transition-transform transform hover:scale-105"
-            />
+          <div className="relative cursor-pointer">
+            <Link href={"/sahoolat-experience"}>
+              <Image
+                height={400}
+                width={400}
+                src="/assets/Mic.png"
+                alt="Microphone"
+                style={{ height: "140px", width: "540px" }}
+                className="object-contain transition-transform transform hover:scale-105"
+              />
+            </Link>
           </div>
         </div>
-      </div>
-
-      {/* Popup */}
-      {isPopupOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50 px-4">
-          <div className="relative bg-white p-6 rounded-lg shadow-xl max-w-md w-full text-center">
-            <button
-              className="absolute top-2 right-2 bg-gray-200 text-black rounded-full w-8 h-8 flex items-center justify-center text-lg font-bold hover:bg-gray-300"
-              onClick={handleClosePopup}
-            >
-              ✕
-            </button>
-
-            <h2 className="text-2xl font-bold text-brand mb-4">
-              {getStatusLabel()}
-            </h2>
-
-            {/* If calibrating, listening, or playing, show an animated icon */}
-            {(appState === "CALIBRATING" ||
-              appState === "LISTENING" ||
-              appState === "PLAYING") && (
-              <img
-                src="https://i.gifer.com/7efs.gif"
-                alt="Voice Animation"
-                className="w-full max-w-[200px] mx-auto"
-              />
-            )}
-
-            {appState === "CALIBRATING" && (
-              <p className="text-gray-600 mt-3">Measuring background noise…</p>
-            )}
-            {appState === "LISTENING" && (
-              <p className="text-gray-600 mt-3">
-                Speak now. We’ll auto-stop after 2s of silence.
-              </p>
-            )}
-            {appState === "PROCESSING" && (
-              <p className="text-gray-600 mt-3">
-                Converting speech → text → answer → speech...
-              </p>
-            )}
-            {appState === "PLAYING" && (
-              <p className="text-gray-600 mt-3">
-                Speaking response back to you…
-              </p>
-            )}
-
-            {appState === "LISTENING" && (
-              <button
-                onClick={handleManualStop}
-                className="mt-5 px-4 py-2 bg-red-600 text-white rounded-md"
-              >
-                Stop (Manual Fallback)
-              </button>
-            )}
-          </div>
+        <div className="flex flex-col md:flex-row justify-center items-center gap-4 md:gap-8 mb-8">
+          <img
+            src="/assets/app-store.png"
+            alt="Download on the App Store"
+            className="cursor-pointer w-60 md:w-72 hover:scale-105 transition-transform duration-300"
+          />
+          <img
+            src="/assets/google-play.png"
+            alt="Get it on Google Play"
+            className="cursor-pointer w-60 md:w-72 hover:scale-105 transition-transform duration-300"
+          />
         </div>
-      )}
 
-      {/* Conversation Log (messages) */}
-      <div className="absolute bottom-2 left-2 bg-white/60 p-4 w-[90%] max-w-xl rounded-lg overflow-auto max-h-64">
-        {messages.map((msg, idx) => (
-          <div key={idx} className="mb-3">
-            <strong>{msg.role === "assistant" ? "AI:" : "You:"}</strong>{" "}
-            {msg.role === "assistant" ? (
-              <div
-                className="ml-2 inline-block"
-                dangerouslySetInnerHTML={{ __html: msg.text }}
-              />
-            ) : (
-              <span className="ml-2">{msg.text}</span>
-            )}
-          </div>
-        ))}
       </div>
 
       <style jsx>{`
           .float-animation {
               animation: float 3s ease-in-out infinite;
           }
+
           @keyframes float {
               0% {
                   transform: translateY(0);

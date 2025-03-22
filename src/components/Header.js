@@ -13,6 +13,7 @@ const Header = () => {
     { href: "/", label: "Home" },
     { href: "/about-us", label: "About" },
     { href: "/sahoolat-social", label: "Social Media" },
+    { href: "/sahoolat-experience", label: "Experience Now" },
     { href: "/book-call", label: "Book a call" },
     { href: "/faqs", label: "FAQs" },
   ];
