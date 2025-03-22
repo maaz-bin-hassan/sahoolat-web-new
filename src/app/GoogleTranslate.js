@@ -13,8 +13,10 @@ const GoogleTranslate = () => {
         "src",
         "//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit",
       );
-      typeof window !== "undefined" && document.body.appendChild(addScript);
-      window.googleTranslateElementInit = googleTranslateElementInit;
+      if(typeof window !== "undefined"){
+        document.body.appendChild(addScript);
+        window.googleTranslateElementInit = googleTranslateElementInit;
+      }
 
       if (hasCookie("googtrans")) {
         setSelected(getCookie("googtrans"));
