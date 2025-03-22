@@ -1,7 +1,11 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import Lottie from "lottie-react";
+import dynamic from "next/dynamic";
+
+const Lottie = dynamic(() => import("lottie-react"), {
+  ssr: false,
+});
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 
@@ -52,14 +56,19 @@ export default function Page() {
         const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
         mediaStream.current = stream;
 
-        recorder.current = new MediaRecorder(stream);
+        if (typeof window !== 'undefined' && typeof MediaRecorder !== 'undefined') {
+          recorder.current = new MediaRecorder(stream);
+        }
+
 
         recorder.current.onstop = () => {
           console.log("⏹️ MediaRecorder stopped.");
         };
 
+        let audioContext;
         if (typeof window !== 'undefined') {
-          audioContext = new (window.AudioContext || window.webkitAudioContext)();
+          const AudioCtx = window.AudioContext || window.webkitAudioContext;
+          audioContext = new AudioCtx();
         }
         analyser = audioContext.createAnalyser();
         mic = audioContext.createMediaStreamSource(stream);
