@@ -1,22 +1,35 @@
 "use client";
 
 import Image from "next/image";
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { TypeAnimation } from "react-type-animation";
 import LaunchingTimer from "@/components/LaunchingTimer";
-import Link from 'next/link'
+import Link from "next/link";
+import dynamic from "next/dynamic";
 
+const Lottie = dynamic(() => import("lottie-react"), {
+  ssr: false,
+});
 const phrases = ["Your Voice, Your Solution"];
 
 export default function HeroSection() {
+  const [animationData, setAnimationData] = useState(null);
+  const lottieRef = useRef(null);
+
+  useEffect(() => {
+    fetch("/animation/animation main 2.json")
+      .then((res) => res.json())
+      .then((data) => setAnimationData(data))
+      .catch((err) => console.error("Failed to load animation:", err));
+  }, []);
+
   return (
     <section className="relative bg-[#F2F6F7] py-0 overflow-hidden w-full h-screen flex items-center justify-center">
       <LaunchingTimer />
 
       {/* Hero Content */}
       <div className="relative z-10 flex flex-col items-center text-center px-4">
-        <h1
-          className="mb-3 text-[50px] md:text-[150px] font-bold text-transparent bg-clip-text bg-gradient-to-r from-gray-400 via-brand to-orangebrand">
+        <h1 className="mb-3 text-[50px] md:text-[150px] font-bold text-transparent bg-clip-text bg-gradient-to-r from-gray-400 via-brand to-orangebrand">
           Sahoolat.AI
         </h1>
 
@@ -55,14 +68,37 @@ export default function HeroSection() {
         <div className="flex items-center justify-center mb-6 space-x-4">
           <div className="relative cursor-pointer">
             <Link href={"/sahoolat-experience"}>
-              <Image
-                height={400}
-                width={400}
-                src="/assets/Mic.png"
-                alt="Microphone"
-                style={{ height: "140px", width: "540px" }}
-                className="object-contain transition-transform transform hover:scale-105"
-              />
+              {/*<Image*/}
+              {/*  height={400}*/}
+              {/*  width={400}*/}
+              {/*  src="/assets/Mic.png"*/}
+              {/*  alt="Microphone"*/}
+              {/*  style={{ height: "140px", width: "540px" }}*/}
+              {/*  className="object-contain transition-transform transform hover:scale-105"*/}
+              {/*/>*/}
+
+              <div className="flex items-center justify-center">
+                {animationData ? (
+                  <>
+                    <Lottie
+                      animationData={animationData}
+                      loop
+                      autoplay
+                      lottieRef={lottieRef}
+                      style={{ width: 320, height: 320 }}
+                    />
+                    <img
+                      src="/assets/wave.png"
+                      alt="Wave"
+                      height={'50px'}
+                      width={'500px'}
+                      style={{marginLeft: '-4rem'}}
+                    />
+                  </>
+                ) : (
+                  <p className="text-lg text-center">Loading animation...</p>
+                )}
+              </div>
             </Link>
           </div>
         </div>
@@ -78,25 +114,24 @@ export default function HeroSection() {
             className="cursor-pointer w-60 md:w-72 hover:scale-105 transition-transform duration-300"
           />
         </div>
-
       </div>
 
       <style jsx>{`
-          .float-animation {
-              animation: float 3s ease-in-out infinite;
-          }
+        .float-animation {
+          animation: float 3s ease-in-out infinite;
+        }
 
-          @keyframes float {
-              0% {
-                  transform: translateY(0);
-              }
-              50% {
-                  transform: translateY(-6px);
-              }
-              100% {
-                  transform: translateY(0);
-              }
+        @keyframes float {
+          0% {
+            transform: translateY(0);
           }
+          50% {
+            transform: translateY(-6px);
+          }
+          100% {
+            transform: translateY(0);
+          }
+        }
       `}</style>
     </section>
   );
