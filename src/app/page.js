@@ -1,13 +1,26 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Home from "./home/page";
+import dynamic from "next/dynamic";
+
+const Lottie = dynamic(() => import("lottie-react"), {
+  ssr: false,
+});
 
 export default function App() {
   const [isLoading, setIsLoading] = useState(true);
   const [showPopup, setShowPopup] = useState(false);
   const [phoneNumber, setPhoneNumber] = useState("");
+  const [animationData, setAnimationData] = useState(null);
+  const lottieRef = useRef(null);
+  useEffect(() => {
+    fetch("/animation/launching.json")
+      .then((res) => res.json())
+      .then((data) => setAnimationData(data))
+      .catch((err) => console.error("Failed to load animation:", err));
+  }, []);
 
   useEffect(() => {
     const handleLoad = () => setIsLoading(false);
@@ -49,13 +62,20 @@ export default function App() {
     <div className="relative w-full h-screen">
       {isLoading ? (
         <div className="fixed inset-0 flex items-center justify-center bg-[#F2F6F7] z-50">
-          <Image
-            src="/assets/logo.png" // Replace with your splash image path
-            alt="Splash Screen"
-            width={500}
-            height={500}
-            className="object-contain"
-            priority
+          {/*<Image*/}
+          {/*  src="/assets/logo.png" // Replace with your splash image path*/}
+          {/*  alt="Splash Screen"*/}
+          {/*  width={500}*/}
+          {/*  height={500}*/}
+          {/*  className="object-contain"*/}
+          {/*  priority*/}
+          {/*/>*/}
+          <Lottie
+            animationData={animationData}
+            loop
+            autoplay
+            lottieRef={lottieRef}
+            style={{ width: 320, height: 320 }}
           />
         </div>
       ) : (
