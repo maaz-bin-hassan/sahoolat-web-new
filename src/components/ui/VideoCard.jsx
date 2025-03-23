@@ -24,7 +24,7 @@ export default function VideoCard({
                                     onOpenDrawer
                                   }) {
   return (
-    <div className="relative w-full max-w-[450px] h-full bg-black overflow-hidden py-[10px] pb-[10px]" >
+    <div className="relative w-full max-w-[450px] h-full bg-black overflow-hidden ">
       {/* Hamburger Button */}
       {showHamburger && (
         <button
@@ -37,10 +37,10 @@ export default function VideoCard({
         </button>
       )}
 
-
       {loading && (
         <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="loader border-4 border-gray-300 border-t-transparent w-12 h-12 rounded-full animate-spin"></div>
+          <div
+            className="loader border-4 border-gray-300 border-t-transparent w-12 h-12 rounded-full animate-spin"></div>
         </div>
       )}
 
@@ -59,7 +59,8 @@ export default function VideoCard({
       />
 
       {/* Right-side icons */}
-      <div className="absolute right-3 top-1/2 -translate-y-1/2 flex flex-col items-center space-y-6 text-white text-2xl">
+      <div
+        className="absolute right-3 top-1/2 -translate-y-1/2 flex flex-col items-center space-y-6 text-white text-2xl">
         <button className="p-3 rounded-full bg-black bg-opacity-40 hover:bg-opacity-60 transition">
           <FaHeart />
         </button>
@@ -97,5 +98,7 @@ export default function VideoCard({
         />
       </div>
     </div>
+
+
   );
 }
