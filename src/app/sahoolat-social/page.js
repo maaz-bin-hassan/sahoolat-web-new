@@ -2,7 +2,7 @@
 
 import React, { useEffect, useRef, useState } from "react";
 import { FaCompass, FaHome, FaPlus, FaUser } from "react-icons/fa";
-import TiktokSideDrawer from "../../components/ui/TiktokSideDrawer";  // Adjust path if needed
+import SocialMediaSideDrawer from "../../components/ui/SocialMediaSideDrawer";  // Adjust path if needed
 import VideoCard from "../../components/ui/VideoCard";                // Adjust path if needed
 import Image from "next/image";
 import Link from "next/link";
@@ -210,7 +210,7 @@ export default function SahoolatSocial() {
   return (
     <div className="relative w-full h-screen flex bg-gray-50">
       {/* Side Drawer */}
-      <TiktokSideDrawer
+      <SocialMediaSideDrawer
         isOpen={drawerOpen}
         onClose={() => setDrawerOpen(false)}
       />

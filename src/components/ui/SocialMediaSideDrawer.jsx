@@ -2,7 +2,7 @@
 import React from "react";
 import Image from "next/image";
 
-export default function TiktokSideDrawer({ isOpen, onClose }) {
+export default function SocialMediaSideDrawer({ isOpen, onClose }) {
   return (
     <div
       className={`
