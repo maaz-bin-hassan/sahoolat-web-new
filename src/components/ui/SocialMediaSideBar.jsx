@@ -86,7 +86,7 @@ export default function SocialMediaSideBar() {
           }`}
           onClick={() => handleItemClick("Blogs")}
         >
-          <AiFillInfoCircle size={24} />
+          <FaBloggerB size={24} />
           <span className="text-[18px] pl-0.5">Blogs</span>
         </li>
 
@@ -98,7 +98,7 @@ export default function SocialMediaSideBar() {
           }`}
           onClick={() => handleItemClick("Categories")}
         >
-          <AiFillInfoCircle size={24} />
+          <FaListUl size={24} />
           <span className="text-[18px] pl-0.5">Categories</span>
         </li>
 
@@ -111,7 +111,7 @@ export default function SocialMediaSideBar() {
           }`}
           onClick={() => handleItemClick("Voice Experience")}
         >
-          <AiFillInfoCircle size={24} />
+          <FaMicrophoneAlt size={24} />
           <span className="text-[18px] pl-0.5">Voice Experience</span>
         </li>
 
@@ -124,7 +124,7 @@ export default function SocialMediaSideBar() {
           }`}
           onClick={() => handleItemClick("Support")}
         >
-          <AiFillInfoCircle size={24} />
+          <FaLifeRing size={24} />
           <span className="text-[18px] pl-0.5">Support</span>
         </li>
       </ul>

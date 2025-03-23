@@ -2,10 +2,8 @@
 
 import React, { useEffect, useRef, useState } from "react";
 import { FaCompass, FaHome, FaPlus, FaUser } from "react-icons/fa";
-import SocialMediaSideDrawer from "../../components/ui/SocialMediaSideDrawer";  // Adjust path if needed
-import VideoCard from "../../components/ui/VideoCard";                // Adjust path if needed
-import Image from "next/image";
-import Link from "next/link";
+import SocialMediaSideDrawer from "../../components/ui/SocialMediaSideDrawer";
+import VideoCard from "../../components/ui/VideoCard";
 import SocialMediaSideBar from "../../components/ui/SocialMediaSideBar";
 
 
@@ -185,7 +183,7 @@ export default function SahoolatSocial() {
     const vid = videoRefs.current[index];
     if (!vid) return;
     if (pausedByAuto[index]) {
-      // reset if auto-paused
+
       setPausedByAuto((old) => {
         const clone = [...old];
         clone[index] = false;
@@ -241,7 +239,7 @@ export default function SahoolatSocial() {
           {videoUrls.map((url, idx) => (
             <section
               key={idx}
-              className="w-full h-screen flex items-center justify-center md:py-[10px]"
+              className="w-full h-screen flex items-center justify-center md:py-[10px] rounded-t-xl"
               style={{ scrollSnapAlign: "start" }}
             >
               <VideoCard
