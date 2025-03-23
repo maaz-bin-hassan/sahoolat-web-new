@@ -70,7 +70,7 @@ export default function SocialMediaSideDrawer({ isOpen, onClose }) {
           />
         </div>
 
-        <button className="block w-full py-2 mb-4 border border-red-500 text-red-500 font-semibold rounded hover:bg-red-50">
+        <button className="block w-full py-2 mb-4 border border-green-500 text-green-500 font-semibold rounded hover:bg-green-50">
           Log in
         </button>
 

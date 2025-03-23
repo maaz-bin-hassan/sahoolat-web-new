@@ -1,4 +1,5 @@
 "use client";
+
 import React from "react";
 import { FaHeart, FaRegComment, FaShare } from "react-icons/fa";
 import { BiVolumeFull, BiVolumeMute } from "react-icons/bi";
@@ -23,7 +24,8 @@ export default function VideoCard({
                                     onOpenDrawer
                                   }) {
   return (
-    <div className="relative w-full max-w-[450px] h-full bg-black overflow-hidden">
+    <div className="relative w-full max-w-[450px] h-full bg-black overflow-hidden py-[10px] pb-[10px]" >
+      {/* Hamburger Button */}
       {showHamburger && (
         <button
           onClick={onOpenDrawer}
@@ -35,7 +37,7 @@ export default function VideoCard({
         </button>
       )}
 
-      {/* Loading spinner */}
+
       {loading && (
         <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50">
           <div className="loader border-4 border-gray-300 border-t-transparent w-12 h-12 rounded-full animate-spin"></div>
@@ -54,7 +56,6 @@ export default function VideoCard({
         onLoadedMetadata={onLoadedMetadata}
         onTimeUpdate={onTimeUpdate}
         onClick={onVideoClick}
-        // onEnded={onVideoEnd} // You can also handle ended in parent
       />
 
       {/* Right-side icons */}

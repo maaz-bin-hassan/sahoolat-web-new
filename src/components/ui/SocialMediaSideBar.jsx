@@ -73,7 +73,7 @@ export default function SocialMediaSideBar() {
           onClick={() => handleItemClick("About")}
         >
           <AiFillInfoCircle size={24} />
-          <span className="text-[18px]">About</span>
+          <span className="text-[18px] pl-0.5">About</span>
         </li>
 
         <li
@@ -83,7 +83,7 @@ export default function SocialMediaSideBar() {
           onClick={() => handleItemClick("Blogs")}
         >
           <FaBloggerB size={24} />
-          <span className="text-[18px]">Blogs</span>
+          <span className="text-[18px] pl-0.5">Blogs</span>
         </li>
 
         <li
@@ -93,7 +93,7 @@ export default function SocialMediaSideBar() {
           onClick={() => handleItemClick("Categories")}
         >
           <FaListUl size={24} />
-          <span className="text-[18px]">Categories</span>
+          <span className="text-[18px] pl-0.5">Categories</span>
         </li>
 
         <li
@@ -105,7 +105,7 @@ export default function SocialMediaSideBar() {
           onClick={() => handleItemClick("Voice Experience")}
         >
           <FaMicrophoneAlt size={24} />
-          <span className="text-[18px]">Voice Experience</span>
+          <span className="text-[18px] pl-0.5">Voice Experience</span>
         </li>
 
         <li
@@ -115,7 +115,7 @@ export default function SocialMediaSideBar() {
           onClick={() => handleItemClick("Support")}
         >
           <FaLifeRing size={24} />
-          <span className="text-[18px]">Support</span>
+          <span className="text-[18px] pl-0.5">Support</span>
         </li>
       </ul>
 
@@ -125,19 +125,19 @@ export default function SocialMediaSideBar() {
       <ul className="mt-2 space-y-2 text-gray-700 text-lg px-4">
         <li className="flex items-center space-x-2 cursor-pointer pl-2 pt-2">
           <FaHome size={24} />
-          <span className="text-[18px]">Home</span>
+          <span className="text-[18px] pl-0.5">Home</span>
         </li>
         <li className="flex items-center space-x-2 cursor-pointer pl-2 pt-2">
           <FaCompass size={24} />
-          <span className="text-[18px]">Explore</span>
+          <span className="text-[18px] pl-0.5">Explore</span>
         </li>
         <li className="flex items-center space-x-2 cursor-pointer pl-2 pt-2">
           <FaPlus size={24} />
-          <span className="text-[18px]">Upload</span>
+          <span className="text-[18px] pl-0.5">Upload</span>
         </li>
         <li className="flex items-center space-x-2 cursor-pointer pl-2 pt-2">
           <FaUser size={24} />
-          <span className="text-[18px]">Profile</span>
+          <span className="text-[18px] pl-0.5">Profile</span>
         </li>
       </ul>
 
@@ -148,23 +148,23 @@ export default function SocialMediaSideBar() {
       {/* Follow Us */}
       <h2 className="text-xl font-bold mt-4 px-4">Follow Us</h2>
       <div className="mt-2 space-y-3 text-gray-700 text-xl px-4">
-        <div className="flex items-center space-x-2 pl-2 pt-2">
+        <div className="flex items-center space-x-2 pl-1.5 pt-1.5">
           <AiFillTwitterCircle size={24} />
           <span className="text-[18px]">Twitter</span>
         </div>
-        <div className="flex items-center space-x-2 pl-2 pt-2">
+        <div className="flex items-center space-x-2 pl-1.5 pt-1.5">
           <AiFillInstagram size={24} />
           <span className="text-[18px]">Instagram</span>
         </div>
-        <div className="flex items-center space-x-2 pl-2 pt-2">
+        <div className="flex items-center space-x-2 pl-1.5 pt-1.5">
           <SiTiktok size={24} />
           <span className="text-[18px]">TikTok</span>
         </div>
-        <div className="flex items-center space-x-2 pl-2 pt-2">
+        <div className="flex items-center space-x-2 pl-1.5 pt-1.5">
           <FaFacebook size={24} />
           <span className="text-[18px]">Facebook</span>
         </div>
-        <div className="flex items-center space-x-2 pl-2 pt-2">
+        <div className="flex items-center space-x-2 pl-1.5 pt-1.5">
           <FaLinkedinIn size={24} />
           <span className="text-[18px]">LinkedIn</span>
         </div>

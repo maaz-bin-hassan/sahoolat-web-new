@@ -241,7 +241,7 @@ export default function SahoolatSocial() {
           {videoUrls.map((url, idx) => (
             <section
               key={idx}
-              className="w-full h-screen flex items-center justify-center"
+              className="w-full h-screen flex items-center justify-center py-[10px]"  // Added py-[10px] for 10px padding
               style={{ scrollSnapAlign: "start" }}
             >
               <VideoCard
@@ -265,6 +265,7 @@ export default function SahoolatSocial() {
               />
             </section>
           ))}
+
         </div>
       </div>
 
