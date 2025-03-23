@@ -68,7 +68,9 @@ export default function SocialMediaSideBar() {
       <ul className="mt-2 space-y-2 text-gray-700 text-lg px-4">
         <li
           className={`flex items-center space-x-2 cursor-pointer pl-2 pt-2 ${
-            selectedItem === "About" ? "bg-[#0ea288] text-white rounded" : ""
+            selectedItem === "About"
+              ? "bg-[#0ea288] text-white rounded px-4 py-2"
+              : ""
           }`}
           onClick={() => handleItemClick("About")}
         >
@@ -78,43 +80,51 @@ export default function SocialMediaSideBar() {
 
         <li
           className={`flex items-center space-x-2 cursor-pointer pl-2 pt-2 ${
-            selectedItem === "Blogs" ? "bg-[#0ea288] text-white rounded" : ""
+            selectedItem === "Blogs"
+              ? "bg-[#0ea288] text-white rounded px-4 py-2"
+              : ""
           }`}
           onClick={() => handleItemClick("Blogs")}
         >
-          <FaBloggerB size={24} />
+          <AiFillInfoCircle size={24} />
           <span className="text-[18px] pl-0.5">Blogs</span>
         </li>
 
         <li
           className={`flex items-center space-x-2 cursor-pointer pl-2 pt-2 ${
-            selectedItem === "Categories" ? "bg-[#0ea288] text-white rounded" : ""
+            selectedItem === "Categories"
+              ? "bg-[#0ea288] text-white rounded px-4 py-2"
+              : ""
           }`}
           onClick={() => handleItemClick("Categories")}
         >
-          <FaListUl size={24} />
+          <AiFillInfoCircle size={24} />
           <span className="text-[18px] pl-0.5">Categories</span>
         </li>
+
 
         <li
           className={`flex items-center space-x-2 cursor-pointer pl-2 pt-2 ${
             selectedItem === "Voice Experience"
-              ? "bg-[#0ea288] text-white rounded"
+              ? "bg-[#0ea288] text-white rounded px-4 py-2"
               : ""
           }`}
           onClick={() => handleItemClick("Voice Experience")}
         >
-          <FaMicrophoneAlt size={24} />
+          <AiFillInfoCircle size={24} />
           <span className="text-[18px] pl-0.5">Voice Experience</span>
         </li>
 
+
         <li
           className={`flex items-center space-x-2 cursor-pointer pl-2 pt-2 ${
-            selectedItem === "Support" ? "bg-[#0ea288] text-white rounded" : ""
+            selectedItem === "Support"
+              ? "bg-[#0ea288] text-white rounded px-4 py-2"
+              : ""
           }`}
           onClick={() => handleItemClick("Support")}
         >
-          <FaLifeRing size={24} />
+          <AiFillInfoCircle size={24} />
           <span className="text-[18px] pl-0.5">Support</span>
         </li>
       </ul>
