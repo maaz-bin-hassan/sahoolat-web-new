@@ -11,7 +11,7 @@ export default function VideoCard({
                                     duration,
                                     currentTime,
                                     onVideoClick,
-                                    onVideoEnd,     // if needed or handled in parent
+                                    onVideoEnd,
                                     onLoadedData,
                                     onWaiting,
                                     onLoadedMetadata,
@@ -19,13 +19,11 @@ export default function VideoCard({
                                     onScrub,
                                     onToggleMute,
                                     onToggleComments,
-                                    // Optionally pass "openDrawer" if you want the hamburger in each card
                                     showHamburger,
                                     onOpenDrawer
                                   }) {
   return (
     <div className="relative w-full max-w-[450px] h-full bg-black overflow-hidden">
-      {/* If you want the hamburger icon per video (mobile only), showHamburger can control its visibility */}
       {showHamburger && (
         <button
           onClick={onOpenDrawer}

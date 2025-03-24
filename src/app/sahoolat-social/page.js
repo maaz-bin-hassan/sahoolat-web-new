@@ -7,7 +7,7 @@ import VideoCard from "../../components/ui/VideoCard";                // Adjust 
 import Image from "next/image";
 import Link from "next/link";
 
-// Example navigation menu
+
 const menu = [
   { text: "Home", icon: FaHome, href: "#home" },
   { text: "Explore", icon: FaCompass, href: "#explore" },
@@ -15,7 +15,7 @@ const menu = [
   { text: "Profile", icon: FaUser, href: "#profile" },
 ];
 
-// Example video URLs
+
 const videoUrls = [
   "https://lyudo-images.s3.eu-north-1.amazonaws.com/videos/%23construction+%23plumber+%23plumbing+%23like+%23subscribe+%23shorts+%23video+%23electrical+%23mistri+%23pipes+%23yt.mp4",
   "https://lyudo-images.s3.eu-north-1.amazonaws.com/videos/%23plumber+%23work+wall+mixer+ka+fiting+kese+kare+%23bathroom+%23wallmixer+%23geyser.mp4",
@@ -63,15 +63,12 @@ export default function SahoolatSocial() {
     new Array(videoUrls.length).fill(0)
   );
 
-  // Drawer & comments
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [commentsOpen, setCommentsOpen] = useState(false);
 
-  // Active nav link
   const [activeLink, setActiveLink] = useState("#home");
   const handleMenuClick = (link) => setActiveLink(link);
 
-  // Intersection Observer for auto-play/pause
   useEffect(() => {
     const options = { root: containerRef.current, threshold: 0.7 };
     const observer = new IntersectionObserver((entries) => {
