@@ -6,6 +6,9 @@ import SocialMediaSideDrawer from "../../components/ui/SocialMediaSideDrawer";  
 import VideoCard from "../../components/ui/VideoCard";                // Adjust path if needed
 import Image from "next/image";
 import Link from "next/link";
+import SocialMediaSideBar from "../../components/ui/SocialMediaSideBar";
+
+
 
 
 const menu = [
@@ -225,35 +228,7 @@ export default function SahoolatSocial() {
         onClose={() => setDrawerOpen(false)}
       />
 
-      <div className="hidden md:flex md:w-60 md:h-screen md:bg-white md:shadow-xl md:flex-col md:py-6 md:fixed md:left-0">
-        <Link href={"/"}>
-          <div className="flex items-center justify-center mb-10">
-            <Image
-              height={100}
-              width={100}
-              src="/assets/logo.png"
-              alt="Sahoolat AI Logo"
-            />
-          </div>
-        </Link>
-        <nav className="flex flex-col space-y-1 px-4">
-          {menu.map((item) => (
-            <button
-              key={item.text}
-              onClick={() => handleMenuClick(item.href)}
-              className={`flex items-center p-3 text-gray-600 transition ${
-                activeLink === item.href
-                  ? "text-white font-bold bg-[#0ea288] rounded-lg shadow-md"
-                  : ""
-              }`}
-            >
-              <item.icon size={24} className="mr-3" />
-              <span className="text-lg">{item.text}</span>
-            </button>
-          ))}
-        </nav>
-      </div>
-
+      <SocialMediaSideBar />
       <div className="flex-1 flex flex-col">
         <div
           ref={containerRef}

@@ -16,7 +16,6 @@ import {
 } from "react-icons/ai";
 import { SiTiktok } from "react-icons/si";
 
-// Import your images
 import appStore from "../../../public/assets/app-store.png";
 import googlePlay from "../../../public/assets/google-play.png";
 
@@ -111,6 +110,16 @@ export default function SocialMediaSideDrawer({ isOpen, onClose }) {
             <span className="pl-0.5">Categories</span>
           </li>
 
+          {/* Voice Experience */}
+          <li
+            className={`flex items-center space-x-2 cursor-pointer pl-2 pt-2 ${
+              selectedItem === "Voice Experience" ? "bg-[#0ea288] text-white rounded" : ""
+            }`}
+            onClick={() => handleItemClick("Voice Experience")}
+          >
+            <FaMicrophoneAlt size={22} />
+            <span className="pl-0.5">Voice Experience</span>
+          </li>
           {/* Support */}
           <li
             className={`flex items-center space-x-2 cursor-pointer pl-2 pt-2 ${
@@ -122,16 +131,7 @@ export default function SocialMediaSideDrawer({ isOpen, onClose }) {
             <span className="pl-0.5">Support</span>
           </li>
 
-          {/* Voice Experience */}
-          <li
-            className={`flex items-center space-x-2 cursor-pointer pl-2 pt-2 ${
-              selectedItem === "Voice Experience" ? "bg-[#0ea288] text-white rounded" : ""
-            }`}
-            onClick={() => handleItemClick("Voice Experience")}
-          >
-            <FaMicrophoneAlt size={22} />
-            <span className="pl-0.5">Voice Experience</span>
-          </li>
+
         </ul>
 
         <div className="border-b my-4"></div>
@@ -162,9 +162,7 @@ export default function SocialMediaSideDrawer({ isOpen, onClose }) {
           </div>
         </div>
 
-        {/* Download CTA inside the scrollable area */}
         <div className="border-b my-4"></div>
-        {/* Download CTA */}
          <div className="mt-4 flex items-center justify-center space-x-4 pb-6">
         <Image
           src={appStore}
