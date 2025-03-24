@@ -1,6 +1,8 @@
 "use client";
 import React, { useState } from "react";
 import Image from "next/image";
+import { FaBloggerB, FaListUl, FaLifeRing, FaMicrophoneAlt } from "react-icons/fa";
+
 
 import {
   AiFillTwitterCircle,
@@ -71,50 +73,60 @@ export default function SocialMediaSideDrawer({ isOpen, onClose }) {
           <h3 className="text-xl font-bold mt-4">Company</h3>
           <ul className="mt-2 space-y-2 text-gray-700 text-lg">
 
-            {/* About */}
-            <li
-              className={`flex items-center space-x-2 cursor-pointer pl-2 pt-2 ${
-                selectedItem === "About" ? "bg-[#0ea288] text-white rounded" : ""
-              }`}
-              onClick={() => handleItemClick("About")}
-            >
-              <AiFillInfoCircle size={22} />
-              <span className="pl-0.5">About</span>
+               <li
+                 className={`flex items-center space-x-2 cursor-pointer pl-2 pt-2 ${
+                   selectedItem === "About" ? "bg-[#0ea288] text-white rounded" : ""
+                   }`}
+                 onClick={() => handleItemClick("About")}
+               >
+                 <AiFillInfoCircle size={22} />
+                 <span className="pl-0.5">About</span>
+               </li>
 
-            </li>
+                {/* Blogs */}
+                <li
+                  className={`flex items-center space-x-2 cursor-pointer pl-2 pt-2 ${
+                    selectedItem === "Blogs" ? "bg-[#0ea288] text-white rounded" : ""
+                  }`}
+                 onClick={() => handleItemClick("Blogs")}
+                >
+                  <FaBloggerB size={22} />
+                  <span className="pl-0.5">Blogs</span>
+                </li>
 
-            {/* Newsroom */}
-            <li
-              className={`flex items-center space-x-2 cursor-pointer pl-2 pt-2 ${
-                selectedItem === "Newsroom" ? "bg-[#0ea288] text-white rounded" : ""
-              }`}
-              onClick={() => handleItemClick("Newsroom")}
-            >
-              <FaNewspaper size={22} />
-              <span className="pl-0.5">Newsroom</span>
-            </li>
+           {/* Categories */}
+           <li
+             className={`flex items-center space-x-2 cursor-pointer pl-2 pt-2 ${
+               selectedItem === "Categories" ? "bg-[#0ea288] text-white rounded" : ""
+               }`}
+             onClick={() => handleItemClick("Categories")}
+           >
+             <FaListUl size={22} />
+             <span className="pl-0.5">Categories</span>
+           </li>
 
-            {/* Contact */}
-            <li
-              className={`flex items-center space-x-2 cursor-pointer pl-2 pt-2 ${
-                selectedItem === "Contact" ? "bg-[#0ea288] text-white rounded" : ""
-              }`}
-              onClick={() => handleItemClick("Contact")}
-            >
-              <FaEnvelopeOpenText size={22} />
-              <span className="pl-0.5">Contact</span>
-            </li>
+         {/* Support */}
+         <li
+           className={`flex items-center space-x-2 cursor-pointer pl-2 pt-2 ${
+               selectedItem === "Support" ? "bg-[#0ea288] text-white rounded" : ""
+               }`}
+           onClick={() => handleItemClick("Support")}
+         >
+           <FaLifeRing size={22} />
+           <span className="pl-0.5">Support</span>
+         </li>
 
-            {/* Careers */}
-            <li
-              className={`flex items-center space-x-2 cursor-pointer pl-2 pt-2 ${
-                selectedItem === "Careers" ? "bg-[#0ea288] text-white rounded" : ""
-              }`}
-              onClick={() => handleItemClick("Careers")}
-            >
-              <FaBriefcase size={22} />
-              <span className="pl-0.5">Careers</span>
-            </li>
+       {/* Voice Experience */}
+       <li
+     className={`flex items-center space-x-2 cursor-pointer pl-2 pt-2 ${
+           selectedItem === "Voice Experience" ? "bg-[#0ea288] text-white rounded" : ""
+           }`}
+       onClick={() => handleItemClick("Voice Experience")}
+     >
+       <FaMicrophoneAlt size={22} />
+       <span className="pl-0.5">Voice Experience</span>
+     </li>
+
           </ul>
 
           <div className="border-b my-4"></div>
