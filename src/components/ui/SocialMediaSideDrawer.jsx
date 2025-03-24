@@ -2,6 +2,17 @@
 import React from "react";
 import Image from "next/image";
 
+import {
+  AiFillTwitterCircle,
+  AiFillInstagram,
+  AiFillInfoCircle,
+} from "react-icons/ai";
+import {
+  FaNewspaper,
+  FaEnvelopeOpenText,
+  FaBriefcase
+} from "react-icons/fa";
+
 export default function SocialMediaSideDrawer({ isOpen, onClose }) {
   return (
     <div
@@ -11,7 +22,6 @@ export default function SocialMediaSideDrawer({ isOpen, onClose }) {
         ${isOpen ? "translate-x-0" : "-translate-x-full"}
       `}
     >
-      {/* Close button */}
       <button
         onClick={onClose}
         className="absolute top-2 right-2 p-2 text-gray-700 hover:text-black"
@@ -19,8 +29,10 @@ export default function SocialMediaSideDrawer({ isOpen, onClose }) {
         ✕
       </button>
 
-      <div className="mt-10 px-4 overflow-y-auto h-full pb-10">
-        {/* Logo replaces "For You / Following" */}
+      <div
+        className="mt-10 px-4 overflow-y-auto h-full pb-10"
+        style={{ fontFamily: "Roboto, sans-serif" }}
+      >
         <div className="flex items-center justify-center mb-6">
           <Image
             src="/assets/logo.png"
@@ -36,27 +48,39 @@ export default function SocialMediaSideDrawer({ isOpen, onClose }) {
 
         <div className="border-b my-4"></div>
 
-        <h3 className="text-lg font-semibold mt-4">Company</h3>
-        <ul className="text-sm text-gray-700 mt-2 space-y-1">
-          <li>About</li>
-          <li>Newsroom</li>
-          <li>Contact</li>
-          <li>Careers</li>
+        <h3 className="text-xl font-bold mt-4">Company</h3>
+        <ul className="mt-2 space-y-2 text-gray-700 text-lg">
+          <li className="flex items-center space-x-2">
+            <AiFillInfoCircle size={22} />
+            <span>About</span>
+          </li>
+          <li className="flex items-center space-x-2">
+            <FaNewspaper size={22} />
+            <span>Newsroom</span>
+          </li>
+          <li className="flex items-center space-x-2">
+            <FaEnvelopeOpenText size={22} />
+            <span>Contact</span>
+          </li>
+          <li className="flex items-center space-x-2">
+            <FaBriefcase size={22} />
+            <span>Careers</span>
+          </li>
         </ul>
 
         <div className="border-b my-4"></div>
 
-        <h3 className="text-lg font-semibold mt-4">Program</h3>
-        <ul className="text-sm text-gray-700 mt-2 space-y-1">
-          <li>TikTok for Good</li>
-          <li>Advertise</li>
-          <li>TikTok LIVE Creator Networks</li>
-          <li>Developers</li>
-          <li>Transparency</li>
-          <li>TikTok Rewards</li>
-          <li>SoundOn Music Distribution</li>
-          <li>TikTok Live</li>
-        </ul>
+        <h3 className="text-xl font-bold mt-4">Follow Us</h3>
+        <div className="mt-2 space-y-3 text-gray-700">
+          <div className="flex items-center space-x-2 text-xl">
+            <AiFillTwitterCircle size={30} />
+            <span>Twitter</span>
+          </div>
+          <div className="flex items-center space-x-2 text-xl">
+            <AiFillInstagram size={30} />
+            <span>Instagram</span>
+          </div>
+        </div>
       </div>
     </div>
   );
