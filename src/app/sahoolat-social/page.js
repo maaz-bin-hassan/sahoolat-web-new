@@ -310,8 +310,7 @@ export default function SahoolatSocial() {
               />
 
               {/*
-                DESKTOP-ONLY icons (outside the video)
-                hidden on mobile
+
               */}
               <div className="hidden md:flex flex-col items-center pl-3 transform translate-y-1/2 space-y-2 z-10">
                 {/* Like */}
@@ -374,7 +373,7 @@ export default function SahoolatSocial() {
         )}
       </div>
 
-      {/* Bottom nav (mobile) */}
+
       <div className="fixed bottom-0 left-0 right-0 flex md:hidden bg-white shadow-inner border-t border-gray-200 z-20">
         {menu.map((item) => (
           <button
@@ -384,7 +383,7 @@ export default function SahoolatSocial() {
               activeLink === item.href ? "text-white font-bold bg-[#0ea288]" : ""
             }`}
           >
-            <item.icon size={20} />
+            <item.icon size={10} />
             <span className="text-xs">{item.text}</span>
           </button>
         ))}

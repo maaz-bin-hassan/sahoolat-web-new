@@ -63,12 +63,12 @@ export default function VideoCard({
       />
 
       {/* MOBILE-ONLY icons (hidden on md+) */}
-      <div className="md:hidden absolute right-3 top-1/2 -translate-y-1/2 flex flex-col items-center space-y-2 text-white text-2xl z-10">
+      <div className="md:hidden absolute right-3 top-52 translate-y-3/4 flex flex-col items-center space-y-2 text-white text-2xl z-10">
         {/* Like */}
         <button className="p-3 rounded-full bg-black bg-opacity-40 hover:bg-opacity-60 transition">
           <FaHeart />
         </button>
-        <span className="text-sm">{likesCount}</span>
+        <span className="text-sm pb-2">{likesCount}</span>
 
         {/* Comment */}
         <button
@@ -77,13 +77,13 @@ export default function VideoCard({
         >
           <FaRegComment />
         </button>
-        <span className="text-sm">{commentsCount}</span>
+        <span className="text-sm pb-2">{commentsCount}</span>
 
         {/* Share */}
         <button className="p-3 rounded-full bg-black bg-opacity-40 hover:bg-opacity-60 transition">
           <FaShare />
         </button>
-        <span className="text-sm">{sharesCount}</span>
+        <span className="text-sm pb-2">{sharesCount}</span>
       </div>
 
       {/* Mute/Unmute Button (bottom-left) */}
