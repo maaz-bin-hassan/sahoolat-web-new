@@ -1,10 +1,9 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
-import { FaCompass, FaHome, FaPlus, FaUser } from "react-icons/fa";
-import { BsArrowUpCircleFill, BsArrowDownCircleFill } from "react-icons/bs"; // NEW ICONS
+import { FaCompass, FaHome, FaPlus, FaUser, FaBars, FaArrowUp, FaArrowDown } from "react-icons/fa";
+import { BsArrowUpCircleFill, BsArrowDownCircleFill } from "react-icons/bs"; // Unused but kept for reference
 import { toast } from "react-toastify";
-import { FaArrowUp, FaArrowDown } from "react-icons/fa";
 
 // Components
 import SocialMediaSideDrawer from "../../components/ui/SocialMediaSideDrawer";
@@ -41,7 +40,7 @@ export default function SahoolatSocial() {
   const videoRefs = useRef([]);   // Video elements
   const sectionRefs = useRef([]); // Section wrappers for scrolling
 
-// Drawers and modals
+  // Side drawer state
   const [drawerOpen, setDrawerOpen] = useState(false);
 
   // Video state
@@ -55,7 +54,7 @@ export default function SahoolatSocial() {
   const [durations, setDurations] = useState(new Array(videoUrls.length).fill(0));
   const [currentTimes, setCurrentTimes] = useState(new Array(videoUrls.length).fill(0));
 
-
+  // Comments
   const [commentsOpen, setCommentsOpen] = useState(false);
 
   // Mobile bottom nav
@@ -97,7 +96,7 @@ export default function SahoolatSocial() {
     };
   }, [pausedByAuto]);
 
-
+  // Close the drawer if viewport >= 768
   useEffect(() => {
     function handleResize() {
       if (window.innerWidth >= 768) {
@@ -109,13 +108,14 @@ export default function SahoolatSocial() {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-
+  // Sync "muted" state
   useEffect(() => {
     videoRefs.current.forEach((vid) => {
       if (vid) vid.muted = isMuted;
     });
   }, [isMuted]);
 
+  // Handlers for video events
   const handleVideoLoad = (index) => {
     setLoadingVideos((prev) => {
       const updated = [...prev];
@@ -158,10 +158,13 @@ export default function SahoolatSocial() {
       updated[index] += 1;
 
       const vid = videoRefs.current[index];
+      // If the video ended once, restart
       if (updated[index] === 1) {
         vid.currentTime = 0;
         vid.play().catch(() => {});
-      } else if (updated[index] >= 2) {
+      }
+      // If it ended twice, pause automatically
+      else if (updated[index] >= 2) {
         vid.pause();
         setPausedByAuto((old) => {
           const clone = [...old];
@@ -176,12 +179,15 @@ export default function SahoolatSocial() {
   const handleVideoClick = (index) => {
     const vid = videoRefs.current[index];
     if (!vid) return;
+
     if (pausedByAuto[index]) {
+      // If the video was auto-paused, reset that so we can play again
       setPausedByAuto((old) => {
         const clone = [...old];
         clone[index] = false;
         return clone;
       });
+      // Reset the play count so it can loop again
       setPlayCounts((old) => {
         const clone = [...old];
         clone[index] = 0;
@@ -194,6 +200,7 @@ export default function SahoolatSocial() {
   const handleScrub = (index, val) => {
     const vid = videoRefs.current[index];
     if (!vid) return;
+
     if (pausedByAuto[index]) {
       setPausedByAuto((old) => {
         const clone = [...old];
@@ -234,11 +241,25 @@ export default function SahoolatSocial() {
 
   return (
     <div className="relative w-full h-screen flex bg-gray-50">
+      <div className="md:hidden absolute top-4 left-4 z-50">
+        <button
+          onClick={() => setDrawerOpen(true)}
+          className="p-2
+              rounded-full
+              focus:outline-none
+              text-black
+              bg-transparent
+              hover:bg-black/20
+              transition"
+          >
+          <FaBars size={24} />
+        </button>
+      </div>
+
       <SocialMediaSideDrawer
         isOpen={drawerOpen}
         onClose={() => setDrawerOpen(false)}
       />
-
 
       <SocialMediaSideBar />
 
@@ -271,8 +292,10 @@ export default function SahoolatSocial() {
                 onScrub={(e) => handleScrub(idx, e.target.value)}
                 onToggleMute={() => setIsMuted((m) => !m)}
                 onToggleComments={toggleComments}
-                showHamburger={true}
+                // You can remove these two props if you're now using the dedicated top-left hamburger
+                showHamburger={false}
                 onOpenDrawer={() => setDrawerOpen(true)}
+                // Demo stats
                 likesCount={mockStats[idx].likesCount}
                 commentsCount={mockStats[idx].commentsCount}
                 sharesCount={mockStats[idx].sharesCount}
@@ -282,6 +305,7 @@ export default function SahoolatSocial() {
         </div>
       </div>
 
+      {/* 5) Up/Down arrows for desktop view */}
       <div className="hidden md:flex md:flex-col md:space-y-5 z-10 absolute right-5 top-1/2 transform -translate-y-1/2">
         {currentIndex > 0 && (
           <button
@@ -302,6 +326,7 @@ export default function SahoolatSocial() {
         )}
       </div>
 
+      {/* 6) Bottom nav for mobile */}
       <div className="fixed bottom-0 left-0 right-0 flex md:hidden bg-white shadow-inner border-t border-gray-200 z-20">
         {menu.map((item) => (
           <button
@@ -317,10 +342,9 @@ export default function SahoolatSocial() {
         ))}
       </div>
 
-      {/* Comments drawer (right side) */}
+      {/* 7) Comments drawer (right side) */}
       {commentsOpen && (
-        <div
-          className="fixed top-0 right-0 h-full bg-white shadow-lg border-l border-gray-300 flex flex-col w-[90%] md:w-[30%] z-30">
+        <div className="fixed top-0 right-0 h-full bg-white shadow-lg border-l border-gray-300 flex flex-col w-[90%] md:w-[30%] z-30">
           <button
             className="text-black self-end m-3 px-3 py-1 bg-gray-200 rounded-full hover:bg-gray-300"
             onClick={() => setCommentsOpen(false)}

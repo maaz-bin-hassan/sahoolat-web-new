@@ -63,7 +63,7 @@ export default function VideoCard({
         onEnded={onVideoEnd}
       />
 
-      {/* Right-side icons & counters (reduced gap via space-y-2) */}
+      {/* Right-side icons & counters (reduce gap via space-y-2) */}
       <div className="absolute right-3 top-1/2 -translate-y-1/2 flex flex-col items-center space-y-2 text-white text-2xl z-10">
         {/* Like */}
         <button className="p-3 rounded-full bg-black bg-opacity-40 hover:bg-opacity-60 transition">
