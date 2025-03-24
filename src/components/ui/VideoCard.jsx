@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { FaHeart, FaRegComment, FaShare } from "react-icons/fa";
+import { FaHeart, FaRegComment, FaShare , FaEllipsisV} from "react-icons/fa";
 import { BiVolumeFull, BiVolumeMute } from "react-icons/bi";
 
 export default function VideoCard({
@@ -63,7 +63,7 @@ export default function VideoCard({
       />
 
       {/* MOBILE-ONLY icons (hidden on md+) */}
-      <div className="md:hidden absolute right-3 top-52 translate-y-3/4 flex flex-col items-center space-y-2 text-white text-2xl z-10">
+      <div className="md:hidden absolute right-3 top-40 translate-y-3/4 flex flex-col items-center space-y-2 text-white text-2xl z-10">
         {/* Like */}
         <button className="p-3 rounded-full bg-black bg-opacity-40 hover:bg-opacity-60 transition">
           <FaHeart />
@@ -84,6 +84,11 @@ export default function VideoCard({
           <FaShare />
         </button>
         <span className="text-sm pb-2">{sharesCount}</span>
+
+        <button className="p-3 rounded-full bg-black bg-opacity-40 hover:bg-opacity-60 transition">
+          <FaEllipsisV />
+        </button>
+
       </div>
 
       {/* Mute/Unmute Button (bottom-left) */}
@@ -96,7 +101,6 @@ export default function VideoCard({
         </button>
       </div>
 
-      {/* Progress Bar (bottom) */}
       <div className="absolute bottom-3 left-[60px] right-2 flex items-center z-10">
         <input
           type="range"
