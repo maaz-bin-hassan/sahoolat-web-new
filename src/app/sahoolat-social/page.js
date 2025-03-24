@@ -100,14 +100,28 @@ export default function SahoolatSocial() {
     };
   }, [pausedByAuto]);
 
-  // Keep all videos muted/unmuted
+  useEffect(() => {
+    function handleResize() {
+      if (window.innerWidth >= 768) {
+        setDrawerOpen(false);
+      }
+    }
+    window.addEventListener("resize", handleResize);
+
+    handleResize();
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
+
   useEffect(() => {
     videoRefs.current.forEach((vid) => {
       if (vid) vid.muted = isMuted;
     });
   }, [isMuted]);
 
-  // Handlers for each video
   const handleVideoLoad = (index) => {
     setLoadingVideos((prev) => {
       const updated = [...prev];
@@ -209,13 +223,11 @@ export default function SahoolatSocial() {
 
   return (
     <div className="relative w-full h-screen flex bg-gray-50">
-      {/* Side Drawer */}
       <SocialMediaSideDrawer
         isOpen={drawerOpen}
         onClose={() => setDrawerOpen(false)}
       />
 
-      {/* Large-screen sidebar (desktop) */}
       <div className="hidden md:flex md:w-60 md:h-screen md:bg-white md:shadow-xl md:flex-col md:py-6 md:fixed md:left-0">
         <Link href={"/"}>
           <div className="flex items-center justify-center mb-10">
@@ -245,7 +257,6 @@ export default function SahoolatSocial() {
         </nav>
       </div>
 
-      {/* MAIN VIDEO SECTION */}
       <div className="flex-1 flex flex-col">
         <div
           ref={containerRef}
@@ -285,7 +296,6 @@ export default function SahoolatSocial() {
         </div>
       </div>
 
-      {/* Mobile Navigation Bar */}
       <div className="fixed bottom-0 left-0 right-0 flex md:hidden bg-white shadow-inner border-t border-gray-200">
         {menu.map((item) => (
           <button
@@ -303,7 +313,6 @@ export default function SahoolatSocial() {
         ))}
       </div>
 
-      {/* Comments Panel */}
       {commentsOpen && (
         <div className="fixed top-0 right-0 h-full bg-white shadow-lg border-l border-gray-300 flex flex-col w-[90%] md:w-[30%]">
           <button
