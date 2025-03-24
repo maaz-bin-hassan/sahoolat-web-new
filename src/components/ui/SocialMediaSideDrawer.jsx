@@ -10,8 +10,11 @@ import {
 import {
   FaNewspaper,
   FaEnvelopeOpenText,
-  FaBriefcase,
+  FaBriefcase,FaFacebook , FaLinkedinIn
 } from "react-icons/fa";
+
+import { SiTiktok } from "react-icons/si";
+
 
 export default function SocialMediaSideDrawer({ isOpen, onClose }) {
   const [selectedItem, setSelectedItem] = useState(null);
@@ -70,46 +73,47 @@ export default function SocialMediaSideDrawer({ isOpen, onClose }) {
 
             {/* About */}
             <li
-              className={`flex items-center space-x-2 cursor-pointer ${
+              className={`flex items-center space-x-2 cursor-pointer pl-2 pt-2 ${
                 selectedItem === "About" ? "bg-[#0ea288] text-white rounded" : ""
               }`}
               onClick={() => handleItemClick("About")}
             >
               <AiFillInfoCircle size={22} />
-              <span>About</span>
+              <span className="pl-0.5">About</span>
+
             </li>
 
             {/* Newsroom */}
             <li
-              className={`flex items-center space-x-2 cursor-pointer ${
+              className={`flex items-center space-x-2 cursor-pointer pl-2 pt-2 ${
                 selectedItem === "Newsroom" ? "bg-[#0ea288] text-white rounded" : ""
               }`}
               onClick={() => handleItemClick("Newsroom")}
             >
               <FaNewspaper size={22} />
-              <span>Newsroom</span>
+              <span className="pl-0.5">Newsroom</span>
             </li>
 
             {/* Contact */}
             <li
-              className={`flex items-center space-x-2 cursor-pointer ${
+              className={`flex items-center space-x-2 cursor-pointer pl-2 pt-2 ${
                 selectedItem === "Contact" ? "bg-[#0ea288] text-white rounded" : ""
               }`}
               onClick={() => handleItemClick("Contact")}
             >
               <FaEnvelopeOpenText size={22} />
-              <span>Contact</span>
+              <span className="pl-0.5">Contact</span>
             </li>
 
             {/* Careers */}
             <li
-              className={`flex items-center space-x-2 cursor-pointer ${
+              className={`flex items-center space-x-2 cursor-pointer pl-2 pt-2 ${
                 selectedItem === "Careers" ? "bg-[#0ea288] text-white rounded" : ""
               }`}
               onClick={() => handleItemClick("Careers")}
             >
               <FaBriefcase size={22} />
-              <span>Careers</span>
+              <span className="pl-0.5">Careers</span>
             </li>
           </ul>
 
@@ -117,14 +121,28 @@ export default function SocialMediaSideDrawer({ isOpen, onClose }) {
 
           <h3 className="text-xl font-bold mt-4">Follow Us</h3>
           <div className="mt-2 space-y-3 text-gray-700">
-            <div className="flex items-center space-x-2 text-xl">
+            <div className="flex items-center space-x-2 text-xl pl-2 pt-2">
               <AiFillTwitterCircle size={30} />
               <span>Twitter</span>
             </div>
-            <div className="flex items-center space-x-2 text-xl">
+            <div className="flex items-center space-x-2 text-xl pl-2 pt-2">
               <AiFillInstagram size={30} />
               <span>Instagram</span>
             </div>
+
+               {/* New icons */}
+               <div className="flex items-center space-x-2 text-xl pl-2 pt-2">
+                 <SiTiktok size={30} />
+                 <span>TikTok</span>
+               </div>
+               <div className="flex items-center space-x-2 text-xl pl-2 pt-2">
+                 <FaFacebook size={30} />
+                 <span>Facebook</span>
+               </div>
+               <div className="flex items-center space-x-2 text-xl pl-2 pt-2">
+                 <FaLinkedinIn size={30} />
+                 <span>LinkedIn</span>
+               </div>
           </div>
         </div>
       </div>
