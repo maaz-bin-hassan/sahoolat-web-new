@@ -1,24 +1,24 @@
 "use client";
-import React, { useEffect, useRef, useState } from "react";
-import { FaCog, FaCompass, FaHeart, FaHome, FaPlus, FaRegComment, FaShare, FaUser } from "react-icons/fa";
-import { BiVolumeFull, BiVolumeMute } from "react-icons/bi";
-import Image from "next/image";
-import Link from "next/link";
 
+import React, { useEffect, useRef, useState } from "react";
+import {
+  FaCompass, FaHome, FaPlus, FaUser, FaBars, FaArrowUp, FaArrowDown,
+  FaHeart, FaRegComment, FaShare, FaEllipsisV
+} from "react-icons/fa";
+
+import SocialMediaSideDrawer from "../../components/ui/SocialMediaSideDrawer";
+import SocialMediaSideBar from "../../components/ui/SocialMediaSideBar";
+import { useRouter } from "next/navigation";
+import VideoCard from "../../components/ui/VideoCard";
 
 const menu = [
   { text: "Home", icon: FaHome, href: "#home" },
-  { text: "Explore", icon: FaCompass, href: "#explore" },
-  { text: "Upload", icon: FaPlus, href: "#upload" },
-  { text: "Profile", icon: FaUser, href: "#profile" },
+  { text: "Explore", icon: FaCompass, href: "/sahoolat-social/explore" },
+  { text: "Upload", icon: FaPlus, href: "/sahoolat-social/upload" },
+  { text: "Profile", icon: FaUser, href: "/sahoolat-social/profile" },
 ];
 
-function formatTime(seconds) {
-  const mins = Math.floor(seconds / 60);
-  const secs = Math.floor(seconds % 60).toString().padStart(2, "0");
-  return `${mins}:${secs}`;
-}
-
+// Demo video URLs
 const videoUrls = [
   "https://lyudo-images.s3.eu-north-1.amazonaws.com/videos/%23construction+%23plumber+%23plumbing+%23like+%23subscribe+%23shorts+%23video+%23electrical+%23mistri+%23pipes+%23yt.mp4",
   "https://lyudo-images.s3.eu-north-1.amazonaws.com/videos/%23plumber+%23work+wall+mixer+ka+fiting+kese+kare+%23bathroom+%23wallmixer+%23geyser.mp4",
@@ -28,7 +28,6 @@ const videoUrls = [
   "https://lyudo-images.s3.eu-north-1.amazonaws.com/videos/PERFECT+PLUMBING+WORK+%23shorts.mp4",
   "https://lyudo-images.s3.eu-north-1.amazonaws.com/videos/videoplayback.mp4",
   "https://lyudo-images.s3.eu-north-1.amazonaws.com/videos/Water+tank+connection+%23shorts+%23shortvideo+%23short+%23shortsfeed+%23trending+%23viralvideo+%23reels.mp4",
-//     home handy workers:
   "https://lyudo-images.s3.eu-north-1.amazonaws.com/videos/home+cares/Helpful+construction+tips+you+should+learn+from+the+experience+carpenter+%23carpentry+%23wood+%23skills.mp4",
   "https://lyudo-images.s3.eu-north-1.amazonaws.com/videos/home+cares/Home+Ceiling+Designer+POP+Bedroom+Amazing+%F0%9F%98%9C+Interior+Work++%23popdesign+%23house+%23designer+%23shorts.mp4",
   "https://lyudo-images.s3.eu-north-1.amazonaws.com/videos/home+cares/LALKA+Electric+Grass+Cutting+Machine+_+Lawn+Mower+_+%23grasscutting++%23shortvideo+%23short+%23shorts.mp4",
@@ -39,329 +38,355 @@ const videoUrls = [
   "https://lyudo-images.s3.eu-north-1.amazonaws.com/videos/home+cares/Ye+kya+kr+diya+%F0%9F%98%82%F0%9F%A4%A3%23noorah_albalushiya+%23shortvideo+%23funny+%23shortvideo+%23comedy.mp4",
 ];
 
+// Demo stats for each video
+const mockStats = [
+  { likesCount: "368.5K", commentsCount: "6427", sharesCount: "25K" },
+  { likesCount: "120K",   commentsCount: "542",  sharesCount: "10K" },
+  { likesCount: "1.2M",   commentsCount: "3400", sharesCount: "5K" },
+  { likesCount: "900K",   commentsCount: "1300", sharesCount: "3K" },
+  { likesCount: "368.5K", commentsCount: "6427", sharesCount: "25K" },
+  { likesCount: "120K",   commentsCount: "542",  sharesCount: "10K" },
+  { likesCount: "1.2M",   commentsCount: "3400", sharesCount: "5K" },
+  { likesCount: "900K",   commentsCount: "1300", sharesCount: "3K" },
+  { likesCount: "368.5K", commentsCount: "6427", sharesCount: "25K" },
+  { likesCount: "120K",   commentsCount: "542",  sharesCount: "10K" },
+  { likesCount: "1.2M",   commentsCount: "3400", sharesCount: "5K" },
+  { likesCount: "900K",   commentsCount: "1300", sharesCount: "3K" },
+  { likesCount: "368.5K", commentsCount: "6427", sharesCount: "25K" },
+  { likesCount: "120K",   commentsCount: "542",  sharesCount: "10K" },
+  { likesCount: "1.2M",   commentsCount: "3400", sharesCount: "5K" },
+  { likesCount: "900K",   commentsCount: "1300", sharesCount: "3K" },
+];
+
 export default function SahoolatSocial() {
+  const router = useRouter();
   const containerRef = useRef(null);
   const videoRefs = useRef([]);
+  const sectionRefs = useRef([]);
 
-  // For toggling audio, we won't rely on muted={muted}. We'll do manual DOM manipulation.
+  const [activeMenuItem, setActiveMenuItem] = useState(null);
+  const [drawerOpen, setDrawerOpen] = useState(false);
+  // Video state
   const [isMuted, setIsMuted] = useState(true);
-  // For 2-loop logic
-  const [playCounts, setPlayCounts] = useState(
-    new Array(videoUrls.length).fill(0),
-  );
-  const [pausedByAuto, setPausedByAuto] = useState(
-    new Array(videoUrls.length).fill(false),
-  );
-
+  const [playCounts, setPlayCounts] = useState(new Array(videoUrls.length).fill(0));
+  const [pausedByAuto, setPausedByAuto] = useState(new Array(videoUrls.length).fill(false));
   const [currentIndex, setCurrentIndex] = useState(0);
 
-  // Loader
-  const [loadingVideos, setLoadingVideos] = useState(
-    new Array(videoUrls.length).fill(true),
-  );
-
-  // Durations & currentTimes => progress bar
-  const [durations, setDurations] = useState(
-    new Array(videoUrls.length).fill(0),
-  );
-  const [currentTimes, setCurrentTimes] = useState(
-    new Array(videoUrls.length).fill(0),
-  );
+  // Loading/progress
+  const [loadingVideos, setLoadingVideos] = useState(new Array(videoUrls.length).fill(true));
+  const [durations, setDurations] = useState(new Array(videoUrls.length).fill(0));
+  const [currentTimes, setCurrentTimes] = useState(new Array(videoUrls.length).fill(0));
 
   // Comments
   const [commentsOpen, setCommentsOpen] = useState(false);
 
+  // Mobile bottom nav
   const [activeLink, setActiveLink] = useState("#home");
 
-  const handleMenuClick = (link) => {
-    setActiveLink(link);
+  // Keep sectionRefs array in sync
+  useEffect(() => {
+    sectionRefs.current = sectionRefs.current.slice(0, videoUrls.length);
+  }, [videoUrls.length]);
+
+  const handleMenuClick = (href) => {
+    setActiveLink(href);
+    router.push(href);
   };
 
-  // ----------------------------------------
-  // HELPER: Update actual video muted property
-  // whenever `isMuted` changes
-  // ----------------------------------------
-  useEffect(() => {
-    // Only update the currently visible video or all videos as you prefer
-    videoRefs.current.forEach((vid) => {
-      if (vid) {
-        vid.muted = isMuted;
-      }
-    });
-  }, [isMuted]);
-
-  // ----------------------------------------
-  // IntersectionObserver => auto-play
-  // ----------------------------------------
   useEffect(() => {
     const options = { root: containerRef.current, threshold: 0.7 };
     const observer = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
-        const video = entry.target;
-        const idx = videoRefs.current.indexOf(video);
+        const videoEl = entry.target;
+        const idx = videoRefs.current.indexOf(videoEl);
 
         if (entry.isIntersecting) {
-          if (!pausedByAuto[idx]) {
-            video.play().catch(() => {
-            });
+          // Play the video when it enters the viewport if paused
+          if (videoEl.paused) {
+            videoEl.play().catch(() => {});
             setCurrentIndex(idx);
           }
         } else {
-          video.pause();
+          // Pause the video when it leaves the viewport
+          if (!videoEl.paused) {
+            videoEl.pause();
+          }
         }
       });
     }, options);
 
-    videoRefs.current.forEach((video) => {
-      if (video) observer.observe(video);
+    // Observe each video element
+    videoRefs.current.forEach((vid) => {
+      if (vid) observer.observe(vid);
     });
 
     return () => {
-      videoRefs.current.forEach((video) => {
-        if (video) observer.unobserve(video);
+      videoRefs.current.forEach((vid) => {
+        if (vid) observer.unobserve(vid);
       });
     };
-  }, [pausedByAuto]);
+  }, []);
 
-  // ----------------------------------------
-  // VIDEO EVENT HANDLERS
-  // ----------------------------------------
-  const handleVideoLoad = (i) => {
+  // Close the drawer if viewport >= 768
+  useEffect(() => {
+    function handleResize() {
+      if (window.innerWidth >= 768) {
+        setDrawerOpen(false);
+      }
+    }
+    window.addEventListener("resize", handleResize);
+    handleResize();
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  useEffect(() => {
+    videoRefs.current.forEach((vid) => {
+      if (vid) vid.muted = isMuted;
+    });
+  }, [isMuted]);
+
+  const handleVideoLoad = (index) => {
     setLoadingVideos((prev) => {
-      const clone = [...prev];
-      clone[i] = false;
-      return clone;
-    });
-  };
-
-  const handleVideoBuffer = (i) => {
-    setLoadingVideos((prev) => {
-      const clone = [...prev];
-      clone[i] = true;
-      return clone;
-    });
-  };
-
-  const handleLoadedMetadata = (i) => {
-    const vid = videoRefs.current[i];
-    if (!vid) return;
-    setDurations((prev) => {
-      const clone = [...prev];
-      clone[i] = vid.duration || 0;
-      return clone;
-    });
-  };
-
-  const handleTimeUpdate = (i) => {
-    const vid = videoRefs.current[i];
-    if (!vid) return;
-    setCurrentTimes((prev) => {
-      const clone = [...prev];
-      clone[i] = vid.currentTime;
-      return clone;
-    });
-  };
-
-  const handleVideoEnd = (i) => {
-    setPlayCounts((prev) => {
       const updated = [...prev];
-      updated[i] += 1;
-
-      // First end => replay
-      if (updated[i] === 1) {
-        const vid = videoRefs.current[i];
-        vid.currentTime = 0;
-        vid.play().catch(() => {
-        });
-      }
-      // Second end => auto pause
-      else if (updated[i] >= 2) {
-        const vid = videoRefs.current[i];
-        vid.pause();
-
-        setPausedByAuto((old) => {
-          const clone = [...old];
-          clone[i] = true;
-          return clone;
-        });
-      }
+      updated[index] = false;
       return updated;
     });
   };
 
-  // If video was auto-paused => user override
-  const handleVideoClick = (i) => {
-    const vid = videoRefs.current[i];
+  const handleVideoBuffer = (index) => {
+    setLoadingVideos((prev) => {
+      const updated = [...prev];
+      updated[index] = true;
+      return updated;
+    });
+  };
+
+  const handleLoadedMetadata = (index) => {
+    const vid = videoRefs.current[index];
+    if (!vid) return;
+    setDurations((prev) => {
+      const updated = [...prev];
+      updated[index] = vid.duration || 0;
+      return updated;
+    });
+  };
+
+  const handleTimeUpdate = (index) => {
+    const vid = videoRefs.current[index];
+    if (!vid) return;
+    setCurrentTimes((prev) => {
+      const updated = [...prev];
+      updated[index] = vid.currentTime;
+      return updated;
+    });
+  };
+
+  const handleVideoEnd = (index) => {
+    const vid = videoRefs.current[index];
+    if (vid) {
+      vid.pause();
+      setPausedByAuto((prev) => {
+        const updated = [...prev];
+        updated[index] = true;
+        return updated;
+      });
+      setPlayCounts((prev) => {
+        const updated = [...prev];
+        updated[index] += 1;
+        return updated;
+      });
+    }
+  };
+
+  const handleVideoClick = (index) => {
+    const vid = videoRefs.current[index];
     if (!vid) return;
 
-    if (pausedByAuto[i]) {
-      // reset auto-pause
+    if (pausedByAuto[index]) {
       setPausedByAuto((old) => {
         const clone = [...old];
-        clone[i] = false;
+        clone[index] = false;
         return clone;
       });
-      // reset playCounts => can watch 2 loops again
       setPlayCounts((old) => {
         const clone = [...old];
-        clone[i] = 0;
+        clone[index] = 0;
         return clone;
       });
     }
     vid.paused ? vid.play() : vid.pause();
   };
 
-  // PROGRESS BAR => real-time scrub
-  const handleScrub = (i, val) => {
-    const vid = videoRefs.current[i];
+  const handleScrub = (index, val) => {
+    const vid = videoRefs.current[index];
     if (!vid) return;
 
-    if (pausedByAuto[i]) {
-      // override auto-pause
+    if (pausedByAuto[index]) {
       setPausedByAuto((old) => {
         const clone = [...old];
-        clone[i] = false;
+        clone[index] = false;
         return clone;
       });
       setPlayCounts((old) => {
         const clone = [...old];
-        clone[i] = 0;
+        clone[index] = 0;
         return clone;
       });
     }
     vid.currentTime = Number(val);
-    vid.play().catch(() => {
+    vid.play().catch(() => {});
+  };
+
+  const toggleComments = () => setCommentsOpen((prev) => !prev);
+
+  const handleNextVideo = () => {
+    setCurrentIndex((prevIndex) => {
+      const newIndex = prevIndex + 1;
+      if (newIndex < videoUrls.length) {
+        sectionRefs.current[newIndex]?.scrollIntoView({ behavior: "smooth" });
+      }
+      return newIndex < videoUrls.length ? newIndex : prevIndex;
     });
   };
 
-  const toggleComments = () => setCommentsOpen((x) => !x);
+  const handlePreviousVideo = () => {
+    setCurrentIndex((prevIndex) => {
+      const newIndex = prevIndex - 1;
+      if (newIndex >= 0) {
+        sectionRefs.current[newIndex]?.scrollIntoView({ behavior: "smooth" });
+      }
+      return newIndex >= 0 ? newIndex : prevIndex;
+    });
+  };
 
-  // ----------------------------------------
-  // RENDER
-  // ----------------------------------------
   return (
-    <div className="relative w-full h-screen flex bg-gray-50">
-      {/* SIDEBAR */}
-      <div className="w-60 h-screen bg-white shadow-xl flex flex-col py-6 fixed left-0">
-        <Link href={"/"}>
-          <div className="flex items-center justify-center mb-10">
-            <Image
-              height={200}
-              width={200}
-              src="/assets/logo.png"
-              alt="Sahoolat AI Logo"
-            />
-          </div>
-        </Link>
-        <nav className="flex flex-col space-y-1 px-4">
-          {menu.map(item => (
-            <button
-              key={item.text}
-              onClick={() => handleMenuClick(item.href)}
-              className={`flex items-center p-3 text-gray-600 transition ${activeLink === item.href ? "text-white font-bold bg-[#0ea288] rounded-lg shadow-md" : ""}`}
-            >
-              <item.icon size={24} className="mr-3" />
-
-              <span className="text-lg">
-                {item.text}
-              </span>
-            </button>
-          ))}
-        </nav>
+    <div className="w-screen h-screen flex bg-gray-50">
+      <div className="md:hidden absolute top-4 left-4 z-50">
+        <button
+          onClick={() => setDrawerOpen(true)}
+          className="p-2 rounded-full focus:outline-none text-black bg-transparent hover:bg-black/20 transition"
+        >
+          <FaBars size={24} />
+        </button>
       </div>
 
-      {/* MAIN VIDEO SECTION */}
-      <div className="flex-1 flex justify-center items-center ml-48">
+      <SocialMediaSideDrawer
+        isOpen={drawerOpen}
+        onClose={() => setDrawerOpen(false)}
+      />
+
+      <div className="hidden md:block fixed top-0 left-0 w-44 h-screen bg-white shadow-md">
+        <SocialMediaSideBar />
+      </div>
+
+      <div className="flex-1 ml-0 md:ml-44 flex flex-col relative">
         <div
           ref={containerRef}
-          className="w-full h-screen overflow-y-scroll"
-          style={{
-            scrollSnapType: "y mandatory",
-            WebkitOverflowScrolling: "touch",
-          }}
+          className="w-full flex-1 overflow-y-scroll"
+          style={{ scrollSnapType: "y mandatory", WebkitOverflowScrolling: "touch" }}
         >
           {videoUrls.map((url, idx) => (
             <section
               key={idx}
-              className="w-full h-screen flex items-center justify-center"
+              ref={(el) => (sectionRefs.current[idx] = el)}
+              className="relative w-full h-screen flex items-center justify-center md:pt-[10px] pb-[5px]"
               style={{ scrollSnapAlign: "start" }}
             >
-              <div
-                className="relative w-full max-w-[450px] h-[90%] rounded-xl overflow-hidden shadow-lg bg-black">
-                {/* Loader */}
-                {loadingVideos[idx] && (
-                  <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50">
-                    <div
-                      className="loader border-4 border-gray-300 border-t-transparent w-12 h-12 rounded-full animate-spin"></div>
-                  </div>
-                )}
+              <VideoCard
+                videoRef={(el) => (videoRefs.current[idx] = el)}
+                videoUrl={url}
+                isMuted={isMuted}
+                loading={loadingVideos[idx]}
+                duration={durations[idx]}
+                currentTime={currentTimes[idx]}
+                onLoadedData={() => handleVideoLoad(idx)}
+                onWaiting={() => handleVideoBuffer(idx)}
+                onLoadedMetadata={() => handleLoadedMetadata(idx)}
+                onTimeUpdate={() => handleTimeUpdate(idx)}
+                onVideoClick={() => handleVideoClick(idx)}
+                onVideoEnd={() => handleVideoEnd(idx)}
+                onScrub={(e) => handleScrub(idx, e.target.value)}
+                onToggleMute={() => setIsMuted((m) => !m)}
+                onToggleComments={toggleComments}
+                showHamburger={false}
+                onOpenDrawer={() => setDrawerOpen(true)}
+                likesCount={mockStats[idx].likesCount}
+                commentsCount={mockStats[idx].commentsCount}
+                sharesCount={mockStats[idx].sharesCount}
+              />
 
-                <video
-                  ref={(el) => (videoRefs.current[idx] = el)}
-                  src={url}
-                  className="absolute top-0 left-0 w-full h-full object-cover"
-                  playsInline
-                  // No muted={isMuted} here => we do it manually in useEffect
-                  onLoadedData={() => handleVideoLoad(idx)}
-                  onWaiting={() => handleVideoBuffer(idx)}
-                  onLoadedMetadata={() => handleLoadedMetadata(idx)}
-                  onTimeUpdate={() => handleTimeUpdate(idx)}
-                  onEnded={() => handleVideoEnd(idx)}
-                  onClick={() => handleVideoClick(idx)}
-                />
-
-                {/* Right Side Icons */}
-                <div
-                  className="absolute right-3 top-1/2 -translate-y-1/2 flex flex-col items-center space-y-6 text-white text-2xl">
-                  <button className="p-3 rounded-full bg-black bg-opacity-40 hover:bg-opacity-60 transition">
-                    <FaHeart />
-                  </button>
-                  <button
-                    onClick={toggleComments}
-                    className="p-3 rounded-full bg-black bg-opacity-40 hover:bg-opacity-60 transition"
-                  >
-                    <FaRegComment />
-                  </button>
-                  <button className="p-3 rounded-full bg-black bg-opacity-40 hover:bg-opacity-60 transition">
-                    <FaShare />
-                  </button>
-                </div>
-
-                {/* Mute/Unmute */}
-                <div className="absolute bottom-4 left-4 text-white text-2xl">
-                  <button
-                    onClick={() => setIsMuted(!isMuted)}
-                    className="p-2 rounded-full bg-black bg-opacity-40 hover:bg-opacity-60 transition"
-                  >
-                    {isMuted ? <BiVolumeMute /> : <BiVolumeFull />}
-                  </button>
-                </div>
-
-                {/* PROGRESS BAR & TIME */}
-                <div className="absolute bottom-3 left-[60px] right-2 flex items-center">
-                  <input
-                    type="range"
-                    className="w-full h-1.5 text-textColor transition-all duration-300"
-                    min={0}
-                    step={0.1}
-                    max={durations[idx] || 0}
-                    value={currentTimes[idx] || 0}
-                    onInput={(e) => handleScrub(idx, e.target.value)}
-                  />
-                  {/*<span className="text-white text-sm ml-2">*/}
-                  {/*  {formatTime(currentTimes[idx])} / {formatTime(durations[idx])}*/}
-                  {/*</span>*/}
-                </div>
+              <div className="hidden md:flex flex-col items-center space-y-2 z-10 absolute right-[29%] top-[66%] transform -translate-y-1/2">
+                <button className="p-3 rounded-full bg-gray-200 text-black hover:bg-gray-300 transition">
+                  <FaHeart size={30} />
+                </button>
+                <span className="text-sm text-black pb-4">
+                  {mockStats[idx].likesCount}
+                </span>
+                <button
+                  onClick={toggleComments}
+                  className="p-3 rounded-full bg-gray-200 text-black hover:bg-gray-300 transition"
+                >
+                  <FaRegComment size={30} />
+                </button>
+                <span className="text-sm text-black pb-4">
+                  {mockStats[idx].commentsCount}
+                </span>
+                <button className="p-3 rounded-full bg-gray-200 text-black hover:bg-gray-300 transition">
+                  <FaShare size={30} />
+                </button>
+                <span className="text-sm text-black">
+                  {mockStats[idx].sharesCount}
+                </span>
+                <button className="p-3 rounded-full bg-gray-200 text-black hover:bg-gray-300 transition">
+                  <FaEllipsisV size={30} />
+                </button>
               </div>
             </section>
           ))}
         </div>
       </div>
 
-      {/* Comments Panel */}
+      <div className="hidden md:flex md:flex-col md:space-y-5 z-10 absolute right-20 top-1/2 transform -translate-y-1/2">
+        {currentIndex > 0 && (
+          <button
+            className="w-20 h-20 p-3 flex items-center justify-center rounded-full bg-gray-200 text-black hover:bg-gray-300 transition"
+            onClick={handlePreviousVideo}
+          >
+            <FaArrowUp size={35} />
+          </button>
+        )}
+
+        {currentIndex < videoUrls.length - 1 && (
+          <button
+            className="w-20 h-20 p-3 flex items-center justify-center rounded-full bg-gray-200 text-black hover:bg-gray-300 transition"
+            onClick={handleNextVideo}
+          >
+            <FaArrowDown size={35} />
+          </button>
+        )}
+      </div>
+
+      <div className="fixed bottom-0 left-0 right-0 flex md:hidden bg-white shadow-inner border-t border-gray-200 z-20">
+        {menu.map((item) => (
+          <button
+            key={item.text}
+            onClick={() => handleMenuClick(item.href)}
+            className={`flex-1 flex flex-col items-center p-3 transition-all ${
+              activeLink === item.href ? "text-white font-bold bg-[#0ea288]" : "text-gray-600"
+            }`}
+            style={{
+              transform: activeMenuItem === item.href ? "translateY(-10px)" : "translateY(0)",
+              transition: "transform 0.3s ease-in-out",
+            }}
+          >
+            <item.icon size={25} />
+            <span className="text-xs">{item.text}</span>
+          </button>
+        ))}
+      </div>
+
       {commentsOpen && (
-        <div
-          className="fixed top-0 right-0 h-full bg-white shadow-lg border-l border-gray-300 flex flex-col transform transition-transform w-[30%]">
+        <div className="fixed top-0 right-0 h-full bg-white shadow-lg border-l border-gray-300 flex flex-col w-[90%] md:w-[30%] z-30">
           <button
             className="text-black self-end m-3 px-3 py-1 bg-gray-200 rounded-full hover:bg-gray-300"
             onClick={() => setCommentsOpen(false)}
@@ -369,14 +394,14 @@ export default function SahoolatSocial() {
             ✕
           </button>
           <h2 className="text-xl font-bold p-4 border-b">Comments</h2>
-          <div className="flex-1 overflow-y-auto p-4 space-y-3">
-            <p className="text-gray-700">
+          <div className="flex-1 overflow-y-auto p-4 space-y-3 text-gray-700">
+            <p>
               <strong>User123:</strong> Great video!
             </p>
-            <p className="text-gray-700">
+            <p>
               <strong>PlumberGuy:</strong> Very informative.
             </p>
-            <p className="text-gray-700">
+            <p>
               <strong>JaneDoe:</strong> Loved it! 🔥
             </p>
           </div>
