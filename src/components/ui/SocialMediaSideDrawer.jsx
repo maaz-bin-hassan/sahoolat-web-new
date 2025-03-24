@@ -22,6 +22,7 @@ import googlePlay from "../../../public/assets/google-play.png";
 export default function SocialMediaSideDrawer({ isOpen, onClose }) {
   const [selectedItem, setSelectedItem] = useState(null);
 
+
   const handleItemClick = (itemName) => {
     setSelectedItem(itemName);
   };

@@ -41,6 +41,9 @@ export default function SahoolatSocial() {
   const videoRefs = useRef([]);   // Video elements
   const sectionRefs = useRef([]); // Section wrappers for scrolling
 
+// Drawers and modals
+  const [drawerOpen, setDrawerOpen] = useState(false);
+
   // Video state
   const [isMuted, setIsMuted] = useState(true);
   const [playCounts, setPlayCounts] = useState(new Array(videoUrls.length).fill(0));
@@ -52,8 +55,7 @@ export default function SahoolatSocial() {
   const [durations, setDurations] = useState(new Array(videoUrls.length).fill(0));
   const [currentTimes, setCurrentTimes] = useState(new Array(videoUrls.length).fill(0));
 
-  // Drawers and modals
-  const [drawerOpen, setDrawerOpen] = useState(false);
+
   const [commentsOpen, setCommentsOpen] = useState(false);
 
   // Mobile bottom nav
@@ -95,7 +97,7 @@ export default function SahoolatSocial() {
     };
   }, [pausedByAuto]);
 
-  // Close drawer on desktop
+
   useEffect(() => {
     function handleResize() {
       if (window.innerWidth >= 768) {
@@ -107,14 +109,13 @@ export default function SahoolatSocial() {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  // Sync mute state
+
   useEffect(() => {
     videoRefs.current.forEach((vid) => {
       if (vid) vid.muted = isMuted;
     });
   }, [isMuted]);
 
-  // Video event handlers
   const handleVideoLoad = (index) => {
     setLoadingVideos((prev) => {
       const updated = [...prev];
@@ -157,7 +158,6 @@ export default function SahoolatSocial() {
       updated[index] += 1;
 
       const vid = videoRefs.current[index];
-      // Replay once, then pause
       if (updated[index] === 1) {
         vid.currentTime = 0;
         vid.play().catch(() => {});
@@ -238,6 +238,7 @@ export default function SahoolatSocial() {
         isOpen={drawerOpen}
         onClose={() => setDrawerOpen(false)}
       />
+
 
       <SocialMediaSideBar />
 
