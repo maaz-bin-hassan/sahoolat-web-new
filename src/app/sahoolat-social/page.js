@@ -281,24 +281,26 @@ export default function SahoolatSocial() {
         </div>
       </div>
 
-      <div className="hidden md:flex md:flex-col md:space-y-2 z-10 absolute right-5 top-1/2 transform -translate-y-1/2">
+      <div className="hidden md:flex md:flex-col md:space-y-5 z-10 absolute right-5 top-1/2 transform -translate-y-1/2">
         {currentIndex > 0 && (
           <button
-            className="w-14 h-14 flex items-center justify-center rounded-full bg-gray-200 text-black hover:bg-gray-300 transition"
+            className="w-20 h-20 p-3 flex items-center justify-center rounded-full bg-gray-200 text-black hover:bg-gray-300 transition"
             onClick={handlePreviousVideo}
           >
-            <FaArrowUp size={30} />
+            <FaArrowUp size={35} />
           </button>
         )}
 
         {currentIndex < videoUrls.length - 1 && (
           <button
+            className="w-20 h-20 p-3 flex items-center justify-center rounded-full bg-gray-200 text-black hover:bg-gray-300 transition"
             onClick={handleNextVideo}
-            className="w-14 h-14 flex items-center justify-center rounded-full bg-gray-200 text-black hover:bg-gray-300 transition">
-            <FaArrowDown size={30} />
+          >
+            <FaArrowDown size={35} />
           </button>
         )}
       </div>
+
       <div className="fixed bottom-0 left-0 right-0 flex md:hidden bg-white shadow-inner border-t border-gray-200 z-20">
         {menu.map((item) => (
           <button
@@ -316,7 +318,8 @@ export default function SahoolatSocial() {
 
       {/* Comments drawer (right side) */}
       {commentsOpen && (
-        <div className="fixed top-0 right-0 h-full bg-white shadow-lg border-l border-gray-300 flex flex-col w-[90%] md:w-[30%] z-30">
+        <div
+          className="fixed top-0 right-0 h-full bg-white shadow-lg border-l border-gray-300 flex flex-col w-[90%] md:w-[30%] z-30">
           <button
             className="text-black self-end m-3 px-3 py-1 bg-gray-200 rounded-full hover:bg-gray-300"
             onClick={() => setCommentsOpen(false)}
