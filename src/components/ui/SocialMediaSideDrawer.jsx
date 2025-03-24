@@ -48,10 +48,8 @@ export default function SocialMediaSideDrawer({ isOpen, onClose }) {
           ✕
         </button>
 
-        <div
-          className="mt-10 px-4 overflow-y-auto h-full pb-10"
-          style={{ fontFamily: "Roboto, sans-serif" }}
-        >
+           <div className="mt-10 px-4 pb-10 h-full overflow-y-scroll" style={{ fontFamily: "Roboto, sans-serif" }}>
+
           <div className="flex items-center justify-center mb-6">
             <Image
               src="/assets/logo.png"
