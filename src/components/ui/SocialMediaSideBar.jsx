@@ -20,19 +20,11 @@ import {
 } from "react-icons/fa";
 import { SiTiktok } from "react-icons/si";
 
-// Example images
 import appStore from "../../../public/assets/app-store.png";
 import googlePlay from "../../../public/assets/google-play.png";
 
-/**
- * A permanent desktop sidebar with:
- * 1) Company section
- * 2) Follow Us
- * 3) Download CTA
- * 4) Extra nav items: Home, Explore, etc.
- */
+
 export default function SocialMediaSideBar() {
-  // If you want click-to-highlight logic:
   const [selectedItem, setSelectedItem] = useState(null);
   const handleItemClick = (itemName) => setSelectedItem(itemName);
 

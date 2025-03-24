@@ -21,11 +21,14 @@ export default function VideoCard({
                                     onToggleMute,
                                     onToggleComments,
                                     showHamburger,
-                                    onOpenDrawer
+                                    onOpenDrawer,
+                                    likesCount,
+                                    commentsCount,
+                                    sharesCount,
                                   }) {
   return (
     <div className="relative w-full max-w-[450px] h-full bg-black overflow-hidden md:rounded-xl">
-      {/* Hamburger Button */}
+      {/* Hamburger Button (visible on mobile) */}
       {showHamburger && (
         <button
           onClick={onOpenDrawer}
@@ -37,12 +40,14 @@ export default function VideoCard({
         </button>
       )}
 
+      {/* Loading Spinner Overlay */}
       {loading && (
-        <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50">
+        <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 z-10">
           <div className="loader border-4 border-gray-300 border-t-transparent w-12 h-12 rounded-full animate-spin"></div>
         </div>
       )}
 
+      {/* Video Element */}
       <video
         ref={videoRef}
         src={videoUrl}
@@ -55,26 +60,35 @@ export default function VideoCard({
         onLoadedMetadata={onLoadedMetadata}
         onTimeUpdate={onTimeUpdate}
         onClick={onVideoClick}
+        onEnded={onVideoEnd}
       />
 
-      {/* Right-side icons */}
-      <div className="absolute right-3 top-1/2 -translate-y-1/2 flex flex-col items-center space-y-6 text-white text-2xl">
+      {/* Right-side icons & counters (reduced gap via space-y-2) */}
+      <div className="absolute right-3 top-1/2 -translate-y-1/2 flex flex-col items-center space-y-2 text-white text-2xl z-10">
+        {/* Like */}
         <button className="p-3 rounded-full bg-black bg-opacity-40 hover:bg-opacity-60 transition">
           <FaHeart />
         </button>
+        <span className="text-sm">{likesCount}</span>
+
+        {/* Comment */}
         <button
           onClick={onToggleComments}
           className="p-3 rounded-full bg-black bg-opacity-40 hover:bg-opacity-60 transition"
         >
           <FaRegComment />
         </button>
+        <span className="text-sm">{commentsCount}</span>
+
+        {/* Share */}
         <button className="p-3 rounded-full bg-black bg-opacity-40 hover:bg-opacity-60 transition">
           <FaShare />
         </button>
+        <span className="text-sm">{sharesCount}</span>
       </div>
 
-      {/* Mute/Unmute */}
-      <div className="absolute bottom-4 left-4 text-white text-2xl">
+      {/* Mute/Unmute Button (bottom-left) */}
+      <div className="absolute bottom-4 left-4 text-white text-2xl z-10">
         <button
           onClick={onToggleMute}
           className="p-2 rounded-full bg-black bg-opacity-40 hover:bg-opacity-60 transition"
@@ -83,11 +97,11 @@ export default function VideoCard({
         </button>
       </div>
 
-      {/* Progress bar */}
-      <div className="absolute bottom-3 left-[60px] right-2 flex items-center">
+      {/* Progress Bar (bottom) */}
+      <div className="absolute bottom-3 left-[60px] right-2 flex items-center z-10">
         <input
           type="range"
-          className="w-full h-1.5 text-textColor transition-all duration-300"
+          className="w-full h-1.5 text-textColor transition-all duration-300 cursor-pointer"
           min={0}
           step={0.1}
           max={duration || 0}
