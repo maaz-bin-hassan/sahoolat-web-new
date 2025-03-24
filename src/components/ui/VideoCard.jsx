@@ -1,5 +1,4 @@
 "use client";
-
 import React from "react";
 import { FaHeart, FaRegComment, FaShare } from "react-icons/fa";
 import { BiVolumeFull, BiVolumeMute } from "react-icons/bi";
@@ -28,7 +27,7 @@ export default function VideoCard({
                                   }) {
   return (
     <div className="relative w-full max-w-[450px] h-full bg-black overflow-hidden md:rounded-xl">
-      {/* Hamburger Button (visible on mobile) */}
+      {/* (Optional) Hamburger button for mobile */}
       {showHamburger && (
         <button
           onClick={onOpenDrawer}
@@ -63,8 +62,8 @@ export default function VideoCard({
         onEnded={onVideoEnd}
       />
 
-      {/* Right-side icons & counters (reduce gap via space-y-2) */}
-      <div className="absolute right-3 top-1/2 -translate-y-1/2 flex flex-col items-center space-y-2 text-white text-2xl z-10">
+      {/* MOBILE-ONLY icons (hidden on md+) */}
+      <div className="md:hidden absolute right-3 top-1/2 -translate-y-1/2 flex flex-col items-center space-y-2 text-white text-2xl z-10">
         {/* Like */}
         <button className="p-3 rounded-full bg-black bg-opacity-40 hover:bg-opacity-60 transition">
           <FaHeart />

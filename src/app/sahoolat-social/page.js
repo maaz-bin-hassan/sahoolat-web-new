@@ -1,7 +1,10 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
-import { FaCompass, FaHome, FaPlus, FaUser, FaBars, FaArrowUp, FaArrowDown } from "react-icons/fa";
+import {
+  FaCompass, FaHome, FaPlus, FaUser, FaBars, FaArrowUp, FaArrowDown,
+  FaHeart, FaRegComment, FaShare , FaEllipsisV
+} from "react-icons/fa";
 import { BsArrowUpCircleFill, BsArrowDownCircleFill } from "react-icons/bs"; // Unused but kept for reference
 import { toast } from "react-toastify";
 
@@ -37,8 +40,8 @@ const mockStats = [
 export default function SahoolatSocial() {
   // Refs for videos and sections
   const containerRef = useRef(null);
-  const videoRefs = useRef([]);   // Video elements
-  const sectionRefs = useRef([]); // Section wrappers for scrolling
+  const videoRefs = useRef([]);
+  const sectionRefs = useRef([]);
 
   // Side drawer state
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -241,28 +244,34 @@ export default function SahoolatSocial() {
 
   return (
     <div className="relative w-full h-screen flex bg-gray-50">
+      {/* Mobile hamburger */}
       <div className="md:hidden absolute top-4 left-4 z-50">
         <button
           onClick={() => setDrawerOpen(true)}
-          className="p-2
-              rounded-full
-              focus:outline-none
-              text-black
-              bg-transparent
-              hover:bg-black/20
-              transition"
-          >
+          className="
+            p-2
+            rounded-full
+            focus:outline-none
+            text-black
+            bg-transparent
+            hover:bg-black/20
+            transition
+          "
+        >
           <FaBars size={24} />
         </button>
       </div>
 
+      {/* Side Drawer */}
       <SocialMediaSideDrawer
         isOpen={drawerOpen}
         onClose={() => setDrawerOpen(false)}
       />
 
+      {/* Left Sidebar (desktop) */}
       <SocialMediaSideBar />
 
+      {/* Main content (videos) */}
       <div className="flex-1 flex flex-col">
         <div
           ref={containerRef}
@@ -276,6 +285,7 @@ export default function SahoolatSocial() {
               className="w-full h-screen flex items-center justify-center md:py-[10px] rounded-t-xl"
               style={{ scrollSnapAlign: "start" }}
             >
+              {/* Video Card */}
               <VideoCard
                 videoRef={(el) => (videoRefs.current[idx] = el)}
                 videoUrl={url}
@@ -292,20 +302,58 @@ export default function SahoolatSocial() {
                 onScrub={(e) => handleScrub(idx, e.target.value)}
                 onToggleMute={() => setIsMuted((m) => !m)}
                 onToggleComments={toggleComments}
-                // You can remove these two props if you're now using the dedicated top-left hamburger
                 showHamburger={false}
                 onOpenDrawer={() => setDrawerOpen(true)}
-                // Demo stats
                 likesCount={mockStats[idx].likesCount}
                 commentsCount={mockStats[idx].commentsCount}
                 sharesCount={mockStats[idx].sharesCount}
               />
+
+              {/*
+                DESKTOP-ONLY icons (outside the video)
+                hidden on mobile
+              */}
+              <div className="hidden md:flex flex-col items-center pl-3 transform translate-y-1/2 space-y-2 z-10">
+                {/* Like */}
+
+                <button className="p-3 rounded-full bg-gray-200 text-black hover:bg-gray-300 transition">
+                  <FaHeart size={30} />
+                </button>
+                <span className="text-sm text-black pb-4">
+                  {mockStats[idx].likesCount}
+                </span>
+
+                {/* Comment */}
+                <button
+                  onClick={toggleComments}
+                  className="p-3 rounded-full bg-gray-200 text-black hover:bg-gray-300 transition"
+                >
+                  <FaRegComment size={30} />
+                </button>
+                <span className="text-sm text-black pb-4">
+                  {mockStats[idx].commentsCount}
+                </span>
+
+                {/* Share */}
+                <button className="p-3 rounded-full bg-gray-200 text-black hover:bg-gray-300 transition">
+                  <FaShare size={30} />
+                </button>
+                <span className="text-sm text-black">
+                  {mockStats[idx].sharesCount}
+                </span>
+
+                {/*Three Dots*/}
+                <button className="p-3 rounded-full bg-gray-200 text-black hover:bg-gray-300 transition">
+                  <FaEllipsisV size={30} />
+                </button>
+
+              </div>
             </section>
           ))}
         </div>
       </div>
 
-      {/* 5) Up/Down arrows for desktop view */}
+      {/* Up/Down arrows (desktop) */}
       <div className="hidden md:flex md:flex-col md:space-y-5 z-10 absolute right-5 top-1/2 transform -translate-y-1/2">
         {currentIndex > 0 && (
           <button
@@ -326,7 +374,7 @@ export default function SahoolatSocial() {
         )}
       </div>
 
-      {/* 6) Bottom nav for mobile */}
+      {/* Bottom nav (mobile) */}
       <div className="fixed bottom-0 left-0 right-0 flex md:hidden bg-white shadow-inner border-t border-gray-200 z-20">
         {menu.map((item) => (
           <button
@@ -342,7 +390,7 @@ export default function SahoolatSocial() {
         ))}
       </div>
 
-      {/* 7) Comments drawer (right side) */}
+      {/* Comments drawer (right side) */}
       {commentsOpen && (
         <div className="fixed top-0 right-0 h-full bg-white shadow-lg border-l border-gray-300 flex flex-col w-[90%] md:w-[30%] z-30">
           <button
