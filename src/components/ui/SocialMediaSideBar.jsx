@@ -19,7 +19,7 @@ import {
   FaUser,
 } from "react-icons/fa";
 import { SiTiktok } from "react-icons/si";
-
+import Link from "next/link";
 import appStore from "../../../public/assets/app-store.png";
 import googlePlay from "../../../public/assets/google-play.png";
 
@@ -66,8 +66,10 @@ export default function SocialMediaSideBar() {
           }`}
           onClick={() => handleItemClick("About")}
         >
-          <AiFillInfoCircle size={24} />
-          <span className="text-[18px] pl-0.5">About</span>
+          <Link href="/about-us" className="flex items-center space-x-2">
+            <AiFillInfoCircle size={24} />
+            <span className="text-[18px] pl-0.5">About</span>
+          </Link>
         </li>
 
         <li
@@ -76,8 +78,10 @@ export default function SocialMediaSideBar() {
           }`}
           onClick={() => handleItemClick("Blogs")}
         >
-          <FaBloggerB size={24} />
-          <span className="text-[18px] pl-0.5">Blogs</span>
+          <Link href="/blogs" className="flex items-center space-x-2">
+              <FaBloggerB size={24} />
+              <span className="text-[18px] pl-0.5">Blogs</span>
+          </Link>
         </li>
 
         <li
@@ -88,8 +92,10 @@ export default function SocialMediaSideBar() {
           }`}
           onClick={() => handleItemClick("Categories")}
         >
-          <FaListUl size={24} />
-          <span className="text-[18px] pl-0.5 ">Categories</span>
+          <Link href="/category" className="flex items-center space-x-2">
+            <FaListUl size={24} />
+            <span className="text-[18px] pl-0.5 ">Categories</span>
+          </Link>
         </li>
 
         <li
@@ -100,8 +106,10 @@ export default function SocialMediaSideBar() {
           }`}
           onClick={() => handleItemClick("Voice Experience")}
         >
-          <FaMicrophoneAlt size={24} />
-          <span className="text-[18px] pl-0.5">Voice Experience</span>
+          <Link href="/sahoolat-experience" className="flex items-center space-x-2">
+            <FaMicrophoneAlt size={24} />
+            <span className="text-[18px] pl-0.5">Voice Experience</span>
+          </Link>
         </li>
 
         <li
@@ -110,8 +118,10 @@ export default function SocialMediaSideBar() {
           }`}
           onClick={() => handleItemClick("Support")}
         >
-          <FaLifeRing size={24} />
-          <span className="text-[18px] pl-0.5">Support</span>
+          <Link href="/support" className="flex items-center space-x-2">
+            <FaLifeRing size={24} />
+            <span className="text-[18px] pl-0.5">Support</span>
+          </Link>
         </li>
       </ul>
 
@@ -125,8 +135,10 @@ export default function SocialMediaSideBar() {
           }`}
           onClick={() => handleItemClick("Home")}
         >
+
           <FaHome size={24} />
           <span className="text-[18px] pl-0.5">Home</span>
+
         </li>
         <li
           className={`flex items-center text-gray-800 space-x-2 cursor-pointer py-1 pl-2 pt-2 ${
@@ -134,8 +146,11 @@ export default function SocialMediaSideBar() {
           }`}
           onClick={() => handleItemClick("Explore")}
         >
-          <FaCompass size={24} />
-          <span className="text-[18px] pl-0.5">Explore</span>
+          <Link href="/sahoolat-social/explore" className="flex items-center space-x-2">
+            <FaCompass size={24} />
+            <span className="text-[18px] pl-0.5">Explore</span>
+          </Link>
+
         </li>
         <li
           className={`flex items-center text-gray-800 space-x-2 cursor-pointer py-1 pl-2 pt-2 ${
@@ -143,8 +158,10 @@ export default function SocialMediaSideBar() {
           }`}
           onClick={() => handleItemClick("Upload")}
         >
-          <FaPlus size={24} />
-          <span className="text-[18px] pl-0.5">Upload</span>
+          <Link href="/sahoolat-social/upload" className="flex items-center space-x-2">
+            <FaPlus size={24} />
+            <span className="text-[18px] pl-0.5">Upload</span>
+          </Link>
         </li>
         <li
           className={`flex items-center text-gray-800 space-x-2 cursor-pointer py-1 pl-2 pt-2 ${
@@ -152,8 +169,10 @@ export default function SocialMediaSideBar() {
           }`}
           onClick={() => handleItemClick("Profile")}
         >
-          <FaUser size={24} />
-          <span className="text-[18px] pl-0.5">Profile</span>
+          <Link href="/sahoolat-social/profile" className="flex items-center space-x-2">
+            <FaUser size={24} />
+            <span className="text-[18px] pl-0.5">Profile</span>
+          </Link>
         </li>
       </ul>
 
