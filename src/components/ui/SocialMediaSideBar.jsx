@@ -13,10 +13,6 @@ import {
   FaMicrophoneAlt,
   FaFacebook,
   FaLinkedinIn,
-  FaHome,
-  FaCompass,
-  FaPlus,
-  FaUser,
 } from "react-icons/fa";
 import { SiTiktok } from "react-icons/si";
 import Link from "next/link";
@@ -44,21 +40,24 @@ export default function SocialMediaSideBar() {
     >
       {/* Logo */}
       <Link href="/" className="flex items-center justify-center mb-6">
-      <div>
-        <Image
-          src="/assets/logo.png"
-          alt="Sahoolat AI Logo"
-          width={120}
-          height={120}
-        />
-      </div>
+        <div>
+          <Image
+            src="/assets/logo.png"
+            alt="Sahoolat AI Logo"
+            width={120}
+            height={120}
+          />
+        </div>
       </Link>
 
-      <span className="pl-2 pr-1">
-        <button className="block text-xl w-full py-2 mb-4 border border-green-500 text-gray-800 font-bold rounded hover:bg-green-50">
-          Log in
-        </button>
-      </span>
+      {/*<span className="pl-2 pr-1">*/}
+      {/*  <button*/}
+      {/*    className="block text-xl w-full py-2 mb-4 border border-green-500 text-gray-800 font-bold rounded hover:bg-green-50">*/}
+      {/*    Log in*/}
+      {/*  </button>*/}
+      {/*</span>*/}
+
+      <div className="border-b my-1"></div>
 
       <h2 className="text-xl font-bold text-gray-800 mt-4 px-4">Company</h2>
       <ul className="mt-2 space-y-2 text-gray-700 text-lg px-4">
@@ -81,8 +80,8 @@ export default function SocialMediaSideBar() {
           onClick={() => handleItemClick("Blogs")}
         >
           <Link href="/blogs" className="flex items-center space-x-2">
-              <FaBloggerB size={24} />
-              <span className="text-[18px] pl-0.5">Blogs</span>
+            <FaBloggerB size={24} />
+            <span className="text-[18px] pl-0.5">Blogs</span>
           </Link>
         </li>
 
@@ -127,7 +126,6 @@ export default function SocialMediaSideBar() {
         </li>
       </ul>
 
-      {/* Company Section */}
       <div className="border-b my-4"></div>
 
       {/* Follow Us */}
@@ -155,7 +153,6 @@ export default function SocialMediaSideBar() {
         </div>
       </div>
 
-      {/* Download CTA */}
       <div className="border-b my-4"></div>
       <div className="mt-4 flex items-center justify-center space-x-4 pb-6 px-4">
         <Image

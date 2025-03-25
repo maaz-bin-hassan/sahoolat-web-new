@@ -76,11 +76,11 @@ export default function SocialMediaSideDrawer({ isOpen, onClose }) {
         </Link>
 
 
-        <button className="block w-full py-2 mb-4 border border-green-500 text-gray-800 font-semibold rounded hover:bg-green-50">
-          Log in
-        </button>
+        {/*<button className="block w-full py-2 mb-4 border border-green-500 text-gray-800 font-semibold rounded hover:bg-green-50">*/}
+        {/*  Log in*/}
+        {/*</button>*/}
 
-        <div className="border-b my-4"></div>
+        <div className="border-b my-2"></div>
 
         <h3 className="text-xl font-bold mt-4">Company</h3>
         <ul className="mt-2 space-y-2 text-gray-700 text-lg">
