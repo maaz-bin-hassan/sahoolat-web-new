@@ -71,7 +71,8 @@ export default function SocialMediaSideDrawer({ isOpen, onClose }) {
           />
         </div>
 
-        <button className="block w-full py-2 mb-4 border border-green-500 text-green-500 font-semibold rounded hover:bg-green-50">
+
+        <button className="block w-full py-2 mb-4 border border-green-500 text-gray-800 font-semibold rounded hover:bg-green-50">
           Log in
         </button>
 
@@ -80,7 +81,7 @@ export default function SocialMediaSideDrawer({ isOpen, onClose }) {
         <h3 className="text-xl font-bold mt-4">Company</h3>
         <ul className="mt-2 space-y-2 text-gray-700 text-lg">
           <li
-            className={`flex items-center space-x-2 cursor-pointer py-1 pl-2 pt-3 ${
+            className={`flex items-center text-gray-800 space-x-2 cursor-pointer py-1 pl-2 pt-3 ${
               selectedItem === "About"
                 ? "bg-[#0ea288] text-white rounded  py-2"
                 : ""
@@ -93,7 +94,7 @@ export default function SocialMediaSideDrawer({ isOpen, onClose }) {
 
           {/* Blogs */}
           <li
-            className={`flex items-center space-x-2 cursor-pointer py-1 pl-2 pt-3 ${
+            className={`flex items-center text-gray-800 space-x-2 cursor-pointer py-1 pl-2 pt-3 ${
               selectedItem === "Blogs"
                 ? "bg-[#0ea288] text-white rounded py-2"
                 : ""
@@ -106,7 +107,7 @@ export default function SocialMediaSideDrawer({ isOpen, onClose }) {
 
           {/* Categories */}
           <li
-            className={`flex items-center space-x-2 cursor-pointer py-1 pl-2 pt-3 ${
+            className={`flex items-center text-gray-800 space-x-2 cursor-pointer py-1 pl-2 pt-3 ${
               selectedItem === "Categories"
                 ? "bg-[#0ea288] text-white rounded py-2"
                 : ""
@@ -119,7 +120,7 @@ export default function SocialMediaSideDrawer({ isOpen, onClose }) {
 
           {/* Voice Experience */}
           <li
-            className={`flex items-center space-x-2 cursor-pointer py-1 pl-2 pt-3 ${
+            className={`flex items-center text-gray-800 space-x-2 cursor-pointer py-1 pl-2 pt-3 ${
               selectedItem === "Voice Experience"
                 ? "bg-[#0ea288] text-white rounded py-2"
                 : ""
@@ -131,7 +132,7 @@ export default function SocialMediaSideDrawer({ isOpen, onClose }) {
           </li>
           {/* Support */}
           <li
-            className={`flex items-center space-x-2 cursor-pointer py-1 pl-2 pt-3 ${
+            className={`flex items-center text-gray-800 space-x-2 cursor-pointer py-1 pl-2 pt-3 ${
               selectedItem === "Support"
                 ? "bg-[#0ea288] text-white rounded py-2"
                 : ""
@@ -147,27 +148,27 @@ export default function SocialMediaSideDrawer({ isOpen, onClose }) {
 
         <div className="border-b my-4"></div>
 
-        <h3 className="text-xl font-bold mt-4">Follow Us</h3>
+        <h3 className="text-xl text-gray-800 font-bold mt-4">Follow Us</h3>
         <div className="mt-2 space-y-3 text-gray-700">
-          <div className="flex items-center space-x-2 text-xl pl-2 pt-2">
+          <div className="flex text-gray-800 items-center space-x-2 text-xl pl-2 pt-2">
             <AiFillTwitterCircle size={22} />
             <span>Twitter</span>
           </div>
-          <div className="flex items-center space-x-2 text-xl pl-2 pt-2">
+          <div className="flex text-gray-800 items-center space-x-2 text-xl pl-2 pt-2">
             <AiFillInstagram size={22} />
             <span>Instagram</span>
           </div>
 
           {/* New icons */}
-          <div className="flex items-center space-x-2 text-xl pl-2 pt-2">
+          <div className="flex  text-gray-800 items-center space-x-2 text-xl pl-2 pt-2">
             <SiTiktok size={22} />
             <span>TikTok</span>
           </div>
-          <div className="flex items-center space-x-2 text-xl pl-2 pt-2">
+          <div className="flex text-gray-800 items-center space-x-2 text-xl pl-2 pt-2">
             <FaFacebook size={22} />
             <span>Facebook</span>
           </div>
-          <div className="flex items-center space-x-2 text-xl pl-2 pt-2">
+          <div className="flex text-gray-800 items-center space-x-2 text-xl pl-2 pt-2">
             <FaLinkedinIn size={22} />
             <span>LinkedIn</span>
           </div>

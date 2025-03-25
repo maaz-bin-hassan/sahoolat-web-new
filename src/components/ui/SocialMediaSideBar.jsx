@@ -52,11 +52,13 @@ export default function SocialMediaSideBar() {
         />
       </div>
 
-      <button className="block w-full py-2 mb-4 border border-green-500 text-green-500 font-semibold rounded hover:bg-green-50">
-        Log in
-      </button>
+      <span className="pl-2 pr-1">
+        <button className="block text-xl w-full py-2 mb-4 border border-green-500 text-gray-800 font-bold rounded hover:bg-green-50">
+          Log in
+        </button>
+      </span>
 
-      <h2 className="text-xl font-bold mt-4 px-4">Company</h2>
+      <h2 className="text-xl font-bold text-gray-800 mt-4 px-4">Company</h2>
       <ul className="mt-2 space-y-2 text-gray-700 text-lg px-4">
         <li
           className={`flex items-center space-x-2 cursor-pointer py-1 pl-2 pt-2 ${
@@ -69,7 +71,7 @@ export default function SocialMediaSideBar() {
         </li>
 
         <li
-          className={`flex items-center space-x-2 cursor-pointer py-1 pl-2 pt-2 ${
+          className={`flex items-center text-gray-800 space-x-2 cursor-pointer py-1 pl-2 pt-2 ${
             selectedItem === "Blogs" ? "bg-[#0ea288] text-white rounded py-2" : ""
           }`}
           onClick={() => handleItemClick("Blogs")}
@@ -79,7 +81,7 @@ export default function SocialMediaSideBar() {
         </li>
 
         <li
-          className={`flex items-center space-x-2 cursor-pointer py-1 pl-2 pt-2 ${
+          className={`flex items-center text-gray-800 space-x-2 cursor-pointer py-1 pl-2 pt-2 ${
             selectedItem === "Categories"
               ? "bg-[#0ea288] text-white rounded py-2"
               : ""
@@ -87,11 +89,11 @@ export default function SocialMediaSideBar() {
           onClick={() => handleItemClick("Categories")}
         >
           <FaListUl size={24} />
-          <span className="text-[18px] pl-0.5">Categories</span>
+          <span className="text-[18px] pl-0.5 ">Categories</span>
         </li>
 
         <li
-          className={`flex items-center space-x-2 cursor-pointer py-1 pl-2 pt-2 ${
+          className={`flex items-center text-gray-800 space-x-2 cursor-pointer py-1 pl-2 pt-2 ${
             selectedItem === "Voice Experience"
               ? "bg-[#0ea288] text-white rounded py-2"
               : ""
@@ -103,7 +105,7 @@ export default function SocialMediaSideBar() {
         </li>
 
         <li
-          className={`flex items-center space-x-2 cursor-pointer py-1 pl-2 pt-2 ${
+          className={`flex items-center text-gray-800 space-x-2 cursor-pointer py-1 pl-2 pt-2 ${
             selectedItem === "Support" ? "bg-[#0ea288] text-white rounded py-2" : ""
           }`}
           onClick={() => handleItemClick("Support")}
@@ -115,10 +117,10 @@ export default function SocialMediaSideBar() {
 
       <div className="border-b my-4"></div>
 
-      <h2 className="text-xl font-bold mt-4 px-4">Navigation</h2>
+      <h2 className="text-xl text-gray-800 font-bold mt-4 px-4">Navigation</h2>
       <ul className="mt-2 space-y-2 text-gray-700 text-lg px-4">
         <li
-          className={`flex items-center space-x-2 cursor-pointer py-1 pl-2 pt-2 ${
+          className={`flex items-center text-gray-800 space-x-2 cursor-pointer py-1 pl-2 pt-2 ${
             selectedItem === "Home" ? "bg-[#0ea288] text-white rounded py-2" : ""
           }`}
           onClick={() => handleItemClick("Home")}
@@ -127,7 +129,7 @@ export default function SocialMediaSideBar() {
           <span className="text-[18px] pl-0.5">Home</span>
         </li>
         <li
-          className={`flex items-center space-x-2 cursor-pointer py-1 pl-2 pt-2 ${
+          className={`flex items-center text-gray-800 space-x-2 cursor-pointer py-1 pl-2 pt-2 ${
             selectedItem === "Explore" ? "bg-[#0ea288] text-white rounded py-2" : ""
           }`}
           onClick={() => handleItemClick("Explore")}
@@ -136,7 +138,7 @@ export default function SocialMediaSideBar() {
           <span className="text-[18px] pl-0.5">Explore</span>
         </li>
         <li
-          className={`flex items-center space-x-2 cursor-pointer py-1 pl-2 pt-2 ${
+          className={`flex items-center text-gray-800 space-x-2 cursor-pointer py-1 pl-2 pt-2 ${
             selectedItem === "Upload" ? "bg-[#0ea288] text-white rounded py-2" : ""
           }`}
           onClick={() => handleItemClick("Upload")}
@@ -145,7 +147,7 @@ export default function SocialMediaSideBar() {
           <span className="text-[18px] pl-0.5">Upload</span>
         </li>
         <li
-          className={`flex items-center space-x-2 cursor-pointer py-1 pl-2 pt-2 ${
+          className={`flex items-center text-gray-800 space-x-2 cursor-pointer py-1 pl-2 pt-2 ${
             selectedItem === "Profile" ? "bg-[#0ea288] text-white rounded py-2" : ""
           }`}
           onClick={() => handleItemClick("Profile")}
@@ -160,27 +162,27 @@ export default function SocialMediaSideBar() {
       <div className="border-b my-4"></div>
 
       {/* Follow Us */}
-      <h2 className="text-xl font-bold mt-4 px-4">Follow Us</h2>
+      <h2 className="text-xl text-gray-800 font-bold mt-4 px-4">Follow Us</h2>
       <div className="mt-2 space-y-3 text-gray-700 text-xl px-4">
         <div className="flex items-center space-x-2 pl-1.5 pt-1.5">
           <AiFillTwitterCircle size={24} />
-          <span className="text-[18px]">Twitter</span>
+          <span className="text-[18px] text-gray-800">Twitter</span>
         </div>
         <div className="flex items-center space-x-2 pl-1.5 pt-1.5">
           <AiFillInstagram size={24} />
-          <span className="text-[18px]">Instagram</span>
+          <span className="text-[18px] text-gray-800">Instagram</span>
         </div>
         <div className="flex items-center space-x-2 pl-1.5 pt-1.5">
           <SiTiktok size={24} />
-          <span className="text-[18px]">TikTok</span>
+          <span className="text-[18px] text-gray-800">TikTok</span>
         </div>
         <div className="flex items-center space-x-2 pl-1.5 pt-1.5">
           <FaFacebook size={24} />
-          <span className="text-[18px]">Facebook</span>
+          <span className="text-[18px] text-gray-800">Facebook</span>
         </div>
         <div className="flex items-center space-x-2 pl-1.5 pt-1.5">
           <FaLinkedinIn size={24} />
-          <span className="text-[18px]">LinkedIn</span>
+          <span className="text-[18px] text-gray-800">LinkedIn</span>
         </div>
       </div>
 
