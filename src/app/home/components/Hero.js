@@ -68,31 +68,31 @@ export default function HeroSection() {
         <div className="flex items-center justify-center mb-6 space-x-4">
           <div className="relative cursor-pointer">
             <Link href={"/sahoolat-experience"}>
-              {/*<Image*/}
-              {/*  height={400}*/}
-              {/*  width={400}*/}
-              {/*  src="/assets/Mic.png"*/}
-              {/*  alt="Microphone"*/}
-              {/*  style={{ height: "140px", width: "540px" }}*/}
-              {/*  className="object-contain transition-transform transform hover:scale-105"*/}
-              {/*/>*/}
 
               <div className="flex items-center justify-center">
                 {animationData ? (
                   <>
+                    {/* Lottie Animation */}
                     <Lottie
                       animationData={animationData}
                       loop
                       autoplay
                       lottieRef={lottieRef}
-                      style={{ width: 320, height: 320 }}
+                      style={{
+                        width: "250px",
+                        height: "250px",
+                      }}
+                      className="md:w-[400px] md:h-[400px]"
                     />
+
+                    {/* Wave Image (Hidden on Mobile) */}
                     <img
                       src="/assets/wave.png"
                       alt="Wave"
-                      height={'50px'}
-                      width={'500px'}
-                      style={{marginLeft: '-4rem'}}
+                      height={"50px"}
+                      width={"500px"}
+                      className="hidden md:block"
+                      style={{ marginLeft: "-4rem" }}
                     />
                   </>
                 ) : (

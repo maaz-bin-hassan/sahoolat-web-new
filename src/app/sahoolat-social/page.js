@@ -8,13 +8,14 @@ import {
 
 import SocialMediaSideDrawer from "../../components/ui/SocialMediaSideDrawer";
 import SocialMediaSideBar from "../../components/ui/SocialMediaSideBar";
+import { useRouter } from "next/navigation";
 import VideoCard from "../../components/ui/VideoCard";
 
 const menu = [
   { text: "Home", icon: FaHome, href: "#home" },
-  { text: "Explore", icon: FaCompass, href: "#explore" },
-  { text: "Upload", icon: FaPlus, href: "#upload" },
-  { text: "Profile", icon: FaUser, href: "#profile" },
+  { text: "Explore", icon: FaCompass, href: "/sahoolat-social/explore" },
+  { text: "Upload", icon: FaPlus, href: "/sahoolat-social/upload" },
+  { text: "Profile", icon: FaUser, href: "/sahoolat-social/profile" },
 ];
 
 // Demo video URLs
@@ -27,7 +28,6 @@ const videoUrls = [
   "https://lyudo-images.s3.eu-north-1.amazonaws.com/videos/PERFECT+PLUMBING+WORK+%23shorts.mp4",
   "https://lyudo-images.s3.eu-north-1.amazonaws.com/videos/videoplayback.mp4",
   "https://lyudo-images.s3.eu-north-1.amazonaws.com/videos/Water+tank+connection+%23shorts+%23shortvideo+%23short+%23shortsfeed+%23trending+%23viralvideo+%23reels.mp4",
-//     home handy workers:
   "https://lyudo-images.s3.eu-north-1.amazonaws.com/videos/home+cares/Helpful+construction+tips+you+should+learn+from+the+experience+carpenter+%23carpentry+%23wood+%23skills.mp4",
   "https://lyudo-images.s3.eu-north-1.amazonaws.com/videos/home+cares/Home+Ceiling+Designer+POP+Bedroom+Amazing+%F0%9F%98%9C+Interior+Work++%23popdesign+%23house+%23designer+%23shorts.mp4",
   "https://lyudo-images.s3.eu-north-1.amazonaws.com/videos/home+cares/LALKA+Electric+Grass+Cutting+Machine+_+Lawn+Mower+_+%23grasscutting++%23shortvideo+%23short+%23shorts.mp4",
@@ -37,7 +37,6 @@ const videoUrls = [
   "https://lyudo-images.s3.eu-north-1.amazonaws.com/videos/home+cares/videoplayback.mp4",
   "https://lyudo-images.s3.eu-north-1.amazonaws.com/videos/home+cares/Ye+kya+kr+diya+%F0%9F%98%82%F0%9F%A4%A3%23noorah_albalushiya+%23shortvideo+%23funny+%23shortvideo+%23comedy.mp4",
 ];
-
 
 // Demo stats for each video
 const mockStats = [
@@ -60,14 +59,13 @@ const mockStats = [
 ];
 
 export default function SahoolatSocial() {
-  // Refs for videos and sections
+  const router = useRouter();
   const containerRef = useRef(null);
   const videoRefs = useRef([]);
   const sectionRefs = useRef([]);
 
-  // Side drawer state
+  const [activeMenuItem, setActiveMenuItem] = useState(null);
   const [drawerOpen, setDrawerOpen] = useState(false);
-
   // Video state
   const [isMuted, setIsMuted] = useState(true);
   const [playCounts, setPlayCounts] = useState(new Array(videoUrls.length).fill(0));
@@ -84,14 +82,17 @@ export default function SahoolatSocial() {
 
   // Mobile bottom nav
   const [activeLink, setActiveLink] = useState("#home");
-  const handleMenuClick = (link) => setActiveLink(link);
 
   // Keep sectionRefs array in sync
   useEffect(() => {
     sectionRefs.current = sectionRefs.current.slice(0, videoUrls.length);
   }, [videoUrls.length]);
 
-  // IntersectionObserver for auto-play/pause
+  const handleMenuClick = (href) => {
+    setActiveLink(href);
+    router.push(href);
+  };
+
   useEffect(() => {
     const options = { root: containerRef.current, threshold: 0.7 };
     const observer = new IntersectionObserver((entries) => {
@@ -100,16 +101,21 @@ export default function SahoolatSocial() {
         const idx = videoRefs.current.indexOf(videoEl);
 
         if (entry.isIntersecting) {
-          if (!pausedByAuto[idx]) {
+          // Play the video when it enters the viewport if paused
+          if (videoEl.paused) {
             videoEl.play().catch(() => {});
             setCurrentIndex(idx);
           }
         } else {
-          videoEl.pause();
+          // Pause the video when it leaves the viewport
+          if (!videoEl.paused) {
+            videoEl.pause();
+          }
         }
       });
     }, options);
 
+    // Observe each video element
     videoRefs.current.forEach((vid) => {
       if (vid) observer.observe(vid);
     });
@@ -119,7 +125,7 @@ export default function SahoolatSocial() {
         if (vid) observer.unobserve(vid);
       });
     };
-  }, [pausedByAuto]);
+  }, []);
 
   // Close the drawer if viewport >= 768
   useEffect(() => {
@@ -176,25 +182,20 @@ export default function SahoolatSocial() {
   };
 
   const handleVideoEnd = (index) => {
-    setPlayCounts((prev) => {
-      const updated = [...prev];
-      updated[index] += 1;
-
-      const vid = videoRefs.current[index];
-      if (updated[index] === 1) {
-        vid.currentTime = 0;
-        vid.play().catch(() => {});
-      }
-      else if (updated[index] >= 2) {
-        vid.pause();
-        setPausedByAuto((old) => {
-          const clone = [...old];
-          clone[index] = true;
-          return clone;
-        });
-      }
-      return updated;
-    });
+    const vid = videoRefs.current[index];
+    if (vid) {
+      vid.pause();
+      setPausedByAuto((prev) => {
+        const updated = [...prev];
+        updated[index] = true;
+        return updated;
+      });
+      setPlayCounts((prev) => {
+        const updated = [...prev];
+        updated[index] += 1;
+        return updated;
+      });
+    }
   };
 
   const handleVideoClick = (index) => {
@@ -260,19 +261,10 @@ export default function SahoolatSocial() {
 
   return (
     <div className="w-screen h-screen flex bg-gray-50">
-
       <div className="md:hidden absolute top-4 left-4 z-50">
         <button
           onClick={() => setDrawerOpen(true)}
-          className="
-            p-2
-            rounded-full
-            focus:outline-none
-            text-black
-            bg-transparent
-            hover:bg-black/20
-            transition
-          "
+          className="p-2 rounded-full focus:outline-none text-black bg-transparent hover:bg-black/20 transition"
         >
           <FaBars size={24} />
         </button>
@@ -288,7 +280,6 @@ export default function SahoolatSocial() {
       </div>
 
       <div className="flex-1 ml-0 md:ml-44 flex flex-col relative">
-        {/* Container for intersection observer */}
         <div
           ref={containerRef}
           className="w-full flex-1 overflow-y-scroll"
@@ -301,7 +292,6 @@ export default function SahoolatSocial() {
               className="relative w-full h-screen flex items-center justify-center md:pt-[10px] pb-[5px]"
               style={{ scrollSnapAlign: "start" }}
             >
-              {/* Video Card */}
               <VideoCard
                 videoRef={(el) => (videoRefs.current[idx] = el)}
                 videoUrl={url}
@@ -325,18 +315,13 @@ export default function SahoolatSocial() {
                 sharesCount={mockStats[idx].sharesCount}
               />
 
-
-              <div className="hidden md:flex flex-col items-center space-y-2 z-10
-                 absolute right-[29%] top-[66%]  transform -translate-y-1/2">
-                {/* Like */}
+              <div className="hidden md:flex flex-col items-center space-y-2 z-10 absolute right-[29%] top-[66%] transform -translate-y-1/2">
                 <button className="p-3 rounded-full bg-gray-200 text-black hover:bg-gray-300 transition">
                   <FaHeart size={30} />
                 </button>
                 <span className="text-sm text-black pb-4">
                   {mockStats[idx].likesCount}
                 </span>
-
-                {/* Comment */}
                 <button
                   onClick={toggleComments}
                   className="p-3 rounded-full bg-gray-200 text-black hover:bg-gray-300 transition"
@@ -346,20 +331,16 @@ export default function SahoolatSocial() {
                 <span className="text-sm text-black pb-4">
                   {mockStats[idx].commentsCount}
                 </span>
-
-
                 <button className="p-3 rounded-full bg-gray-200 text-black hover:bg-gray-300 transition">
                   <FaShare size={30} />
                 </button>
                 <span className="text-sm text-black">
                   {mockStats[idx].sharesCount}
                 </span>
-
                 <button className="p-3 rounded-full bg-gray-200 text-black hover:bg-gray-300 transition">
                   <FaEllipsisV size={30} />
                 </button>
               </div>
-
             </section>
           ))}
         </div>
@@ -390,16 +371,19 @@ export default function SahoolatSocial() {
           <button
             key={item.text}
             onClick={() => handleMenuClick(item.href)}
-            className={`flex-1 flex flex-col items-center p-3 text-gray-600 transition ${
-              activeLink === item.href ? "text-white font-bold bg-[#0ea288]" : ""
+            className={`flex-1 flex flex-col items-center p-3 transition-all ${
+              activeLink === item.href ? "text-white font-bold bg-[#0ea288]" : "text-gray-600"
             }`}
+            style={{
+              transform: activeMenuItem === item.href ? "translateY(-10px)" : "translateY(0)",
+              transition: "transform 0.3s ease-in-out",
+            }}
           >
             <item.icon size={25} />
             <span className="text-xs">{item.text}</span>
           </button>
         ))}
       </div>
-
 
       {commentsOpen && (
         <div className="fixed top-0 right-0 h-full bg-white shadow-lg border-l border-gray-300 flex flex-col w-[90%] md:w-[30%] z-30">
