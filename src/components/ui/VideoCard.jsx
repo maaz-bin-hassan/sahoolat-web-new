@@ -1,6 +1,12 @@
 "use client";
+
 import React from "react";
-import { FaHeart, FaRegComment, FaShare , FaEllipsisV} from "react-icons/fa";
+import {
+  FaHeart,
+  FaRegComment,
+  FaShare,
+  FaEllipsisV,
+} from "react-icons/fa";
 import { BiVolumeFull, BiVolumeMute } from "react-icons/bi";
 
 export default function VideoCard({
@@ -10,24 +16,28 @@ export default function VideoCard({
                                     loading,
                                     duration,
                                     currentTime,
-                                    onVideoClick,
-                                    onVideoEnd,
-                                    onLoadedData,
-                                    onWaiting,
+
+                                    onPlaying,
+                                    onError,
                                     onLoadedMetadata,
                                     onTimeUpdate,
+                                    onVideoClick,
+                                    onVideoEnd,
                                     onScrub,
                                     onToggleMute,
                                     onToggleComments,
+
                                     showHamburger,
                                     onOpenDrawer,
+
+
                                     likesCount,
                                     commentsCount,
                                     sharesCount,
                                   }) {
   return (
     <div className="relative w-full max-w-[450px] h-full bg-black overflow-hidden md:rounded-xl">
-      {/* (Optional) Hamburger button for mobile */}
+      {/* Optional Hamburger (mobile) */}
       {showHamburger && (
         <button
           onClick={onOpenDrawer}
@@ -54,8 +64,8 @@ export default function VideoCard({
         playsInline
         autoPlay
         muted={isMuted}
-        onLoadedData={onLoadedData}
-        onWaiting={onWaiting}
+        onPlaying={onPlaying}
+        onError={onError}
         onLoadedMetadata={onLoadedMetadata}
         onTimeUpdate={onTimeUpdate}
         onClick={onVideoClick}
@@ -88,10 +98,9 @@ export default function VideoCard({
         <button className="p-3 rounded-full bg-black bg-opacity-40 hover:bg-opacity-60 transition">
           <FaEllipsisV />
         </button>
-
       </div>
 
-      {/* Mute/Unmute Button (bottom-left) */}
+      {/* Mute/Unmute Button */}
       <div className="absolute bottom-4 left-4 text-white text-2xl z-10">
         <button
           onClick={onToggleMute}
@@ -101,6 +110,7 @@ export default function VideoCard({
         </button>
       </div>
 
+      {/* Progress (Scrub) Bar */}
       <div className="absolute bottom-3 left-[60px] right-2 flex items-center z-10">
         <input
           type="range"

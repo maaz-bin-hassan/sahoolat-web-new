@@ -64,7 +64,8 @@ export default function SocialMediaSideDrawer({ isOpen, onClose }) {
         className="mt-10 px-4 pb-10 h-full overflow-y-scroll"
         style={{ fontFamily: "Roboto, sans-serif" }}
       >
-        <div className="flex items-center justify-center mb-6">
+        <Link href="/" className="flex items-center justify-center mb-6">
+        <div>
           <Image
             src="/assets/logo.png"
             alt="Sahoolat AI Logo"
@@ -72,13 +73,14 @@ export default function SocialMediaSideDrawer({ isOpen, onClose }) {
             height={120}
           />
         </div>
+        </Link>
 
 
-        <button className="block w-full py-2 mb-4 border border-green-500 text-gray-800 font-semibold rounded hover:bg-green-50">
-          Log in
-        </button>
+        {/*<button className="block w-full py-2 mb-4 border border-green-500 text-gray-800 font-semibold rounded hover:bg-green-50">*/}
+        {/*  Log in*/}
+        {/*</button>*/}
 
-        <div className="border-b my-4"></div>
+        <div className="border-b my-2"></div>
 
         <h3 className="text-xl font-bold mt-4">Company</h3>
         <ul className="mt-2 space-y-2 text-gray-700 text-lg">

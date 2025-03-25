@@ -1,15 +1,28 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import {
-  FaCompass, FaHome, FaPlus, FaUser, FaBars, FaArrowUp, FaArrowDown,
-  FaHeart, FaRegComment, FaShare, FaEllipsisV
+  FaCompass,
+  FaHome,
+  FaPlus,
+  FaUser,
+  FaBars,
+  FaArrowUp,
+  FaArrowDown,
+  FaHeart,
+  FaRegComment,
+  FaShare,
+  FaEllipsisV,
 } from "react-icons/fa";
+
+import { useSwipeable } from "react-swipeable";
 
 import SocialMediaSideDrawer from "../../components/ui/SocialMediaSideDrawer";
 import SocialMediaSideBar from "../../components/ui/SocialMediaSideBar";
 import { useRouter } from "next/navigation";
 import VideoCard from "../../components/ui/VideoCard";
+
+
 
 const menu = [
   { text: "Home", icon: FaHome, href: "#home" },
@@ -18,7 +31,7 @@ const menu = [
   { text: "Profile", icon: FaUser, href: "/sahoolat-social/profile" },
 ];
 
-// Demo video URLs
+
 const videoUrls = [
   "https://lyudo-images.s3.eu-north-1.amazonaws.com/videos/%23construction+%23plumber+%23plumbing+%23like+%23subscribe+%23shorts+%23video+%23electrical+%23mistri+%23pipes+%23yt.mp4",
   "https://lyudo-images.s3.eu-north-1.amazonaws.com/videos/%23plumber+%23work+wall+mixer+ka+fiting+kese+kare+%23bathroom+%23wallmixer+%23geyser.mp4",
@@ -38,55 +51,110 @@ const videoUrls = [
   "https://lyudo-images.s3.eu-north-1.amazonaws.com/videos/home+cares/Ye+kya+kr+diya+%F0%9F%98%82%F0%9F%A4%A3%23noorah_albalushiya+%23shortvideo+%23funny+%23shortvideo+%23comedy.mp4",
 ];
 
-// Demo stats for each video
 const mockStats = [
   { likesCount: "368.5K", commentsCount: "6427", sharesCount: "25K" },
-  { likesCount: "120K",   commentsCount: "542",  sharesCount: "10K" },
-  { likesCount: "1.2M",   commentsCount: "3400", sharesCount: "5K" },
-  { likesCount: "900K",   commentsCount: "1300", sharesCount: "3K" },
+  { likesCount: "120K", commentsCount: "542", sharesCount: "10K" },
+  { likesCount: "1.2M", commentsCount: "3400", sharesCount: "5K" },
+  { likesCount: "900K", commentsCount: "1300", sharesCount: "3K" },
   { likesCount: "368.5K", commentsCount: "6427", sharesCount: "25K" },
-  { likesCount: "120K",   commentsCount: "542",  sharesCount: "10K" },
-  { likesCount: "1.2M",   commentsCount: "3400", sharesCount: "5K" },
-  { likesCount: "900K",   commentsCount: "1300", sharesCount: "3K" },
+  { likesCount: "120K", commentsCount: "542", sharesCount: "10K" },
+  { likesCount: "1.2M", commentsCount: "3400", sharesCount: "5K" },
+  { likesCount: "900K", commentsCount: "1300", sharesCount: "3K" },
   { likesCount: "368.5K", commentsCount: "6427", sharesCount: "25K" },
-  { likesCount: "120K",   commentsCount: "542",  sharesCount: "10K" },
-  { likesCount: "1.2M",   commentsCount: "3400", sharesCount: "5K" },
-  { likesCount: "900K",   commentsCount: "1300", sharesCount: "3K" },
+  { likesCount: "120K", commentsCount: "542", sharesCount: "10K" },
+  { likesCount: "1.2M", commentsCount: "3400", sharesCount: "5K" },
+  { likesCount: "900K", commentsCount: "1300", sharesCount: "3K" },
   { likesCount: "368.5K", commentsCount: "6427", sharesCount: "25K" },
-  { likesCount: "120K",   commentsCount: "542",  sharesCount: "10K" },
-  { likesCount: "1.2M",   commentsCount: "3400", sharesCount: "5K" },
-  { likesCount: "900K",   commentsCount: "1300", sharesCount: "3K" },
+  { likesCount: "120K", commentsCount: "542", sharesCount: "10K" },
+  { likesCount: "1.2M", commentsCount: "3400", sharesCount: "5K" },
+  { likesCount: "900K", commentsCount: "1300", sharesCount: "3K" },
 ];
+
 
 export default function SahoolatSocial() {
   const router = useRouter();
-  const containerRef = useRef(null);
-  const videoRefs = useRef([]);
-  const sectionRefs = useRef([]);
 
-  const [activeMenuItem, setActiveMenuItem] = useState(null);
+
+  const prevVideoRef = useRef(null);
+  const currentVideoRef = useRef(null);
+  const nextVideoRef = useRef(null);
+
   const [drawerOpen, setDrawerOpen] = useState(false);
-  // Video state
   const [isMuted, setIsMuted] = useState(true);
-  const [playCounts, setPlayCounts] = useState(new Array(videoUrls.length).fill(0));
-  const [pausedByAuto, setPausedByAuto] = useState(new Array(videoUrls.length).fill(false));
+
   const [currentIndex, setCurrentIndex] = useState(0);
 
-  // Loading/progress
-  const [loadingVideos, setLoadingVideos] = useState(new Array(videoUrls.length).fill(true));
-  const [durations, setDurations] = useState(new Array(videoUrls.length).fill(0));
-  const [currentTimes, setCurrentTimes] = useState(new Array(videoUrls.length).fill(0));
+  const [loadingVideos, setLoadingVideos] = useState(
+    new Array(videoUrls.length).fill(true)
+  );
+  const [durations, setDurations] = useState(
+    new Array(videoUrls.length).fill(0)
+  );
+  const [currentTimes, setCurrentTimes] = useState(
+    new Array(videoUrls.length).fill(0)
+  );
 
-  // Comments
   const [commentsOpen, setCommentsOpen] = useState(false);
-
-  // Mobile bottom nav
   const [activeLink, setActiveLink] = useState("#home");
 
-  // Keep sectionRefs array in sync
+  const wheelTimerRef = useRef(null);
+  const wheelDeltaRef = useRef(0);
+
   useEffect(() => {
-    sectionRefs.current = sectionRefs.current.slice(0, videoUrls.length);
-  }, [videoUrls.length]);
+    const prefetchIndex = currentIndex + 2;
+    if (prefetchIndex < videoUrls.length) {
+      const video = document.createElement("video");
+      video.src = videoUrls[prefetchIndex];
+      video.preload = "auto";
+    }
+  }, [currentIndex]);
+
+  const arrowDown = () => {
+    if (currentIndex < videoUrls.length - 1) {
+      setCurrentIndex((prev) => prev + 1);
+    }
+  };
+
+  const arrowUp = () => {
+    if (currentIndex > 0) {
+      setCurrentIndex((prev) => prev - 1);
+    }
+  };
+
+  const swipeHandlers = useSwipeable({
+    onSwipedUp: () => arrowDown(),
+    onSwipedDown: () => arrowUp(),
+    trackTouch: true,
+    trackMouse: true,
+    delta: 10,
+    preventScrollOnSwipe: true,
+    rotationAngle: 0,
+    axis: "y",
+  });
+
+  const WHEEL_THRESHOLD = 80;
+  const WHEEL_DEBOUNCE = 150; // ms
+
+  const handleWheel = (e) => {
+    e.preventDefault();
+
+    wheelDeltaRef.current += e.deltaY;
+
+    if (wheelTimerRef.current) {
+      clearTimeout(wheelTimerRef.current);
+    }
+
+    wheelTimerRef.current = setTimeout(() => {
+      if (wheelDeltaRef.current > WHEEL_THRESHOLD) {
+        arrowDown();
+      } else if (wheelDeltaRef.current < -WHEEL_THRESHOLD) {
+        arrowUp();
+      }
+
+      wheelDeltaRef.current = 0;
+      wheelTimerRef.current = null;
+    }, WHEEL_DEBOUNCE);
+  };
 
   const handleMenuClick = (href) => {
     setActiveLink(href);
@@ -94,58 +162,21 @@ export default function SahoolatSocial() {
   };
 
   useEffect(() => {
-    const options = { root: containerRef.current, threshold: 0.7 };
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        const videoEl = entry.target;
-        const idx = videoRefs.current.indexOf(videoEl);
-
-        if (entry.isIntersecting) {
-          // Play the video when it enters the viewport if paused
-          if (videoEl.paused) {
-            videoEl.play().catch(() => {});
-            setCurrentIndex(idx);
-          }
-        } else {
-          // Pause the video when it leaves the viewport
-          if (!videoEl.paused) {
-            videoEl.pause();
-          }
-        }
-      });
-    }, options);
-
-    // Observe each video element
-    videoRefs.current.forEach((vid) => {
-      if (vid) observer.observe(vid);
-    });
-
-    return () => {
-      videoRefs.current.forEach((vid) => {
-        if (vid) observer.unobserve(vid);
-      });
-    };
-  }, []);
-
-  // Close the drawer if viewport >= 768
-  useEffect(() => {
-    function handleResize() {
-      if (window.innerWidth >= 768) {
-        setDrawerOpen(false);
-      }
+    if (prevVideoRef.current) {
+      prevVideoRef.current.muted = isMuted;
+      prevVideoRef.current.pause();
     }
-    window.addEventListener("resize", handleResize);
-    handleResize();
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
+    if (currentVideoRef.current) {
+      currentVideoRef.current.muted = isMuted;
+      currentVideoRef.current.play().catch(() => {});
+    }
+    if (nextVideoRef.current) {
+      nextVideoRef.current.muted = isMuted;
+      nextVideoRef.current.pause();
+    }
+  }, [isMuted, currentIndex]);
 
-  useEffect(() => {
-    videoRefs.current.forEach((vid) => {
-      if (vid) vid.muted = isMuted;
-    });
-  }, [isMuted]);
-
-  const handleVideoLoad = (index) => {
+  const handleVideoPlaying = (index) => {
     setLoadingVideos((prev) => {
       const updated = [...prev];
       updated[index] = false;
@@ -153,7 +184,7 @@ export default function SahoolatSocial() {
     });
   };
 
-  const handleVideoBuffer = (index) => {
+  const handleVideoError = (index) => {
     setLoadingVideos((prev) => {
       const updated = [...prev];
       updated[index] = true;
@@ -161,106 +192,72 @@ export default function SahoolatSocial() {
     });
   };
 
-  const handleLoadedMetadata = (index) => {
-    const vid = videoRefs.current[index];
-    if (!vid) return;
-    setDurations((prev) => {
-      const updated = [...prev];
-      updated[index] = vid.duration || 0;
-      return updated;
-    });
-  };
-
-  const handleTimeUpdate = (index) => {
-    const vid = videoRefs.current[index];
-    if (!vid) return;
-    setCurrentTimes((prev) => {
-      const updated = [...prev];
-      updated[index] = vid.currentTime;
-      return updated;
-    });
-  };
-
-  const handleVideoEnd = (index) => {
-    const vid = videoRefs.current[index];
-    if (vid) {
-      vid.pause();
-      setPausedByAuto((prev) => {
+  const handleLoadedMetadata = (index, videoRef) => {
+    if (videoRef.current) {
+      setDurations((prev) => {
         const updated = [...prev];
-        updated[index] = true;
-        return updated;
-      });
-      setPlayCounts((prev) => {
-        const updated = [...prev];
-        updated[index] += 1;
+        updated[index] = videoRef.current.duration || 0;
         return updated;
       });
     }
   };
 
-  const handleVideoClick = (index) => {
-    const vid = videoRefs.current[index];
-    if (!vid) return;
-
-    if (pausedByAuto[index]) {
-      setPausedByAuto((old) => {
-        const clone = [...old];
-        clone[index] = false;
-        return clone;
-      });
-      setPlayCounts((old) => {
-        const clone = [...old];
-        clone[index] = 0;
-        return clone;
+  const handleTimeUpdate = (index, videoRef) => {
+    if (videoRef.current) {
+      setCurrentTimes((prev) => {
+        const updated = [...prev];
+        updated[index] = videoRef.current.currentTime;
+        return updated;
       });
     }
-    vid.paused ? vid.play() : vid.pause();
   };
 
-  const handleScrub = (index, val) => {
-    const vid = videoRefs.current[index];
-    if (!vid) return;
-
-    if (pausedByAuto[index]) {
-      setPausedByAuto((old) => {
-        const clone = [...old];
-        clone[index] = false;
-        return clone;
-      });
-      setPlayCounts((old) => {
-        const clone = [...old];
-        clone[index] = 0;
-        return clone;
-      });
+  const handleVideoEnd = (index, videoRef) => {
+    if (videoRef.current) {
+      videoRef.current.pause();
     }
-    vid.currentTime = Number(val);
-    vid.play().catch(() => {});
+  };
+
+  const handleVideoClick = (videoRef) => {
+    if (videoRef.current) {
+      if (videoRef.current.paused) videoRef.current.play();
+      else videoRef.current.pause();
+    }
+  };
+
+  const handleScrub = (index, videoRef, val) => {
+    if (videoRef.current) {
+      videoRef.current.currentTime = Number(val);
+      videoRef.current.play().catch(() => {});
+    }
   };
 
   const toggleComments = () => setCommentsOpen((prev) => !prev);
 
-  const handleNextVideo = () => {
-    setCurrentIndex((prevIndex) => {
-      const newIndex = prevIndex + 1;
-      if (newIndex < videoUrls.length) {
-        sectionRefs.current[newIndex]?.scrollIntoView({ behavior: "smooth" });
-      }
-      return newIndex < videoUrls.length ? newIndex : prevIndex;
-    });
-  };
+  const prevIndex = currentIndex > 0 ? currentIndex - 1 : null;
+  const nextIndex =
+    currentIndex < videoUrls.length - 1 ? currentIndex + 1 : null;
 
-  const handlePreviousVideo = () => {
-    setCurrentIndex((prevIndex) => {
-      const newIndex = prevIndex - 1;
-      if (newIndex >= 0) {
-        sectionRefs.current[newIndex]?.scrollIntoView({ behavior: "smooth" });
-      }
-      return newIndex >= 0 ? newIndex : prevIndex;
-    });
+  const visibleSlides = [prevIndex, currentIndex, nextIndex].filter(
+    (idx) => idx !== null && idx >= 0 && idx < videoUrls.length
+  );
+
+  const getSlideStyle = (slideIdx) => {
+    const offset = slideIdx - currentIndex; // -1, 0, +1
+    return {
+      position: "absolute",
+      top: 0,
+      left: 0,
+      width: "100%",
+      height: "100%",
+      transition: "transform 0.4s ease-in-out",
+      transform: `translateY(${offset * 100}%)`,
+    };
   };
 
   return (
     <div className="w-screen h-screen flex bg-gray-50">
+      {/* Mobile Drawer Toggle */}
       <div className="md:hidden absolute top-4 left-4 z-50">
         <button
           onClick={() => setDrawerOpen(true)}
@@ -270,112 +267,173 @@ export default function SahoolatSocial() {
         </button>
       </div>
 
-      <SocialMediaSideDrawer
-        isOpen={drawerOpen}
-        onClose={() => setDrawerOpen(false)}
-      />
-
+      <SocialMediaSideDrawer isOpen={drawerOpen} onClose={() => setDrawerOpen(false)} />
       <div className="hidden md:block fixed top-0 left-0 w-44 h-screen bg-white shadow-md">
         <SocialMediaSideBar />
       </div>
 
-      <div className="flex-1 ml-0 md:ml-44 flex flex-col relative">
-        <div
-          ref={containerRef}
-          className="w-full flex-1 overflow-y-scroll"
-          style={{ scrollSnapType: "y mandatory", WebkitOverflowScrolling: "touch" }}
-        >
-          {videoUrls.map((url, idx) => (
+
+      <div
+        className="flex-1 ml-0 md:ml-44 relative overflow-hidden"
+        style={{ touchAction: "none" }}
+        {...swipeHandlers}
+        onWheel={handleWheel}
+      >
+        {visibleSlides.map((slideIdx) => {
+          if (slideIdx >= mockStats.length) {
+            return null;
+          }
+
+          return (
             <section
-              key={idx}
-              ref={(el) => (sectionRefs.current[idx] = el)}
-              className="relative w-full h-screen flex items-center justify-center md:pt-[10px] pb-[5px]"
-              style={{ scrollSnapAlign: "start" }}
+              key={slideIdx}
+              style={getSlideStyle(slideIdx)}
+              className="flex items-center justify-center md:pt-[10px] md:pb-[5px]"
             >
               <VideoCard
-                videoRef={(el) => (videoRefs.current[idx] = el)}
-                videoUrl={url}
+                videoRef={
+                  slideIdx === prevIndex
+                    ? prevVideoRef
+                    : slideIdx === nextIndex
+                      ? nextVideoRef
+                      : currentVideoRef
+                }
+                videoUrl={videoUrls[slideIdx]}
                 isMuted={isMuted}
-                loading={loadingVideos[idx]}
-                duration={durations[idx]}
-                currentTime={currentTimes[idx]}
-                onLoadedData={() => handleVideoLoad(idx)}
-                onWaiting={() => handleVideoBuffer(idx)}
-                onLoadedMetadata={() => handleLoadedMetadata(idx)}
-                onTimeUpdate={() => handleTimeUpdate(idx)}
-                onVideoClick={() => handleVideoClick(idx)}
-                onVideoEnd={() => handleVideoEnd(idx)}
-                onScrub={(e) => handleScrub(idx, e.target.value)}
+                loading={loadingVideos[slideIdx]}
+                duration={durations[slideIdx]}
+                currentTime={currentTimes[slideIdx]}
+                onPlaying={() => handleVideoPlaying(slideIdx)}
+                onError={() => handleVideoError(slideIdx)}
+                onLoadedMetadata={() =>
+                  handleLoadedMetadata(
+                    slideIdx,
+                    slideIdx === prevIndex
+                      ? prevVideoRef
+                      : slideIdx === nextIndex
+                        ? nextVideoRef
+                        : currentVideoRef
+                  )
+                }
+                onTimeUpdate={() =>
+                  handleTimeUpdate(
+                    slideIdx,
+                    slideIdx === prevIndex
+                      ? prevVideoRef
+                      : slideIdx === nextIndex
+                        ? nextVideoRef
+                        : currentVideoRef
+                  )
+                }
+                onVideoClick={() =>
+                  handleVideoClick(
+                    slideIdx === prevIndex
+                      ? prevVideoRef
+                      : slideIdx === nextIndex
+                        ? nextVideoRef
+                        : currentVideoRef
+                  )
+                }
+                onVideoEnd={() =>
+                  handleVideoEnd(
+                    slideIdx,
+                    slideIdx === prevIndex
+                      ? prevVideoRef
+                      : slideIdx === nextIndex
+                        ? nextVideoRef
+                        : currentVideoRef
+                  )
+                }
+                onScrub={(e) =>
+                  handleScrub(
+                    slideIdx,
+                    slideIdx === prevIndex
+                      ? prevVideoRef
+                      : slideIdx === nextIndex
+                        ? nextVideoRef
+                        : currentVideoRef,
+                    e.target.value
+                  )
+                }
                 onToggleMute={() => setIsMuted((m) => !m)}
                 onToggleComments={toggleComments}
                 showHamburger={false}
                 onOpenDrawer={() => setDrawerOpen(true)}
-                likesCount={mockStats[idx].likesCount}
-                commentsCount={mockStats[idx].commentsCount}
-                sharesCount={mockStats[idx].sharesCount}
+                likesCount={mockStats[slideIdx].likesCount}
+                commentsCount={mockStats[slideIdx].commentsCount}
+                sharesCount={mockStats[slideIdx].sharesCount}
               />
 
-              <div className="hidden md:flex flex-col items-center space-y-2 z-10 absolute right-[29%] top-[66%] transform -translate-y-1/2">
-                <button className="p-3 rounded-full bg-gray-200 text-black hover:bg-gray-300 transition">
-                  <FaHeart size={30} />
-                </button>
-                <span className="text-sm text-black pb-4">
-                  {mockStats[idx].likesCount}
-                </span>
-                <button
-                  onClick={toggleComments}
-                  className="p-3 rounded-full bg-gray-200 text-black hover:bg-gray-300 transition"
-                >
-                  <FaRegComment size={30} />
-                </button>
-                <span className="text-sm text-black pb-4">
-                  {mockStats[idx].commentsCount}
-                </span>
-                <button className="p-3 rounded-full bg-gray-200 text-black hover:bg-gray-300 transition">
-                  <FaShare size={30} />
-                </button>
-                <span className="text-sm text-black">
-                  {mockStats[idx].sharesCount}
-                </span>
-                <button className="p-3 rounded-full bg-gray-200 text-black hover:bg-gray-300 transition">
-                  <FaEllipsisV size={30} />
-                </button>
-              </div>
+              {/* Desktop Social Icons (only for the "current" slide) */}
+              {slideIdx === currentIndex && (
+                <div className="hidden md:flex flex-col items-center space-y-2 z-10 absolute right-[29%] top-[66%] transform -translate-y-1/2">
+                  <button className="p-3 rounded-full bg-gray-200 text-black hover:bg-gray-300 transition">
+                    <FaHeart size={30} />
+                  </button>
+                  <span className="text-sm text-black pb-4">
+                    {mockStats[slideIdx].likesCount}
+                  </span>
+                  <button
+                    onClick={toggleComments}
+                    className="p-3 rounded-full bg-gray-200 text-black hover:bg-gray-300 transition"
+                  >
+                    <FaRegComment size={30} />
+                  </button>
+                  <span className="text-sm text-black pb-4">
+                    {mockStats[slideIdx].commentsCount}
+                  </span>
+                  <button className="p-3 rounded-full bg-gray-200 text-black hover:bg-gray-300 transition">
+                    <FaShare size={30} />
+                  </button>
+                  <span className="text-sm text-black">
+                    {mockStats[slideIdx].sharesCount}
+                  </span>
+                  <button className="p-3 rounded-full bg-gray-200 text-black hover:bg-gray-300 transition">
+                    <FaEllipsisV size={30} />
+                  </button>
+                </div>
+              )}
             </section>
-          ))}
-        </div>
+          );
+        })}
       </div>
 
+      {/* Desktop Navigation Arrows (Up/Down) */}
       <div className="hidden md:flex md:flex-col md:space-y-5 z-10 absolute right-20 top-1/2 transform -translate-y-1/2">
+        {/* Only show Up arrow if NOT on first video */}
         {currentIndex > 0 && (
           <button
             className="w-20 h-20 p-3 flex items-center justify-center rounded-full bg-gray-200 text-black hover:bg-gray-300 transition"
-            onClick={handlePreviousVideo}
+            onClick={arrowUp}
           >
             <FaArrowUp size={35} />
           </button>
         )}
 
+        {/* Only show Down arrow if NOT on last video */}
         {currentIndex < videoUrls.length - 1 && (
           <button
             className="w-20 h-20 p-3 flex items-center justify-center rounded-full bg-gray-200 text-black hover:bg-gray-300 transition"
-            onClick={handleNextVideo}
+            onClick={arrowDown}
           >
             <FaArrowDown size={35} />
           </button>
         )}
       </div>
 
+      {/* Mobile Bottom Navigation */}
       <div className="fixed bottom-0 left-0 right-0 flex md:hidden bg-white shadow-inner border-t border-gray-200 z-20">
         {menu.map((item) => (
           <button
             key={item.text}
             onClick={() => handleMenuClick(item.href)}
             className={`flex-1 flex flex-col items-center p-3 transition-all ${
-              activeLink === item.href ? "text-white font-bold bg-[#0ea288]" : "text-gray-600"
+              activeLink === item.href
+                ? "text-white font-bold bg-[#0ea288]"
+                : "text-gray-600"
             }`}
             style={{
-              transform: activeMenuItem === item.href ? "translateY(-10px)" : "translateY(0)",
+              transform: "translateY(0)",
               transition: "transform 0.3s ease-in-out",
             }}
           >
@@ -385,6 +443,7 @@ export default function SahoolatSocial() {
         ))}
       </div>
 
+      {/* Comments Section */}
       {commentsOpen && (
         <div className="fixed top-0 right-0 h-full bg-white shadow-lg border-l border-gray-300 flex flex-col w-[90%] md:w-[30%] z-30">
           <button

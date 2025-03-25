@@ -13,10 +13,6 @@ import {
   FaMicrophoneAlt,
   FaFacebook,
   FaLinkedinIn,
-  FaHome,
-  FaCompass,
-  FaPlus,
-  FaUser,
 } from "react-icons/fa";
 import { SiTiktok } from "react-icons/si";
 import Link from "next/link";
@@ -43,20 +39,25 @@ export default function SocialMediaSideBar() {
       style={{ fontFamily: "Roboto, sans-serif" }}
     >
       {/* Logo */}
-      <div className="flex items-center justify-center mb-6">
-        <Image
-          src="/assets/logo.png"
-          alt="Sahoolat AI Logo"
-          width={120}
-          height={120}
-        />
-      </div>
+      <Link href="/" className="flex items-center justify-center mb-6">
+        <div>
+          <Image
+            src="/assets/logo.png"
+            alt="Sahoolat AI Logo"
+            width={120}
+            height={120}
+          />
+        </div>
+      </Link>
 
-      <span className="pl-2 pr-1">
-        <button className="block text-xl w-full py-2 mb-4 border border-green-500 text-gray-800 font-bold rounded hover:bg-green-50">
-          Log in
-        </button>
-      </span>
+      {/*<span className="pl-2 pr-1">*/}
+      {/*  <button*/}
+      {/*    className="block text-xl w-full py-2 mb-4 border border-green-500 text-gray-800 font-bold rounded hover:bg-green-50">*/}
+      {/*    Log in*/}
+      {/*  </button>*/}
+      {/*</span>*/}
+
+      <div className="border-b my-1"></div>
 
       <h2 className="text-xl font-bold text-gray-800 mt-4 px-4">Company</h2>
       <ul className="mt-2 space-y-2 text-gray-700 text-lg px-4">
@@ -79,8 +80,8 @@ export default function SocialMediaSideBar() {
           onClick={() => handleItemClick("Blogs")}
         >
           <Link href="/blogs" className="flex items-center space-x-2">
-              <FaBloggerB size={24} />
-              <span className="text-[18px] pl-0.5">Blogs</span>
+            <FaBloggerB size={24} />
+            <span className="text-[18px] pl-0.5">Blogs</span>
           </Link>
         </li>
 
@@ -127,59 +128,6 @@ export default function SocialMediaSideBar() {
 
       <div className="border-b my-4"></div>
 
-      <h2 className="text-xl text-gray-800 font-bold mt-4 px-4">Navigation</h2>
-      <ul className="mt-2 space-y-2 text-gray-700 text-lg px-4">
-        <li
-          className={`flex items-center text-gray-800 space-x-2 cursor-pointer py-1 pl-2 pt-2 ${
-            selectedItem === "Home" ? "bg-[#0ea288] text-white rounded py-2" : ""
-          }`}
-          onClick={() => handleItemClick("Home")}
-        >
-
-          <FaHome size={24} />
-          <span className="text-[18px] pl-0.5">Home</span>
-
-        </li>
-        <li
-          className={`flex items-center text-gray-800 space-x-2 cursor-pointer py-1 pl-2 pt-2 ${
-            selectedItem === "Explore" ? "bg-[#0ea288] text-white rounded py-2" : ""
-          }`}
-          onClick={() => handleItemClick("Explore")}
-        >
-          <Link href="/sahoolat-social/explore" className="flex items-center space-x-2">
-            <FaCompass size={24} />
-            <span className="text-[18px] pl-0.5">Explore</span>
-          </Link>
-
-        </li>
-        <li
-          className={`flex items-center text-gray-800 space-x-2 cursor-pointer py-1 pl-2 pt-2 ${
-            selectedItem === "Upload" ? "bg-[#0ea288] text-white rounded py-2" : ""
-          }`}
-          onClick={() => handleItemClick("Upload")}
-        >
-          <Link href="/sahoolat-social/upload" className="flex items-center space-x-2">
-            <FaPlus size={24} />
-            <span className="text-[18px] pl-0.5">Upload</span>
-          </Link>
-        </li>
-        <li
-          className={`flex items-center text-gray-800 space-x-2 cursor-pointer py-1 pl-2 pt-2 ${
-            selectedItem === "Profile" ? "bg-[#0ea288] text-white rounded py-2" : ""
-          }`}
-          onClick={() => handleItemClick("Profile")}
-        >
-          <Link href="/sahoolat-social/profile" className="flex items-center space-x-2">
-            <FaUser size={24} />
-            <span className="text-[18px] pl-0.5">Profile</span>
-          </Link>
-        </li>
-      </ul>
-
-      {/* Company Section */}
-
-      <div className="border-b my-4"></div>
-
       {/* Follow Us */}
       <h2 className="text-xl text-gray-800 font-bold mt-4 px-4">Follow Us</h2>
       <div className="mt-2 space-y-3 text-gray-700 text-xl px-4">
@@ -205,7 +153,6 @@ export default function SocialMediaSideBar() {
         </div>
       </div>
 
-      {/* Download CTA */}
       <div className="border-b my-4"></div>
       <div className="mt-4 flex items-center justify-center space-x-4 pb-6 px-4">
         <Image
