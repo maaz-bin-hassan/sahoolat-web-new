@@ -18,7 +18,7 @@ const menu = [
   { text: "Profile", icon: FaUser, href: "/sahoolat-social/profile" },
 ];
 
-// Demo video URLs
+
 const videoUrls = [
   "https://lyudo-images.s3.eu-north-1.amazonaws.com/videos/%23construction+%23plumber+%23plumbing+%23like+%23subscribe+%23shorts+%23video+%23electrical+%23mistri+%23pipes+%23yt.mp4",
   "https://lyudo-images.s3.eu-north-1.amazonaws.com/videos/%23plumber+%23work+wall+mixer+ka+fiting+kese+kare+%23bathroom+%23wallmixer+%23geyser.mp4",
