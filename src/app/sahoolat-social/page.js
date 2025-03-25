@@ -3,7 +3,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import {
   FaCompass, FaHome, FaPlus, FaUser, FaBars, FaArrowUp, FaArrowDown,
-  FaHeart, FaRegComment, FaShare , FaEllipsisV
+  FaHeart, FaRegComment, FaShare, FaEllipsisV
 } from "react-icons/fa";
 import { BsArrowUpCircleFill, BsArrowDownCircleFill } from "react-icons/bs"; // Unused but kept for reference
 import { toast } from "react-toastify";
@@ -27,10 +27,36 @@ const videoUrls = [
   "https://lyudo-images.s3.eu-north-1.amazonaws.com/videos/%23plumber+%23work+wall+mixer+ka+fiting+kese+kare+%23bathroom+%23wallmixer+%23geyser.mp4",
   "https://lyudo-images.s3.eu-north-1.amazonaws.com/videos/%F0%9F%98%B1%F0%9F%94%A5Problem+solve+PPR+Green+Pipes+Fitting+System+%F0%9F%98%B1%F0%9F%92%A5.mp4",
   "https://lyudo-images.s3.eu-north-1.amazonaws.com/videos/%24750+in+2+mins+with+a+screwdriver__+%23plumbing+%23plumber+%23satisfying+%23draincleaning+%40KEENUtility.mp4",
+  "https://lyudo-images.s3.eu-north-1.amazonaws.com/videos/Bathroom+plumbing+installation+process-+Good+tools+and+machinery+make+work+easy.mp4",
+  "https://lyudo-images.s3.eu-north-1.amazonaws.com/videos/PERFECT+PLUMBING+WORK+%23shorts.mp4",
+  "https://lyudo-images.s3.eu-north-1.amazonaws.com/videos/videoplayback.mp4",
+  "https://lyudo-images.s3.eu-north-1.amazonaws.com/videos/Water+tank+connection+%23shorts+%23shortvideo+%23short+%23shortsfeed+%23trending+%23viralvideo+%23reels.mp4",
+//     home handy workers:
+  "https://lyudo-images.s3.eu-north-1.amazonaws.com/videos/home+cares/Helpful+construction+tips+you+should+learn+from+the+experience+carpenter+%23carpentry+%23wood+%23skills.mp4",
+  "https://lyudo-images.s3.eu-north-1.amazonaws.com/videos/home+cares/Home+Ceiling+Designer+POP+Bedroom+Amazing+%F0%9F%98%9C+Interior+Work++%23popdesign+%23house+%23designer+%23shorts.mp4",
+  "https://lyudo-images.s3.eu-north-1.amazonaws.com/videos/home+cares/LALKA+Electric+Grass+Cutting+Machine+_+Lawn+Mower+_+%23grasscutting++%23shortvideo+%23short+%23shorts.mp4",
+  "https://lyudo-images.s3.eu-north-1.amazonaws.com/videos/%23construction+%23plumber+%23plumbing+%23like+%23subscribe+%23shorts+%23video+%23electrical+%23mistri+%23pipes+%23yt.mp4",
+  "https://lyudo-images.s3.eu-north-1.amazonaws.com/videos/home+cares/Pedicure+At+Home+%F0%9F%91%8CPamper+Routine+In+Pregnancy+%23shorts+%23ytshorts+%23youtubeshorts+%23beauty.mp4",
+  "https://lyudo-images.s3.eu-north-1.amazonaws.com/videos/home+cares/To+See+How+2.5D+Design+Looks+%F0%9F%91%80.mp4",
+  "https://lyudo-images.s3.eu-north-1.amazonaws.com/videos/home+cares/videoplayback.mp4",
+  "https://lyudo-images.s3.eu-north-1.amazonaws.com/videos/home+cares/Ye+kya+kr+diya+%F0%9F%98%82%F0%9F%A4%A3%23noorah_albalushiya+%23shortvideo+%23funny+%23shortvideo+%23comedy.mp4",
 ];
+
 
 // Demo stats for each video
 const mockStats = [
+  { likesCount: "368.5K", commentsCount: "6427", sharesCount: "25K" },
+  { likesCount: "120K",   commentsCount: "542",  sharesCount: "10K" },
+  { likesCount: "1.2M",   commentsCount: "3400", sharesCount: "5K" },
+  { likesCount: "900K",   commentsCount: "1300", sharesCount: "3K" },
+  { likesCount: "368.5K", commentsCount: "6427", sharesCount: "25K" },
+  { likesCount: "120K",   commentsCount: "542",  sharesCount: "10K" },
+  { likesCount: "1.2M",   commentsCount: "3400", sharesCount: "5K" },
+  { likesCount: "900K",   commentsCount: "1300", sharesCount: "3K" },
+  { likesCount: "368.5K", commentsCount: "6427", sharesCount: "25K" },
+  { likesCount: "120K",   commentsCount: "542",  sharesCount: "10K" },
+  { likesCount: "1.2M",   commentsCount: "3400", sharesCount: "5K" },
+  { likesCount: "900K",   commentsCount: "1300", sharesCount: "3K" },
   { likesCount: "368.5K", commentsCount: "6427", sharesCount: "25K" },
   { likesCount: "120K",   commentsCount: "542",  sharesCount: "10K" },
   { likesCount: "1.2M",   commentsCount: "3400", sharesCount: "5K" },
@@ -111,14 +137,12 @@ export default function SahoolatSocial() {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  // Sync "muted" state
   useEffect(() => {
     videoRefs.current.forEach((vid) => {
       if (vid) vid.muted = isMuted;
     });
   }, [isMuted]);
 
-  // Handlers for video events
   const handleVideoLoad = (index) => {
     setLoadingVideos((prev) => {
       const updated = [...prev];
@@ -161,12 +185,10 @@ export default function SahoolatSocial() {
       updated[index] += 1;
 
       const vid = videoRefs.current[index];
-      // If the video ended once, restart
       if (updated[index] === 1) {
         vid.currentTime = 0;
         vid.play().catch(() => {});
       }
-      // If it ended twice, pause automatically
       else if (updated[index] >= 2) {
         vid.pause();
         setPausedByAuto((old) => {
@@ -184,13 +206,11 @@ export default function SahoolatSocial() {
     if (!vid) return;
 
     if (pausedByAuto[index]) {
-      // If the video was auto-paused, reset that so we can play again
       setPausedByAuto((old) => {
         const clone = [...old];
         clone[index] = false;
         return clone;
       });
-      // Reset the play count so it can loop again
       setPlayCounts((old) => {
         const clone = [...old];
         clone[index] = 0;
@@ -243,8 +263,8 @@ export default function SahoolatSocial() {
   };
 
   return (
-    <div className="relative w-full h-screen flex bg-gray-50">
-      {/* Mobile hamburger */}
+    <div className="w-screen h-screen flex bg-gray-50">
+
       <div className="md:hidden absolute top-4 left-4 z-50">
         <button
           onClick={() => setDrawerOpen(true)}
@@ -262,17 +282,17 @@ export default function SahoolatSocial() {
         </button>
       </div>
 
-      {/* Side Drawer */}
       <SocialMediaSideDrawer
         isOpen={drawerOpen}
         onClose={() => setDrawerOpen(false)}
       />
 
-      {/* Left Sidebar (desktop) */}
-      <SocialMediaSideBar />
+      <div className="hidden md:block fixed top-0 left-0 w-44 h-screen bg-white shadow-md">
+        <SocialMediaSideBar />
+      </div>
 
-      {/* Main content (videos) */}
-      <div className="flex-1 flex flex-col">
+      <div className="flex-1 ml-0 md:ml-44 flex flex-col relative">
+        {/* Container for intersection observer */}
         <div
           ref={containerRef}
           className="w-full flex-1 overflow-y-scroll"
@@ -282,7 +302,7 @@ export default function SahoolatSocial() {
             <section
               key={idx}
               ref={(el) => (sectionRefs.current[idx] = el)}
-              className="w-full h-screen flex items-center justify-center md:py-[10px] rounded-t-xl"
+              className="relative w-full h-screen flex items-center justify-center md:pt-[10px] pb-[5px]"
               style={{ scrollSnapAlign: "start" }}
             >
               {/* Video Card */}
@@ -309,12 +329,10 @@ export default function SahoolatSocial() {
                 sharesCount={mockStats[idx].sharesCount}
               />
 
-              {/*
 
-              */}
-              <div className="hidden md:flex flex-col items-center pl-3 transform translate-y-1/2 space-y-2 z-10">
+              <div className="hidden md:flex flex-col items-center space-y-2 z-10
+                 absolute right-[29%] top-[66%]  transform -translate-y-1/2">
                 {/* Like */}
-
                 <button className="p-3 rounded-full bg-gray-200 text-black hover:bg-gray-300 transition">
                   <FaHeart size={30} />
                 </button>
@@ -333,7 +351,7 @@ export default function SahoolatSocial() {
                   {mockStats[idx].commentsCount}
                 </span>
 
-                {/* Share */}
+
                 <button className="p-3 rounded-full bg-gray-200 text-black hover:bg-gray-300 transition">
                   <FaShare size={30} />
                 </button>
@@ -341,19 +359,17 @@ export default function SahoolatSocial() {
                   {mockStats[idx].sharesCount}
                 </span>
 
-                {/*Three Dots*/}
                 <button className="p-3 rounded-full bg-gray-200 text-black hover:bg-gray-300 transition">
                   <FaEllipsisV size={30} />
                 </button>
-
               </div>
+
             </section>
           ))}
         </div>
       </div>
 
-      {/* Up/Down arrows (desktop) */}
-      <div className="hidden md:flex md:flex-col md:space-y-5 z-10 absolute right-5 top-1/2 transform -translate-y-1/2">
+      <div className="hidden md:flex md:flex-col md:space-y-5 z-10 absolute right-20 top-1/2 transform -translate-y-1/2">
         {currentIndex > 0 && (
           <button
             className="w-20 h-20 p-3 flex items-center justify-center rounded-full bg-gray-200 text-black hover:bg-gray-300 transition"
@@ -373,7 +389,6 @@ export default function SahoolatSocial() {
         )}
       </div>
 
-
       <div className="fixed bottom-0 left-0 right-0 flex md:hidden bg-white shadow-inner border-t border-gray-200 z-20">
         {menu.map((item) => (
           <button
@@ -389,7 +404,7 @@ export default function SahoolatSocial() {
         ))}
       </div>
 
-      {/* Comments drawer (right side) */}
+
       {commentsOpen && (
         <div className="fixed top-0 right-0 h-full bg-white shadow-lg border-l border-gray-300 flex flex-col w-[90%] md:w-[30%] z-30">
           <button
