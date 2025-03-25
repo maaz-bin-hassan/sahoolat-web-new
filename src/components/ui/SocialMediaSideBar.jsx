@@ -59,10 +59,8 @@ export default function SocialMediaSideBar() {
       <h2 className="text-xl font-bold mt-4 px-4">Company</h2>
       <ul className="mt-2 space-y-2 text-gray-700 text-lg px-4">
         <li
-          className={`flex items-center space-x-2 cursor-pointer pl-2 pt-2 ${
-            selectedItem === "About"
-              ? "bg-[#0ea288] text-white rounded px-4 py-2"
-              : ""
+          className={`flex items-center space-x-2 cursor-pointer py-1 pl-2 pt-2 ${
+            selectedItem === "About" ? "bg-[#0ea288] text-white rounded py-2" : ""
           }`}
           onClick={() => handleItemClick("About")}
         >
@@ -71,10 +69,8 @@ export default function SocialMediaSideBar() {
         </li>
 
         <li
-          className={`flex items-center space-x-2 cursor-pointer pl-2 pt-2 ${
-            selectedItem === "Blogs"
-              ? "bg-[#0ea288] text-white rounded px-4 py-2"
-              : ""
+          className={`flex items-center space-x-2 cursor-pointer py-1 pl-2 pt-2 ${
+            selectedItem === "Blogs" ? "bg-[#0ea288] text-white rounded py-2" : ""
           }`}
           onClick={() => handleItemClick("Blogs")}
         >
@@ -83,9 +79,9 @@ export default function SocialMediaSideBar() {
         </li>
 
         <li
-          className={`flex items-center space-x-2 cursor-pointer pl-2 pt-2 ${
+          className={`flex items-center space-x-2 cursor-pointer py-1 pl-2 pt-2 ${
             selectedItem === "Categories"
-              ? "bg-[#0ea288] text-white rounded px-4 py-2"
+              ? "bg-[#0ea288] text-white rounded py-2"
               : ""
           }`}
           onClick={() => handleItemClick("Categories")}
@@ -94,11 +90,10 @@ export default function SocialMediaSideBar() {
           <span className="text-[18px] pl-0.5">Categories</span>
         </li>
 
-
         <li
-          className={`flex items-center space-x-2 cursor-pointer pl-2 pt-2 ${
+          className={`flex items-center space-x-2 cursor-pointer py-1 pl-2 pt-2 ${
             selectedItem === "Voice Experience"
-              ? "bg-[#0ea288] text-white rounded px-4 py-2"
+              ? "bg-[#0ea288] text-white rounded py-2"
               : ""
           }`}
           onClick={() => handleItemClick("Voice Experience")}
@@ -107,12 +102,9 @@ export default function SocialMediaSideBar() {
           <span className="text-[18px] pl-0.5">Voice Experience</span>
         </li>
 
-
         <li
-          className={`flex items-center space-x-2 cursor-pointer pl-2 pt-2 ${
-            selectedItem === "Support"
-              ? "bg-[#0ea288] text-white rounded px-4 py-2"
-              : ""
+          className={`flex items-center space-x-2 cursor-pointer py-1 pl-2 pt-2 ${
+            selectedItem === "Support" ? "bg-[#0ea288] text-white rounded py-2" : ""
           }`}
           onClick={() => handleItemClick("Support")}
         >
@@ -125,19 +117,39 @@ export default function SocialMediaSideBar() {
 
       <h2 className="text-xl font-bold mt-4 px-4">Navigation</h2>
       <ul className="mt-2 space-y-2 text-gray-700 text-lg px-4">
-        <li className="flex items-center space-x-2 cursor-pointer pl-2 pt-2">
+        <li
+          className={`flex items-center space-x-2 cursor-pointer py-1 pl-2 pt-2 ${
+            selectedItem === "Home" ? "bg-[#0ea288] text-white rounded py-2" : ""
+          }`}
+          onClick={() => handleItemClick("Home")}
+        >
           <FaHome size={24} />
           <span className="text-[18px] pl-0.5">Home</span>
         </li>
-        <li className="flex items-center space-x-2 cursor-pointer pl-2 pt-2">
+        <li
+          className={`flex items-center space-x-2 cursor-pointer py-1 pl-2 pt-2 ${
+            selectedItem === "Explore" ? "bg-[#0ea288] text-white rounded py-2" : ""
+          }`}
+          onClick={() => handleItemClick("Explore")}
+        >
           <FaCompass size={24} />
           <span className="text-[18px] pl-0.5">Explore</span>
         </li>
-        <li className="flex items-center space-x-2 cursor-pointer pl-2 pt-2">
+        <li
+          className={`flex items-center space-x-2 cursor-pointer py-1 pl-2 pt-2 ${
+            selectedItem === "Upload" ? "bg-[#0ea288] text-white rounded py-2" : ""
+          }`}
+          onClick={() => handleItemClick("Upload")}
+        >
           <FaPlus size={24} />
           <span className="text-[18px] pl-0.5">Upload</span>
         </li>
-        <li className="flex items-center space-x-2 cursor-pointer pl-2 pt-2">
+        <li
+          className={`flex items-center space-x-2 cursor-pointer py-1 pl-2 pt-2 ${
+            selectedItem === "Profile" ? "bg-[#0ea288] text-white rounded py-2" : ""
+          }`}
+          onClick={() => handleItemClick("Profile")}
+        >
           <FaUser size={24} />
           <span className="text-[18px] pl-0.5">Profile</span>
         </li>

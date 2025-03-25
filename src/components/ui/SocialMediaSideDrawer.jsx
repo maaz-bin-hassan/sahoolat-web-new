@@ -80,8 +80,10 @@ export default function SocialMediaSideDrawer({ isOpen, onClose }) {
         <h3 className="text-xl font-bold mt-4">Company</h3>
         <ul className="mt-2 space-y-2 text-gray-700 text-lg">
           <li
-            className={`flex items-center space-x-2 cursor-pointer pl-2 pt-2 ${
-              selectedItem === "About" ? "bg-[#0ea288] text-white rounded" : ""
+            className={`flex items-center space-x-2 cursor-pointer py-1 pl-2 pt-3 ${
+              selectedItem === "About"
+                ? "bg-[#0ea288] text-white rounded  py-2"
+                : ""
             }`}
             onClick={() => handleItemClick("About")}
           >
@@ -91,8 +93,10 @@ export default function SocialMediaSideDrawer({ isOpen, onClose }) {
 
           {/* Blogs */}
           <li
-            className={`flex items-center space-x-2 cursor-pointer pl-2 pt-2 ${
-              selectedItem === "Blogs" ? "bg-[#0ea288] text-white rounded" : ""
+            className={`flex items-center space-x-2 cursor-pointer py-1 pl-2 pt-3 ${
+              selectedItem === "Blogs"
+                ? "bg-[#0ea288] text-white rounded py-2"
+                : ""
             }`}
             onClick={() => handleItemClick("Blogs")}
           >
@@ -102,8 +106,10 @@ export default function SocialMediaSideDrawer({ isOpen, onClose }) {
 
           {/* Categories */}
           <li
-            className={`flex items-center space-x-2 cursor-pointer pl-2 pt-2 ${
-              selectedItem === "Categories" ? "bg-[#0ea288] text-white rounded" : ""
+            className={`flex items-center space-x-2 cursor-pointer py-1 pl-2 pt-3 ${
+              selectedItem === "Categories"
+                ? "bg-[#0ea288] text-white rounded py-2"
+                : ""
             }`}
             onClick={() => handleItemClick("Categories")}
           >
@@ -113,8 +119,10 @@ export default function SocialMediaSideDrawer({ isOpen, onClose }) {
 
           {/* Voice Experience */}
           <li
-            className={`flex items-center space-x-2 cursor-pointer pl-2 pt-2 ${
-              selectedItem === "Voice Experience" ? "bg-[#0ea288] text-white rounded" : ""
+            className={`flex items-center space-x-2 cursor-pointer py-1 pl-2 pt-3 ${
+              selectedItem === "Voice Experience"
+                ? "bg-[#0ea288] text-white rounded py-2"
+                : ""
             }`}
             onClick={() => handleItemClick("Voice Experience")}
           >
@@ -123,8 +131,10 @@ export default function SocialMediaSideDrawer({ isOpen, onClose }) {
           </li>
           {/* Support */}
           <li
-            className={`flex items-center space-x-2 cursor-pointer pl-2 pt-2 ${
-              selectedItem === "Support" ? "bg-[#0ea288] text-white rounded" : ""
+            className={`flex items-center space-x-2 cursor-pointer py-1 pl-2 pt-3 ${
+              selectedItem === "Support"
+                ? "bg-[#0ea288] text-white rounded py-2"
+                : ""
             }`}
             onClick={() => handleItemClick("Support")}
           >
