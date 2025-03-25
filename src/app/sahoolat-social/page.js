@@ -398,7 +398,7 @@ export default function SahoolatSocial() {
               activeLink === item.href ? "text-white font-bold bg-[#0ea288]" : ""
             }`}
           >
-            <item.icon size={10} />
+            <item.icon size={25} />
             <span className="text-xs">{item.text}</span>
           </button>
         ))}
