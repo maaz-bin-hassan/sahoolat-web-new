@@ -1,6 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import {
   FaBloggerB,
   FaListUl,
@@ -15,6 +16,7 @@ import {
   AiFillInfoCircle,
 } from "react-icons/ai";
 import { SiTiktok } from "react-icons/si";
+
 
 import appStore from "../../../public/assets/app-store.png";
 import googlePlay from "../../../public/assets/google-play.png";
@@ -88,8 +90,10 @@ export default function SocialMediaSideDrawer({ isOpen, onClose }) {
             }`}
             onClick={() => handleItemClick("About")}
           >
-            <AiFillInfoCircle size={22} />
-            <span className="pl-0.5">About</span>
+            <Link href="/about-us" className="flex items-center space-x-2">
+              <AiFillInfoCircle size={22} />
+              <span className="pl-0.5">About</span>
+            </Link>
           </li>
 
           {/* Blogs */}
@@ -101,8 +105,12 @@ export default function SocialMediaSideDrawer({ isOpen, onClose }) {
             }`}
             onClick={() => handleItemClick("Blogs")}
           >
-            <FaBloggerB size={22} />
-            <span className="pl-0.5">Blogs</span>
+
+            <Link href="/blogs" className="flex items-center space-x-2">
+              <FaBloggerB size={22} />
+              <span className="pl-0.5">Blogs</span>
+            </Link>
+
           </li>
 
           {/* Categories */}
@@ -114,11 +122,14 @@ export default function SocialMediaSideDrawer({ isOpen, onClose }) {
             }`}
             onClick={() => handleItemClick("Categories")}
           >
-            <FaListUl size={22} />
-            <span className="pl-0.5">Categories</span>
+            <Link href="/category" className="flex items-center space-x-2">
+              <FaListUl size={22} />
+              <span className="pl-0.5">Categories</span>
+            </Link>
+
+
           </li>
 
-          {/* Voice Experience */}
           <li
             className={`flex items-center text-gray-800 space-x-2 cursor-pointer py-1 pl-2 pt-3 ${
               selectedItem === "Voice Experience"
@@ -127,10 +138,14 @@ export default function SocialMediaSideDrawer({ isOpen, onClose }) {
             }`}
             onClick={() => handleItemClick("Voice Experience")}
           >
-            <FaMicrophoneAlt size={22} />
-            <span className="pl-0.5">Voice Experience</span>
+
+            <Link href="/sahoolat-experience" className="flex items-center space-x-2">
+              <FaMicrophoneAlt size={22} />
+              <span className="pl-0.5">Voice Experience</span>
+            </Link>
+
           </li>
-          {/* Support */}
+
           <li
             className={`flex items-center text-gray-800 space-x-2 cursor-pointer py-1 pl-2 pt-3 ${
               selectedItem === "Support"
@@ -139,8 +154,12 @@ export default function SocialMediaSideDrawer({ isOpen, onClose }) {
             }`}
             onClick={() => handleItemClick("Support")}
           >
-            <FaLifeRing size={22} />
-            <span className="pl-0.5">Support</span>
+
+            <Link href="/support" className="flex items-center space-x-2">
+              <FaLifeRing size={22} />
+              <span className="pl-0.5">Support</span>
+            </Link>
+
           </li>
 
 

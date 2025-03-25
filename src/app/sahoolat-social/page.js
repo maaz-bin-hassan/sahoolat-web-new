@@ -5,15 +5,11 @@ import {
   FaCompass, FaHome, FaPlus, FaUser, FaBars, FaArrowUp, FaArrowDown,
   FaHeart, FaRegComment, FaShare, FaEllipsisV
 } from "react-icons/fa";
-import { BsArrowUpCircleFill, BsArrowDownCircleFill } from "react-icons/bs"; // Unused but kept for reference
-import { toast } from "react-toastify";
 
-// Components
 import SocialMediaSideDrawer from "../../components/ui/SocialMediaSideDrawer";
 import SocialMediaSideBar from "../../components/ui/SocialMediaSideBar";
 import VideoCard from "../../components/ui/VideoCard";
 
-// Bottom nav menu items
 const menu = [
   { text: "Home", icon: FaHome, href: "#home" },
   { text: "Explore", icon: FaCompass, href: "#explore" },
