@@ -127,59 +127,7 @@ export default function SocialMediaSideBar() {
         </li>
       </ul>
 
-      <div className="border-b my-4"></div>
-
-      <h2 className="text-xl text-gray-800 font-bold mt-4 px-4">Navigation</h2>
-      <ul className="mt-2 space-y-2 text-gray-700 text-lg px-4">
-        <li
-          className={`flex items-center text-gray-800 space-x-2 cursor-pointer py-1 pl-2 pt-2 ${
-            selectedItem === "Home" ? "bg-[#0ea288] text-white rounded py-2" : ""
-          }`}
-          onClick={() => handleItemClick("Home")}
-        >
-
-          <FaHome size={24} />
-          <span className="text-[18px] pl-0.5">Home</span>
-
-        </li>
-        <li
-          className={`flex items-center text-gray-800 space-x-2 cursor-pointer py-1 pl-2 pt-2 ${
-            selectedItem === "Explore" ? "bg-[#0ea288] text-white rounded py-2" : ""
-          }`}
-          onClick={() => handleItemClick("Explore")}
-        >
-          <Link href="/sahoolat-social/explore" className="flex items-center space-x-2">
-            <FaCompass size={24} />
-            <span className="text-[18px] pl-0.5">Explore</span>
-          </Link>
-
-        </li>
-        <li
-          className={`flex items-center text-gray-800 space-x-2 cursor-pointer py-1 pl-2 pt-2 ${
-            selectedItem === "Upload" ? "bg-[#0ea288] text-white rounded py-2" : ""
-          }`}
-          onClick={() => handleItemClick("Upload")}
-        >
-          <Link href="/sahoolat-social/upload" className="flex items-center space-x-2">
-            <FaPlus size={24} />
-            <span className="text-[18px] pl-0.5">Upload</span>
-          </Link>
-        </li>
-        <li
-          className={`flex items-center text-gray-800 space-x-2 cursor-pointer py-1 pl-2 pt-2 ${
-            selectedItem === "Profile" ? "bg-[#0ea288] text-white rounded py-2" : ""
-          }`}
-          onClick={() => handleItemClick("Profile")}
-        >
-          <Link href="/sahoolat-social/profile" className="flex items-center space-x-2">
-            <FaUser size={24} />
-            <span className="text-[18px] pl-0.5">Profile</span>
-          </Link>
-        </li>
-      </ul>
-
       {/* Company Section */}
-
       <div className="border-b my-4"></div>
 
       {/* Follow Us */}
