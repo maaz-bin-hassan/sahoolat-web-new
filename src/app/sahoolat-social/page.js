@@ -31,6 +31,7 @@ const menu = [
   { text: "Profile", icon: FaUser, href: "/sahoolat-social/profile" },
 ];
 
+// Replace with your real video URLs
 const videoUrls = [
   "https://lyudo-images.s3.eu-north-1.amazonaws.com/videos/%23construction+%23plumber+%23plumbing+%23like+%23subscribe+%23shorts+%23video+%23electrical+%23mistri+%23pipes+%23yt.mp4",
   "https://lyudo-images.s3.eu-north-1.amazonaws.com/videos/%23plumber+%23work+wall+mixer+ka+fiting+kese+kare+%23bathroom+%23wallmixer+%23geyser.mp4",
@@ -83,12 +84,16 @@ export default function SahoolatSocial() {
   const [isMuted, setIsMuted] = useState(true);
   const [currentIndex, setCurrentIndex] = useState(0);
 
-  // Initialize "loading" to true so we show a spinner until onPlaying fires
+  // Each video starts "loading" until it actually plays
   const [loadingVideos, setLoadingVideos] = useState(
     new Array(videoUrls.length).fill(true)
   );
-  const [durations, setDurations] = useState(new Array(videoUrls.length).fill(0));
-  const [currentTimes, setCurrentTimes] = useState(new Array(videoUrls.length).fill(0));
+  const [durations, setDurations] = useState(
+    new Array(videoUrls.length).fill(0)
+  );
+  const [currentTimes, setCurrentTimes] = useState(
+    new Array(videoUrls.length).fill(0)
+  );
 
   const [commentsOpen, setCommentsOpen] = useState(false);
   const [activeLink, setActiveLink] = useState("#home");
@@ -103,21 +108,35 @@ export default function SahoolatSocial() {
     }
   }, [currentIndex]);
 
-  // Handle up/down swipes like TikTok
+  // ------------- SWIPE HANDLERS ------------- //
+  // axis="y" -> only vertical
+  // delta=10 -> small drag recognized as swipe
+  // preventScrollOnSwipe -> block normal scrolling
+  // style={{ touchAction: "none" }} -> ensures swipes are captured
   const swipeHandlers = useSwipeable({
-    onSwipedUp: () => handleNextVideo(),
-    onSwipedDown: () => handlePreviousVideo(),
-    preventScrollOnSwipe: true,
+    onSwipedUp: () => {
+      // console.log("Swiped Up");
+      handleNextVideo();
+    },
+    onSwipedDown: () => {
+      // console.log("Swiped Down");
+      handlePreviousVideo();
+    },
     trackTouch: true,
+    trackMouse: false,
+    delta: 10,
+    preventScrollOnSwipe: true,
+    rotationAngle: 0,
+    axis: "y",
   });
 
-  // Menu clicks
+  // ------------- MENU CLICK ------------- //
   const handleMenuClick = (href) => {
     setActiveLink(href);
     router.push(href);
   };
 
-  // Mute / unmute logic
+  // ------------- MUTE / REF UPDATES ------------- //
   useEffect(() => {
     if (prevVideoRef.current) {
       prevVideoRef.current.muted = isMuted;
@@ -133,7 +152,7 @@ export default function SahoolatSocial() {
     }
   }, [isMuted, currentIndex]);
 
-  // Slide navigation
+  // ------------- NAVIGATION ------------- //
   const handleNextVideo = () => {
     if (currentIndex < videoUrls.length - 1) {
       setCurrentIndex((prev) => prev + 1);
@@ -146,22 +165,19 @@ export default function SahoolatSocial() {
     }
   };
 
-  // ---------------- VIDEO EVENT HANDLERS ---------------- //
-
-  // Called when the video *actually starts playing*
+  // ------------- VIDEO EVENT HANDLERS ------------- //
   const handleVideoPlaying = (index) => {
     setLoadingVideos((prev) => {
       const updated = [...prev];
-      updated[index] = false; // No spinner once it's playing
+      updated[index] = false; // spinner goes away
       return updated;
     });
   };
 
-  // Called if there's a fatal video error
   const handleVideoError = (index) => {
     setLoadingVideos((prev) => {
       const updated = [...prev];
-      updated[index] = true; // We re-show spinner or error state
+      updated[index] = true; // stays loading or show error
       return updated;
     });
   };
@@ -194,8 +210,11 @@ export default function SahoolatSocial() {
 
   const handleVideoClick = (videoRef) => {
     if (videoRef.current) {
-      if (videoRef.current.paused) videoRef.current.play();
-      else videoRef.current.pause();
+      if (videoRef.current.paused) {
+        videoRef.current.play();
+      } else {
+        videoRef.current.pause();
+      }
     }
   };
 
@@ -208,10 +227,14 @@ export default function SahoolatSocial() {
 
   const toggleComments = () => setCommentsOpen((prev) => !prev);
 
-  // Positioning logic for "slides"
+  // ------------- SLIDE POSITIONS ------------- //
   const prevIndex = currentIndex > 0 ? currentIndex - 1 : null;
-  const nextIndex = currentIndex < videoUrls.length - 1 ? currentIndex + 1 : null;
-  const visibleSlides = [prevIndex, currentIndex, nextIndex].filter((i) => i !== null);
+  const nextIndex =
+    currentIndex < videoUrls.length - 1 ? currentIndex + 1 : null;
+
+  const visibleSlides = [prevIndex, currentIndex, nextIndex].filter(
+    (idx) => idx !== null
+  );
 
   const getSlideStyle = (slideIdx) => {
     const offset = slideIdx - currentIndex; // -1, 0, +1
@@ -226,6 +249,7 @@ export default function SahoolatSocial() {
     };
   };
 
+  // ------------- RENDER ------------- //
   return (
     <div className="w-screen h-screen flex bg-gray-50">
       {/* Mobile Drawer Toggle */}
@@ -239,13 +263,15 @@ export default function SahoolatSocial() {
       </div>
 
       <SocialMediaSideDrawer isOpen={drawerOpen} onClose={() => setDrawerOpen(false)} />
+
       <div className="hidden md:block fixed top-0 left-0 w-44 h-screen bg-white shadow-md">
         <SocialMediaSideBar />
       </div>
 
-      {/* MAIN CONTENT AREA */}
+      {/* MAIN CONTENT AREA: attach swipeHandlers + disable default scrolling */}
       <div
         className="flex-1 ml-0 md:ml-44 relative overflow-hidden"
+        style={{ touchAction: "none" }} // <--- crucial for capturing vertical swipes
         {...swipeHandlers}
       >
         {visibleSlides.map((slideIdx) => (
@@ -264,15 +290,12 @@ export default function SahoolatSocial() {
               }
               videoUrl={videoUrls[slideIdx]}
               isMuted={isMuted}
-              loading={loadingVideos[slideIdx]}  // this controls spinner
+              loading={loadingVideos[slideIdx]}
               duration={durations[slideIdx]}
               currentTime={currentTimes[slideIdx]}
 
-              // Use onPlaying to hide the spinner once the video is actively playing
               onPlaying={() => handleVideoPlaying(slideIdx)}
               onError={() => handleVideoError(slideIdx)}
-
-              // We still keep onLoadedMetadata to set duration
               onLoadedMetadata={() =>
                 handleLoadedMetadata(
                   slideIdx,
@@ -283,8 +306,6 @@ export default function SahoolatSocial() {
                       : currentVideoRef
                 )
               }
-
-              // Optional: onTimeUpdate for the scrub bar
               onTimeUpdate={() =>
                 handleTimeUpdate(
                   slideIdx,
@@ -295,7 +316,6 @@ export default function SahoolatSocial() {
                       : currentVideoRef
                 )
               }
-
               onVideoClick={() =>
                 handleVideoClick(
                   slideIdx === prevIndex

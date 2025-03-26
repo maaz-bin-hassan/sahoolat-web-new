@@ -13,30 +13,32 @@ export default function VideoCard({
                                     videoRef,
                                     videoUrl,
                                     isMuted,
-                                    loading,
+                                    loading,          // Whether to show spinner
                                     duration,
                                     currentTime,
 
-                                    // Instead of onLoadedData/onWaiting, use onPlaying for the spinner logic:
+                                    // Key events
                                     onPlaying,
                                     onError,
                                     onLoadedMetadata,
                                     onTimeUpdate,
-
                                     onVideoClick,
                                     onVideoEnd,
                                     onScrub,
                                     onToggleMute,
                                     onToggleComments,
+
                                     showHamburger,
                                     onOpenDrawer,
+
+                                    // Stats
                                     likesCount,
                                     commentsCount,
                                     sharesCount,
                                   }) {
   return (
     <div className="relative w-full max-w-[450px] h-full bg-black overflow-hidden md:rounded-xl">
-      {/* Optional Hamburger */}
+      {/* Optional Hamburger (mobile) */}
       {showHamburger && (
         <button
           onClick={onOpenDrawer}
@@ -51,7 +53,7 @@ export default function VideoCard({
       {/* Loading Spinner Overlay */}
       {loading && (
         <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 z-10">
-          <div className="loader border-4 border-gray-300 border-t-transparent w-12 h-12 rounded-full animate-spin" />
+          <div className="loader border-4 border-gray-300 border-t-transparent w-12 h-12 rounded-full animate-spin"></div>
         </div>
       )}
 
@@ -64,27 +66,34 @@ export default function VideoCard({
         autoPlay
         muted={isMuted}
 
-        // Fired when the video is actually playing
+        // Fired when the video is actually playing => remove spinner
         onPlaying={onPlaying}
-        // Fired on fatal error
+
+        // If there's a fatal error => keep spinner or show error
         onError={onError}
-        // For duration
+
+        // For capturing duration
         onLoadedMetadata={onLoadedMetadata}
-        // For the progress bar
+
+        // For the scrub bar
         onTimeUpdate={onTimeUpdate}
-        // Play/pause on tap
+
+        // Tap to pause/play
         onClick={onVideoClick}
+
         // If it ends, pause
         onEnded={onVideoEnd}
       />
 
-      {/* MOBILE-ONLY icons */}
+      {/* MOBILE-ONLY icons (hidden on md+) */}
       <div className="md:hidden absolute right-3 top-28 translate-y-1/2 flex flex-col items-center space-y-2 text-white text-2xl z-10">
+        {/* Like */}
         <button className="p-3 rounded-full bg-black bg-opacity-40 hover:bg-opacity-60 transition">
           <FaHeart />
         </button>
         <span className="text-sm pb-2">{likesCount}</span>
 
+        {/* Comment */}
         <button
           onClick={onToggleComments}
           className="p-3 rounded-full bg-black bg-opacity-40 hover:bg-opacity-60 transition"
@@ -93,6 +102,7 @@ export default function VideoCard({
         </button>
         <span className="text-sm pb-2">{commentsCount}</span>
 
+        {/* Share */}
         <button className="p-3 rounded-full bg-black bg-opacity-40 hover:bg-opacity-60 transition">
           <FaShare />
         </button>
@@ -113,7 +123,7 @@ export default function VideoCard({
         </button>
       </div>
 
-      {/* Scrub Bar */}
+      {/* Progress (Scrub) Bar */}
       <div className="absolute bottom-3 left-[60px] right-2 flex items-center z-10">
         <input
           type="range"
