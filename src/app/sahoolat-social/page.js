@@ -145,7 +145,6 @@ export default function SahoolatSocial() {
     }
 
     wheelTimerRef.current = setTimeout(() => {
-      // Once user stops scrolling for 150ms, finalize the direction
       if (wheelDeltaRef.current > WHEEL_THRESHOLD) {
         arrowDown();
       } else if (wheelDeltaRef.current < -WHEEL_THRESHOLD) {
@@ -273,7 +272,7 @@ export default function SahoolatSocial() {
         <SocialMediaSideBar />
       </div>
 
-      {/* MAIN CONTENT AREA */}
+
       <div
         className="flex-1 ml-0 md:ml-44 relative overflow-hidden"
         style={{ touchAction: "none" }}
@@ -289,7 +288,7 @@ export default function SahoolatSocial() {
             <section
               key={slideIdx}
               style={getSlideStyle(slideIdx)}
-              className="flex items-center justify-center"
+              className="flex items-center justify-center md:pt-[10px] md:pb-[5px]"
             >
               <VideoCard
                 videoRef={
