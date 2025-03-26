@@ -1,6 +1,12 @@
 "use client";
+
 import React from "react";
-import { FaHeart, FaRegComment, FaShare , FaEllipsisV} from "react-icons/fa";
+import {
+  FaHeart,
+  FaRegComment,
+  FaShare,
+  FaEllipsisV,
+} from "react-icons/fa";
 import { BiVolumeFull, BiVolumeMute } from "react-icons/bi";
 
 export default function VideoCard({
@@ -10,12 +16,15 @@ export default function VideoCard({
                                     loading,
                                     duration,
                                     currentTime,
-                                    onVideoClick,
-                                    onVideoEnd,
-                                    onLoadedData,
-                                    onWaiting,
+
+                                    // Instead of onLoadedData/onWaiting, use onPlaying for the spinner logic:
+                                    onPlaying,
+                                    onError,
                                     onLoadedMetadata,
                                     onTimeUpdate,
+
+                                    onVideoClick,
+                                    onVideoEnd,
                                     onScrub,
                                     onToggleMute,
                                     onToggleComments,
@@ -27,7 +36,7 @@ export default function VideoCard({
                                   }) {
   return (
     <div className="relative w-full max-w-[450px] h-full bg-black overflow-hidden md:rounded-xl">
-      {/* (Optional) Hamburger button for mobile */}
+      {/* Optional Hamburger */}
       {showHamburger && (
         <button
           onClick={onOpenDrawer}
@@ -42,7 +51,7 @@ export default function VideoCard({
       {/* Loading Spinner Overlay */}
       {loading && (
         <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 z-10">
-          <div className="loader border-4 border-gray-300 border-t-transparent w-12 h-12 rounded-full animate-spin"></div>
+          <div className="loader border-4 border-gray-300 border-t-transparent w-12 h-12 rounded-full animate-spin" />
         </div>
       )}
 
@@ -54,23 +63,28 @@ export default function VideoCard({
         playsInline
         autoPlay
         muted={isMuted}
-        onLoadedData={onLoadedData}
-        onWaiting={onWaiting}
+
+        // Fired when the video is actually playing
+        onPlaying={onPlaying}
+        // Fired on fatal error
+        onError={onError}
+        // For duration
         onLoadedMetadata={onLoadedMetadata}
+        // For the progress bar
         onTimeUpdate={onTimeUpdate}
+        // Play/pause on tap
         onClick={onVideoClick}
+        // If it ends, pause
         onEnded={onVideoEnd}
       />
 
-      {/* MOBILE-ONLY icons (hidden on md+) */}
+      {/* MOBILE-ONLY icons */}
       <div className="md:hidden absolute right-3 top-28 translate-y-1/2 flex flex-col items-center space-y-2 text-white text-2xl z-10">
-        {/* Like */}
         <button className="p-3 rounded-full bg-black bg-opacity-40 hover:bg-opacity-60 transition">
           <FaHeart />
         </button>
         <span className="text-sm pb-2">{likesCount}</span>
 
-        {/* Comment */}
         <button
           onClick={onToggleComments}
           className="p-3 rounded-full bg-black bg-opacity-40 hover:bg-opacity-60 transition"
@@ -79,7 +93,6 @@ export default function VideoCard({
         </button>
         <span className="text-sm pb-2">{commentsCount}</span>
 
-        {/* Share */}
         <button className="p-3 rounded-full bg-black bg-opacity-40 hover:bg-opacity-60 transition">
           <FaShare />
         </button>
@@ -88,10 +101,9 @@ export default function VideoCard({
         <button className="p-3 rounded-full bg-black bg-opacity-40 hover:bg-opacity-60 transition">
           <FaEllipsisV />
         </button>
-
       </div>
 
-      {/* Mute/Unmute Button (bottom-left) */}
+      {/* Mute/Unmute Button */}
       <div className="absolute bottom-4 left-4 text-white text-2xl z-10">
         <button
           onClick={onToggleMute}
@@ -101,6 +113,7 @@ export default function VideoCard({
         </button>
       </div>
 
+      {/* Scrub Bar */}
       <div className="absolute bottom-3 left-[60px] right-2 flex items-center z-10">
         <input
           type="range"
