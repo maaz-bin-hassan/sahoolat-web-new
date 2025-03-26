@@ -22,7 +22,7 @@ import SocialMediaSideBar from "../../components/ui/SocialMediaSideBar";
 import { useRouter } from "next/navigation";
 import VideoCard from "../../components/ui/VideoCard";
 
-// ----------------- MENU & DATA ----------------- //
+
 
 const menu = [
   { text: "Home", icon: FaHome, href: "#home" },
@@ -31,7 +31,7 @@ const menu = [
   { text: "Profile", icon: FaUser, href: "/sahoolat-social/profile" },
 ];
 
-// Ensure `videoUrls.length` === `mockStats.length`
+
 const videoUrls = [
   "https://lyudo-images.s3.eu-north-1.amazonaws.com/videos/%23construction+%23plumber+%23plumbing+%23like+%23subscribe+%23shorts+%23video+%23electrical+%23mistri+%23pipes+%23yt.mp4",
   "https://lyudo-images.s3.eu-north-1.amazonaws.com/videos/%23plumber+%23work+wall+mixer+ka+fiting+kese+kare+%23bathroom+%23wallmixer+%23geyser.mp4",
@@ -70,12 +70,11 @@ const mockStats = [
   { likesCount: "900K", commentsCount: "1300", sharesCount: "3K" },
 ];
 
-// ------------------------------------------------ //
 
 export default function SahoolatSocial() {
   const router = useRouter();
 
-  // Refs for the 3 videos
+
   const prevVideoRef = useRef(null);
   const currentVideoRef = useRef(null);
   const nextVideoRef = useRef(null);
@@ -83,10 +82,8 @@ export default function SahoolatSocial() {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [isMuted, setIsMuted] = useState(true);
 
-  // The index of the currently playing reel
   const [currentIndex, setCurrentIndex] = useState(0);
 
-  // Loading states for each video
   const [loadingVideos, setLoadingVideos] = useState(
     new Array(videoUrls.length).fill(true)
   );
@@ -100,11 +97,9 @@ export default function SahoolatSocial() {
   const [commentsOpen, setCommentsOpen] = useState(false);
   const [activeLink, setActiveLink] = useState("#home");
 
-  // We will "debounce" the wheel scroll so that only one reel changes per flick
   const wheelTimerRef = useRef(null);
   const wheelDeltaRef = useRef(0);
 
-  // Preload the "next-next" video
   useEffect(() => {
     const prefetchIndex = currentIndex + 2;
     if (prefetchIndex < videoUrls.length) {
@@ -114,7 +109,6 @@ export default function SahoolatSocial() {
     }
   }, [currentIndex]);
 
-  // -------- REEL NAVIGATION (Up / Down) -------- //
   const arrowDown = () => {
     if (currentIndex < videoUrls.length - 1) {
       setCurrentIndex((prev) => prev + 1);
@@ -127,7 +121,6 @@ export default function SahoolatSocial() {
     }
   };
 
-  // -------- SWIPE/DRAG HANDLERS -------- //
   const swipeHandlers = useSwipeable({
     onSwipedUp: () => arrowDown(),
     onSwipedDown: () => arrowUp(),
@@ -139,22 +132,18 @@ export default function SahoolatSocial() {
     axis: "y",
   });
 
-  // -------- DEBOUNCE LOGIC for WHEEL SCROLL -------- //
   const WHEEL_THRESHOLD = 80;
   const WHEEL_DEBOUNCE = 150; // ms
 
   const handleWheel = (e) => {
     e.preventDefault();
 
-    // Accumulate the delta
     wheelDeltaRef.current += e.deltaY;
 
-    // Clear any existing timer
     if (wheelTimerRef.current) {
       clearTimeout(wheelTimerRef.current);
     }
 
-    // Start a new debounce timer
     wheelTimerRef.current = setTimeout(() => {
       // Once user stops scrolling for 150ms, finalize the direction
       if (wheelDeltaRef.current > WHEEL_THRESHOLD) {
@@ -163,19 +152,16 @@ export default function SahoolatSocial() {
         arrowUp();
       }
 
-      // Reset the accumulation
       wheelDeltaRef.current = 0;
       wheelTimerRef.current = null;
     }, WHEEL_DEBOUNCE);
   };
 
-  // -------- MENU CLICK -------- //
   const handleMenuClick = (href) => {
     setActiveLink(href);
     router.push(href);
   };
 
-  // -------- MUTE / REF UPDATES -------- //
   useEffect(() => {
     if (prevVideoRef.current) {
       prevVideoRef.current.muted = isMuted;
@@ -191,7 +177,6 @@ export default function SahoolatSocial() {
     }
   }, [isMuted, currentIndex]);
 
-  // -------- VIDEO EVENT HANDLERS -------- //
   const handleVideoPlaying = (index) => {
     setLoadingVideos((prev) => {
       const updated = [...prev];
@@ -250,7 +235,6 @@ export default function SahoolatSocial() {
 
   const toggleComments = () => setCommentsOpen((prev) => !prev);
 
-  // -------- SLIDE POSITIONS -------- //
   const prevIndex = currentIndex > 0 ? currentIndex - 1 : null;
   const nextIndex =
     currentIndex < videoUrls.length - 1 ? currentIndex + 1 : null;
@@ -272,7 +256,6 @@ export default function SahoolatSocial() {
     };
   };
 
-  // -------- RENDER -------- //
   return (
     <div className="w-screen h-screen flex bg-gray-50">
       {/* Mobile Drawer Toggle */}
@@ -285,11 +268,7 @@ export default function SahoolatSocial() {
         </button>
       </div>
 
-      <SocialMediaSideDrawer
-        isOpen={drawerOpen}
-        onClose={() => setDrawerOpen(false)}
-      />
-
+      <SocialMediaSideDrawer isOpen={drawerOpen} onClose={() => setDrawerOpen(false)} />
       <div className="hidden md:block fixed top-0 left-0 w-44 h-screen bg-white shadow-md">
         <SocialMediaSideBar />
       </div>
@@ -303,7 +282,7 @@ export default function SahoolatSocial() {
       >
         {visibleSlides.map((slideIdx) => {
           if (slideIdx >= mockStats.length) {
-            return null; // defensive check
+            return null;
           }
 
           return (
@@ -422,20 +401,25 @@ export default function SahoolatSocial() {
 
       {/* Desktop Navigation Arrows (Up/Down) */}
       <div className="hidden md:flex md:flex-col md:space-y-5 z-10 absolute right-20 top-1/2 transform -translate-y-1/2">
-        <button
-          className="w-20 h-20 p-3 flex items-center justify-center rounded-full bg-gray-200 text-black hover:bg-gray-300 transition"
-          onClick={arrowUp}
-          disabled={currentIndex === 0}
-        >
-          <FaArrowUp size={35} />
-        </button>
-        <button
-          className="w-20 h-20 p-3 flex items-center justify-center rounded-full bg-gray-200 text-black hover:bg-gray-300 transition"
-          onClick={arrowDown}
-          disabled={currentIndex === videoUrls.length - 1}
-        >
-          <FaArrowDown size={35} />
-        </button>
+        {/* Only show Up arrow if NOT on first video */}
+        {currentIndex > 0 && (
+          <button
+            className="w-20 h-20 p-3 flex items-center justify-center rounded-full bg-gray-200 text-black hover:bg-gray-300 transition"
+            onClick={arrowUp}
+          >
+            <FaArrowUp size={35} />
+          </button>
+        )}
+
+        {/* Only show Down arrow if NOT on last video */}
+        {currentIndex < videoUrls.length - 1 && (
+          <button
+            className="w-20 h-20 p-3 flex items-center justify-center rounded-full bg-gray-200 text-black hover:bg-gray-300 transition"
+            onClick={arrowDown}
+          >
+            <FaArrowDown size={35} />
+          </button>
+        )}
       </div>
 
       {/* Mobile Bottom Navigation */}

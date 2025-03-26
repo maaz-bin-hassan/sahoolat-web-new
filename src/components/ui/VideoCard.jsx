@@ -13,11 +13,10 @@ export default function VideoCard({
                                     videoRef,
                                     videoUrl,
                                     isMuted,
-                                    loading,          // Whether to show spinner
+                                    loading,
                                     duration,
                                     currentTime,
 
-                                    // Key events
                                     onPlaying,
                                     onError,
                                     onLoadedMetadata,
@@ -31,7 +30,7 @@ export default function VideoCard({
                                     showHamburger,
                                     onOpenDrawer,
 
-                                    // Stats
+
                                     likesCount,
                                     commentsCount,
                                     sharesCount,
@@ -65,23 +64,11 @@ export default function VideoCard({
         playsInline
         autoPlay
         muted={isMuted}
-
-        // Fired when the video is actually playing => remove spinner
         onPlaying={onPlaying}
-
-        // If there's a fatal error => keep spinner or show error
         onError={onError}
-
-        // For capturing duration
         onLoadedMetadata={onLoadedMetadata}
-
-        // For the scrub bar
         onTimeUpdate={onTimeUpdate}
-
-        // Tap to pause/play
         onClick={onVideoClick}
-
-        // If it ends, pause
         onEnded={onVideoEnd}
       />
 
