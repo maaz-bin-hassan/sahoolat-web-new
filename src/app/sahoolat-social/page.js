@@ -31,7 +31,7 @@ const menu = [
   { text: "Profile", icon: FaUser, href: "/sahoolat-social/profile" },
 ];
 
-// Replace with your real video URLs
+// Ensure `videoUrls.length` === `mockStats.length`
 const videoUrls = [
   "https://lyudo-images.s3.eu-north-1.amazonaws.com/videos/%23construction+%23plumber+%23plumbing+%23like+%23subscribe+%23shorts+%23video+%23electrical+%23mistri+%23pipes+%23yt.mp4",
   "https://lyudo-images.s3.eu-north-1.amazonaws.com/videos/%23plumber+%23work+wall+mixer+ka+fiting+kese+kare+%23bathroom+%23wallmixer+%23geyser.mp4",
@@ -82,9 +82,11 @@ export default function SahoolatSocial() {
 
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [isMuted, setIsMuted] = useState(true);
+
+  // The index of the currently playing reel
   const [currentIndex, setCurrentIndex] = useState(0);
 
-  // Each video starts "loading" until it actually plays
+  // Loading states for each video
   const [loadingVideos, setLoadingVideos] = useState(
     new Array(videoUrls.length).fill(true)
   );
@@ -98,7 +100,11 @@ export default function SahoolatSocial() {
   const [commentsOpen, setCommentsOpen] = useState(false);
   const [activeLink, setActiveLink] = useState("#home");
 
-  // Preload the "next-next" video for faster buffering
+  // We will "debounce" the wheel scroll so that only one reel changes per flick
+  const wheelTimerRef = useRef(null);
+  const wheelDeltaRef = useRef(0);
+
+  // Preload the "next-next" video
   useEffect(() => {
     const prefetchIndex = currentIndex + 2;
     if (prefetchIndex < videoUrls.length) {
@@ -108,35 +114,68 @@ export default function SahoolatSocial() {
     }
   }, [currentIndex]);
 
-  // ------------- SWIPE HANDLERS ------------- //
-  // axis="y" -> only vertical
-  // delta=10 -> small drag recognized as swipe
-  // preventScrollOnSwipe -> block normal scrolling
-  // style={{ touchAction: "none" }} -> ensures swipes are captured
+  // -------- REEL NAVIGATION (Up / Down) -------- //
+  const arrowDown = () => {
+    if (currentIndex < videoUrls.length - 1) {
+      setCurrentIndex((prev) => prev + 1);
+    }
+  };
+
+  const arrowUp = () => {
+    if (currentIndex > 0) {
+      setCurrentIndex((prev) => prev - 1);
+    }
+  };
+
+  // -------- SWIPE/DRAG HANDLERS -------- //
   const swipeHandlers = useSwipeable({
-    onSwipedUp: () => {
-      // console.log("Swiped Up");
-      handleNextVideo();
-    },
-    onSwipedDown: () => {
-      // console.log("Swiped Down");
-      handlePreviousVideo();
-    },
+    onSwipedUp: () => arrowDown(),
+    onSwipedDown: () => arrowUp(),
     trackTouch: true,
-    trackMouse: false,
+    trackMouse: true,
     delta: 10,
     preventScrollOnSwipe: true,
     rotationAngle: 0,
     axis: "y",
   });
 
-  // ------------- MENU CLICK ------------- //
+  // -------- DEBOUNCE LOGIC for WHEEL SCROLL -------- //
+  const WHEEL_THRESHOLD = 80;
+  const WHEEL_DEBOUNCE = 150; // ms
+
+  const handleWheel = (e) => {
+    e.preventDefault();
+
+    // Accumulate the delta
+    wheelDeltaRef.current += e.deltaY;
+
+    // Clear any existing timer
+    if (wheelTimerRef.current) {
+      clearTimeout(wheelTimerRef.current);
+    }
+
+    // Start a new debounce timer
+    wheelTimerRef.current = setTimeout(() => {
+      // Once user stops scrolling for 150ms, finalize the direction
+      if (wheelDeltaRef.current > WHEEL_THRESHOLD) {
+        arrowDown();
+      } else if (wheelDeltaRef.current < -WHEEL_THRESHOLD) {
+        arrowUp();
+      }
+
+      // Reset the accumulation
+      wheelDeltaRef.current = 0;
+      wheelTimerRef.current = null;
+    }, WHEEL_DEBOUNCE);
+  };
+
+  // -------- MENU CLICK -------- //
   const handleMenuClick = (href) => {
     setActiveLink(href);
     router.push(href);
   };
 
-  // ------------- MUTE / REF UPDATES ------------- //
+  // -------- MUTE / REF UPDATES -------- //
   useEffect(() => {
     if (prevVideoRef.current) {
       prevVideoRef.current.muted = isMuted;
@@ -152,24 +191,11 @@ export default function SahoolatSocial() {
     }
   }, [isMuted, currentIndex]);
 
-  // ------------- NAVIGATION ------------- //
-  const handleNextVideo = () => {
-    if (currentIndex < videoUrls.length - 1) {
-      setCurrentIndex((prev) => prev + 1);
-    }
-  };
-
-  const handlePreviousVideo = () => {
-    if (currentIndex > 0) {
-      setCurrentIndex((prev) => prev - 1);
-    }
-  };
-
-  // ------------- VIDEO EVENT HANDLERS ------------- //
+  // -------- VIDEO EVENT HANDLERS -------- //
   const handleVideoPlaying = (index) => {
     setLoadingVideos((prev) => {
       const updated = [...prev];
-      updated[index] = false; // spinner goes away
+      updated[index] = false;
       return updated;
     });
   };
@@ -177,7 +203,7 @@ export default function SahoolatSocial() {
   const handleVideoError = (index) => {
     setLoadingVideos((prev) => {
       const updated = [...prev];
-      updated[index] = true; // stays loading or show error
+      updated[index] = true;
       return updated;
     });
   };
@@ -210,11 +236,8 @@ export default function SahoolatSocial() {
 
   const handleVideoClick = (videoRef) => {
     if (videoRef.current) {
-      if (videoRef.current.paused) {
-        videoRef.current.play();
-      } else {
-        videoRef.current.pause();
-      }
+      if (videoRef.current.paused) videoRef.current.play();
+      else videoRef.current.pause();
     }
   };
 
@@ -227,13 +250,13 @@ export default function SahoolatSocial() {
 
   const toggleComments = () => setCommentsOpen((prev) => !prev);
 
-  // ------------- SLIDE POSITIONS ------------- //
+  // -------- SLIDE POSITIONS -------- //
   const prevIndex = currentIndex > 0 ? currentIndex - 1 : null;
   const nextIndex =
     currentIndex < videoUrls.length - 1 ? currentIndex + 1 : null;
 
   const visibleSlides = [prevIndex, currentIndex, nextIndex].filter(
-    (idx) => idx !== null
+    (idx) => idx !== null && idx >= 0 && idx < videoUrls.length
   );
 
   const getSlideStyle = (slideIdx) => {
@@ -249,7 +272,7 @@ export default function SahoolatSocial() {
     };
   };
 
-  // ------------- RENDER ------------- //
+  // -------- RENDER -------- //
   return (
     <div className="w-screen h-screen flex bg-gray-50">
       {/* Mobile Drawer Toggle */}
@@ -262,150 +285,157 @@ export default function SahoolatSocial() {
         </button>
       </div>
 
-      <SocialMediaSideDrawer isOpen={drawerOpen} onClose={() => setDrawerOpen(false)} />
+      <SocialMediaSideDrawer
+        isOpen={drawerOpen}
+        onClose={() => setDrawerOpen(false)}
+      />
 
       <div className="hidden md:block fixed top-0 left-0 w-44 h-screen bg-white shadow-md">
         <SocialMediaSideBar />
       </div>
 
-      {/* MAIN CONTENT AREA: attach swipeHandlers + disable default scrolling */}
+      {/* MAIN CONTENT AREA */}
       <div
         className="flex-1 ml-0 md:ml-44 relative overflow-hidden"
-        style={{ touchAction: "none" }} // <--- crucial for capturing vertical swipes
+        style={{ touchAction: "none" }}
         {...swipeHandlers}
+        onWheel={handleWheel}
       >
-        {visibleSlides.map((slideIdx) => (
-          <section
-            key={slideIdx}
-            style={getSlideStyle(slideIdx)}
-            className="flex items-center justify-center"
-          >
-            <VideoCard
-              videoRef={
-                slideIdx === prevIndex
-                  ? prevVideoRef
-                  : slideIdx === nextIndex
-                    ? nextVideoRef
-                    : currentVideoRef
-              }
-              videoUrl={videoUrls[slideIdx]}
-              isMuted={isMuted}
-              loading={loadingVideos[slideIdx]}
-              duration={durations[slideIdx]}
-              currentTime={currentTimes[slideIdx]}
+        {visibleSlides.map((slideIdx) => {
+          if (slideIdx >= mockStats.length) {
+            return null; // defensive check
+          }
 
-              onPlaying={() => handleVideoPlaying(slideIdx)}
-              onError={() => handleVideoError(slideIdx)}
-              onLoadedMetadata={() =>
-                handleLoadedMetadata(
-                  slideIdx,
+          return (
+            <section
+              key={slideIdx}
+              style={getSlideStyle(slideIdx)}
+              className="flex items-center justify-center"
+            >
+              <VideoCard
+                videoRef={
                   slideIdx === prevIndex
                     ? prevVideoRef
                     : slideIdx === nextIndex
                       ? nextVideoRef
                       : currentVideoRef
-                )
-              }
-              onTimeUpdate={() =>
-                handleTimeUpdate(
-                  slideIdx,
-                  slideIdx === prevIndex
-                    ? prevVideoRef
-                    : slideIdx === nextIndex
-                      ? nextVideoRef
-                      : currentVideoRef
-                )
-              }
-              onVideoClick={() =>
-                handleVideoClick(
-                  slideIdx === prevIndex
-                    ? prevVideoRef
-                    : slideIdx === nextIndex
-                      ? nextVideoRef
-                      : currentVideoRef
-                )
-              }
-              onVideoEnd={() =>
-                handleVideoEnd(
-                  slideIdx,
-                  slideIdx === prevIndex
-                    ? prevVideoRef
-                    : slideIdx === nextIndex
-                      ? nextVideoRef
-                      : currentVideoRef
-                )
-              }
-              onScrub={(e) =>
-                handleScrub(
-                  slideIdx,
-                  slideIdx === prevIndex
-                    ? prevVideoRef
-                    : slideIdx === nextIndex
-                      ? nextVideoRef
-                      : currentVideoRef,
-                  e.target.value
-                )
-              }
-              onToggleMute={() => setIsMuted((m) => !m)}
-              onToggleComments={toggleComments}
-              showHamburger={false}
-              onOpenDrawer={() => setDrawerOpen(true)}
-              likesCount={mockStats[slideIdx].likesCount}
-              commentsCount={mockStats[slideIdx].commentsCount}
-              sharesCount={mockStats[slideIdx].sharesCount}
-            />
+                }
+                videoUrl={videoUrls[slideIdx]}
+                isMuted={isMuted}
+                loading={loadingVideos[slideIdx]}
+                duration={durations[slideIdx]}
+                currentTime={currentTimes[slideIdx]}
+                onPlaying={() => handleVideoPlaying(slideIdx)}
+                onError={() => handleVideoError(slideIdx)}
+                onLoadedMetadata={() =>
+                  handleLoadedMetadata(
+                    slideIdx,
+                    slideIdx === prevIndex
+                      ? prevVideoRef
+                      : slideIdx === nextIndex
+                        ? nextVideoRef
+                        : currentVideoRef
+                  )
+                }
+                onTimeUpdate={() =>
+                  handleTimeUpdate(
+                    slideIdx,
+                    slideIdx === prevIndex
+                      ? prevVideoRef
+                      : slideIdx === nextIndex
+                        ? nextVideoRef
+                        : currentVideoRef
+                  )
+                }
+                onVideoClick={() =>
+                  handleVideoClick(
+                    slideIdx === prevIndex
+                      ? prevVideoRef
+                      : slideIdx === nextIndex
+                        ? nextVideoRef
+                        : currentVideoRef
+                  )
+                }
+                onVideoEnd={() =>
+                  handleVideoEnd(
+                    slideIdx,
+                    slideIdx === prevIndex
+                      ? prevVideoRef
+                      : slideIdx === nextIndex
+                        ? nextVideoRef
+                        : currentVideoRef
+                  )
+                }
+                onScrub={(e) =>
+                  handleScrub(
+                    slideIdx,
+                    slideIdx === prevIndex
+                      ? prevVideoRef
+                      : slideIdx === nextIndex
+                        ? nextVideoRef
+                        : currentVideoRef,
+                    e.target.value
+                  )
+                }
+                onToggleMute={() => setIsMuted((m) => !m)}
+                onToggleComments={toggleComments}
+                showHamburger={false}
+                onOpenDrawer={() => setDrawerOpen(true)}
+                likesCount={mockStats[slideIdx].likesCount}
+                commentsCount={mockStats[slideIdx].commentsCount}
+                sharesCount={mockStats[slideIdx].sharesCount}
+              />
 
-            {/* Desktop Social Icons (only for the "current" slide) */}
-            {slideIdx === currentIndex && (
-              <div className="hidden md:flex flex-col items-center space-y-2 z-10 absolute right-[29%] top-[66%] transform -translate-y-1/2">
-                <button className="p-3 rounded-full bg-gray-200 text-black hover:bg-gray-300 transition">
-                  <FaHeart size={30} />
-                </button>
-                <span className="text-sm text-black pb-4">
-                  {mockStats[slideIdx].likesCount}
-                </span>
-                <button
-                  onClick={toggleComments}
-                  className="p-3 rounded-full bg-gray-200 text-black hover:bg-gray-300 transition"
-                >
-                  <FaRegComment size={30} />
-                </button>
-                <span className="text-sm text-black pb-4">
-                  {mockStats[slideIdx].commentsCount}
-                </span>
-                <button className="p-3 rounded-full bg-gray-200 text-black hover:bg-gray-300 transition">
-                  <FaShare size={30} />
-                </button>
-                <span className="text-sm text-black">
-                  {mockStats[slideIdx].sharesCount}
-                </span>
-                <button className="p-3 rounded-full bg-gray-200 text-black hover:bg-gray-300 transition">
-                  <FaEllipsisV size={30} />
-                </button>
-              </div>
-            )}
-          </section>
-        ))}
+              {/* Desktop Social Icons (only for the "current" slide) */}
+              {slideIdx === currentIndex && (
+                <div className="hidden md:flex flex-col items-center space-y-2 z-10 absolute right-[29%] top-[66%] transform -translate-y-1/2">
+                  <button className="p-3 rounded-full bg-gray-200 text-black hover:bg-gray-300 transition">
+                    <FaHeart size={30} />
+                  </button>
+                  <span className="text-sm text-black pb-4">
+                    {mockStats[slideIdx].likesCount}
+                  </span>
+                  <button
+                    onClick={toggleComments}
+                    className="p-3 rounded-full bg-gray-200 text-black hover:bg-gray-300 transition"
+                  >
+                    <FaRegComment size={30} />
+                  </button>
+                  <span className="text-sm text-black pb-4">
+                    {mockStats[slideIdx].commentsCount}
+                  </span>
+                  <button className="p-3 rounded-full bg-gray-200 text-black hover:bg-gray-300 transition">
+                    <FaShare size={30} />
+                  </button>
+                  <span className="text-sm text-black">
+                    {mockStats[slideIdx].sharesCount}
+                  </span>
+                  <button className="p-3 rounded-full bg-gray-200 text-black hover:bg-gray-300 transition">
+                    <FaEllipsisV size={30} />
+                  </button>
+                </div>
+              )}
+            </section>
+          );
+        })}
       </div>
 
       {/* Desktop Navigation Arrows (Up/Down) */}
       <div className="hidden md:flex md:flex-col md:space-y-5 z-10 absolute right-20 top-1/2 transform -translate-y-1/2">
-        {currentIndex > 0 && (
-          <button
-            className="w-20 h-20 p-3 flex items-center justify-center rounded-full bg-gray-200 text-black hover:bg-gray-300 transition"
-            onClick={handlePreviousVideo}
-          >
-            <FaArrowUp size={35} />
-          </button>
-        )}
-        {currentIndex < videoUrls.length - 1 && (
-          <button
-            className="w-20 h-20 p-3 flex items-center justify-center rounded-full bg-gray-200 text-black hover:bg-gray-300 transition"
-            onClick={handleNextVideo}
-          >
-            <FaArrowDown size={35} />
-          </button>
-        )}
+        <button
+          className="w-20 h-20 p-3 flex items-center justify-center rounded-full bg-gray-200 text-black hover:bg-gray-300 transition"
+          onClick={arrowUp}
+          disabled={currentIndex === 0}
+        >
+          <FaArrowUp size={35} />
+        </button>
+        <button
+          className="w-20 h-20 p-3 flex items-center justify-center rounded-full bg-gray-200 text-black hover:bg-gray-300 transition"
+          onClick={arrowDown}
+          disabled={currentIndex === videoUrls.length - 1}
+        >
+          <FaArrowDown size={35} />
+        </button>
       </div>
 
       {/* Mobile Bottom Navigation */}
