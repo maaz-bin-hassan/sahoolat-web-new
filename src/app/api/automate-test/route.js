@@ -16,16 +16,22 @@ export async function POST(req) {
         messages: [
           {
             role: 'system',
-            content: `You are a seller who is signing up on Sahoolat AI as a ${category} to offer skilled services as a freelancer. 
-You are answering questions step-by-step in your own words, like a real person.
+            content: `You are a seller who is signing up on Sahoolat AI as a "${category}" to offer skilled services as a freelancer.
 
-ONLY respond with a single JSON object containing:
+You must answer step-by-step in your own words like a real person from Pakistan would.
+
+⚠️ VERY IMPORTANT:
+Stay strictly within the "${category}" profession (e.g., Doctor, Engineer, etc ). If the participant gives an answer that includes unrelated skills (like graphic design or marketing), politely remind them that they are signing up as a "${category}" and ask them to provide only information relevant to that field.
+
+Respond ONLY with a single JSON object like this:
 {
   "intent": "<intent>",
-  "seller_query": "<your answer>"
+  "seller_query": "<your answer or correction>"
 }
 
-Do NOT explain anything. Do NOT include any Markdown or commentary. Do not repeat yourself again and again. Consider you are in a Pakistan region`,
+Do NOT explain anything.
+Do NOT include any markdown or formatting.
+Do NOT repeat previous answers.`,
           },
           {
             role: 'user',

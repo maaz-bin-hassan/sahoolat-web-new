@@ -4,11 +4,14 @@ import { useState, useEffect, useRef } from "react";
 import { io } from "socket.io-client";
 import axios from "axios";
 
-const deviceId = "12919";
 const promptTitle = "SIGNUP_SELLER";
 const country = "Pakistan";
 const language = "en";
+let deviceId = null;
 
+const generateDeviceId = () => {
+  return Math.floor(10000 + Math.random() * 90000).toString();
+};
 export default function SignupPage() {
   const [category, setCategory] = useState("");
   const [log, setLog] = useState([]);
@@ -20,109 +23,117 @@ export default function SignupPage() {
 
   // ----- Setup Socket.IO connection -----
   useEffect(() => {
-    const socket = io("http://localhost:5004/signUpSellerChat", {
-      transports: ["websocket"],
-      query: { device_finger_print: "01200101012" },
-    });
-
-    socketRef.current = socket;
-
-    // On successful connect
-    socket.on("connect", () => {
-      setIsConnected(true);
-      addLog("✅ Connected to Socket.IO namespace /signUpSellerChat", "system");
-    });
-
-    // Server says "connected"
-    socket.on("connected", (data) => {
-      addLog(`📡 ${data.message}`, "system");
-    });
-
-    // Socket error
-    socket.on("error", (err) => {
-      addLog(`❌ Error: ${JSON.stringify(err)}`, "error");
-    });
-
-    // ----- Main handler: server -> "text-response" -> LLM -> server
-    socket.on("text-response", async (data) => {
-      addLog(data, "received");
-
-      const assistantResponse = data?.assistantResponse;
-      if (!assistantResponse) {
-        addLog("⚠️ Missing assistantResponse in server data.", "error");
-        return;
-      }
-
-      const { intent, modelQuery } = assistantResponse;
-      if (!intent) {
-        addLog("⚠️ No intent received, skipping next step", "error");
-        return;
-      }
-
-      // Special case: COMPLETE_INFORMATION => send "✅"
-      if (intent === "COMPLETE_INFORMATION") {
-        addLog(`🎉 "COMPLETE_INFORMATION" recognized. Sending "✅"`, "system");
-        const message = {
-          language,
-          prompt_title: promptTitle,
-          country,
-          device_id: deviceId,
-          seller_query: "✅",
-          intent,
-        };
-        socketRef.current.emit("signup-seller", message);
-        addLog(message, "sent");
-        return;
-      }
-
-      // Otherwise, let's call your LLM for the next step
-      try {
-        const res = await axios.post("/api/automate-test", {
-          intent,
-          modelQuery,
-          category, // pass user-typed category for context
+    axios.post("http://localhost:5004/api/sessions/create", {
+        device_finger_print: generateDeviceId(),
+        session_type: "SIGNUP_SELLER",
+      })
+      .then((res) => {
+        deviceId = res.data.data.device_finger_print
+        const socket = io("http://localhost:5004/signUpSellerChat", {
+          transports: ["websocket"],
+          query: { device_finger_print: res.data.data.device_finger_print },
         });
 
-        const { seller_query } = res.data.response || {};
-        if (!seller_query) {
-          addLog("❌ Missing seller_query in LLM response.", "error");
-          return;
-        }
+        socketRef.current = socket;
 
-        // Send that LLM-generated query back to the socket
-        const message = {
-          language,
-          prompt_title: promptTitle,
-          country,
-          device_id: deviceId,
-          seller_query,
-          intent,
+        // On successful connect
+        socket.on("connect", () => {
+          setIsConnected(true);
+          addLog("✅ Connected to Socket.IO namespace /signUpSellerChat", "system");
+        });
+
+        // Server says "connected"
+        socket.on("connected", (data) => {
+          addLog(`📡 ${data.message}`, "system");
+        });
+
+        // Socket error
+        socket.on("error", (err) => {
+          addLog(`❌ Error: ${JSON.stringify(err)}`, "error");
+        });
+
+        // ----- Main handler: server -> "text-response" -> LLM -> server
+        socket.on("text-response", async (data) => {
+          addLog(data, "received");
+
+          const assistantResponse = data?.assistantResponse;
+          if (!assistantResponse) {
+            addLog("⚠️ Missing assistantResponse in server data.", "error");
+            return;
+          }
+
+          const { intent, modelQuery } = assistantResponse;
+          if (!intent) {
+            addLog("⚠️ No intent received, skipping next step", "error");
+            return;
+          }
+
+          // Special case: COMPLETE_INFORMATION => send "✅"
+          if (intent === "COMPLETE_INFORMATION") {
+            addLog(`🎉 "COMPLETE_INFORMATION" recognized. Sending "✅"`, "system");
+            const message = {
+              language,
+              prompt_title: promptTitle,
+              country,
+              device_id: deviceId,
+              seller_query: "✅",
+              intent,
+            };
+            socketRef.current.emit("signup-seller", message);
+            addLog(message, "sent");
+            return;
+          }
+
+          // Otherwise, let's call your LLM for the next step
+          try {
+            const res = await axios.post("/api/automate-test", {
+              intent,
+              modelQuery,
+              category, // pass user-typed category for context
+            });
+
+            const { seller_query } = res.data.response || {};
+            if (!seller_query) {
+              addLog("❌ Missing seller_query in LLM response.", "error");
+              return;
+            }
+
+            // Send that LLM-generated query back to the socket
+            const message = {
+              language,
+              prompt_title: promptTitle,
+              country,
+              device_id: deviceId,
+              seller_query,
+              intent,
+            };
+
+            socketRef.current.emit("signup-seller", message);
+            addLog(message, "sent");
+          } catch (err) {
+            addLog("❌ Failed to auto-respond based on intent", "error");
+            console.error(err);
+          }
+        });
+
+        // On disconnect
+        socket.on("disconnect", (reason) => {
+          setIsConnected(false);
+          addLog(`🔌 Disconnected: ${reason}`, "system");
+        });
+
+        // Cleanup
+        return () => {
+          socket.disconnect();
         };
-
-        socketRef.current.emit("signup-seller", message);
-        addLog(message, "sent");
-      } catch (err) {
-        addLog("❌ Failed to auto-respond based on intent", "error");
-        console.error(err);
-      }
-    });
-
-    // On disconnect
-    socket.on("disconnect", (reason) => {
-      setIsConnected(false);
-      addLog(`🔌 Disconnected: ${reason}`, "system");
-    });
-
-    // Cleanup
-    return () => {
-      socket.disconnect();
-    };
+      });
   }, []);
 
   // ----- Auto-scroll whenever log changes -----
   useEffect(() => {
     if (messagesContainerRef.current) {
-      messagesContainerRef.current.scrollTop = messagesContainerRef.current.scrollHeight;
+      messagesContainerRef.current.scrollTop =
+        messagesContainerRef.current.scrollHeight;
     }
   }, [log]);
 
@@ -164,7 +175,10 @@ export default function SignupPage() {
         addLog("❌ Intent or seller_query not found in OpenAI response.", "error");
       }
     } catch (err) {
-      addLog("⚠️ Failed to call OpenAI API via axios. Check network or response format.", "error");
+      addLog(
+        "⚠️ Failed to call OpenAI API via axios. Check network or response format.",
+        "error",
+      );
       console.error(err);
     }
   };
