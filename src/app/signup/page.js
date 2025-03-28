@@ -20,6 +20,7 @@ export default function SignupPage() {
   const [log, setLog] = useState([]);
   const socketRef = useRef(null);
   const [isConnected, setIsConnected] = useState(false);
+  const [isLocked, setIsLocked] = useState(false);
 
   // For auto-scroll
   const messagesContainerRef = useRef(null);
@@ -151,6 +152,7 @@ export default function SignupPage() {
     addLog(`🔍 Sending category to OpenAI API: ${category}`, "user");
 
     try {
+      setIsLocked(true)
       // First step: "sign_up"
       const res = await axios.post(NextAPIs.AUTOMATE_TESTING_CLIENT, {
         intent: "sign_up",
@@ -174,9 +176,11 @@ export default function SignupPage() {
         socketRef.current.emit("signup-seller", message);
         addLog(message, "sent");
       } else {
+        setIsLocked(false)
         addLog("❌ Intent or seller_query not found in OpenAI response.", "error");
       }
     } catch (err) {
+      setIsLocked(false)
       addLog(
         "⚠️ Failed to call OpenAI API via axios. Check network or response format.",
         "error",
@@ -199,9 +203,9 @@ export default function SignupPage() {
             {/* Left Panel for Category Input */}
             <div className="w-full sm:w-1/3 bg-white rounded-lg shadow p-4">
               <label className="block mb-4">
-              <span className="text-gray-700 font-medium">
-                Enter Service Category
-              </span>
+                <span className="text-gray-700 font-medium">
+                  Enter Service Category
+                </span>
                 <input
                   type="text"
                   className="mt-2 w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
@@ -212,8 +216,8 @@ export default function SignupPage() {
               </label>
               <button
                 onClick={handleStart}
-                className="w-full bg-indigo-600 text-white py-2 rounded hover:bg-indigo-700 transition"
-                disabled={!isConnected}
+                className={`w-full ${isLocked? 'bg-gray-300 text-black': "bg-indigo-600 hover:bg-indigo-700 text-white"}  py-2 rounded transition`}
+                disabled={isLocked}
               >
                 Start Signup Process
               </button>
@@ -241,10 +245,10 @@ export default function SignupPage() {
                   >
                     <strong>{entry.type.toUpperCase()}:</strong>
                     <pre className="mt-1 whitespace-pre-wrap break-words">
-                    {typeof entry.content === "string"
-                      ? entry.content
-                      : JSON.stringify(entry.content, null, 2)}
-                  </pre>
+                      {typeof entry.content === "string"
+                        ? entry.content
+                        : JSON.stringify(entry.content, null, 2)}
+                    </pre>
                   </div>
                 ))}
               </div>
