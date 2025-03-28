@@ -3,6 +3,9 @@
 import { useState, useEffect, useRef } from "react";
 import { io } from "socket.io-client";
 import axios from "axios";
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
+import { NextAPIs, ThirdPartyAPIs } from "@/utils/const";
 
 const promptTitle = "SIGNUP_SELLER";
 const country = "Pakistan";
@@ -20,16 +23,15 @@ export default function SignupPage() {
 
   // For auto-scroll
   const messagesContainerRef = useRef(null);
-
   // ----- Setup Socket.IO connection -----
   useEffect(() => {
-    axios.post("http://localhost:5004/api/sessions/create", {
+    axios.post(ThirdPartyAPIs.CREATE_SESSION, {
         device_finger_print: generateDeviceId(),
         session_type: "SIGNUP_SELLER",
       })
       .then((res) => {
         deviceId = res.data.data.device_finger_print
-        const socket = io("http://localhost:5004/signUpSellerChat", {
+        const socket = io(ThirdPartyAPIs.SIGNUP_SELLER_CHAT, {
           transports: ["websocket"],
           query: { device_finger_print: res.data.data.device_finger_print },
         });
@@ -39,7 +41,7 @@ export default function SignupPage() {
         // On successful connect
         socket.on("connect", () => {
           setIsConnected(true);
-          addLog("✅ Connected to Socket.IO namespace /signUpSellerChat", "system");
+          addLog(`✅ Connected to Socket.IO namespace ${ThirdPartyAPIs.SIGNUP_SELLER_CHAT}`, "system");
         });
 
         // Server says "connected"
@@ -86,7 +88,7 @@ export default function SignupPage() {
 
           // Otherwise, let's call your LLM for the next step
           try {
-            const res = await axios.post("/api/automate-test", {
+            const res = await axios.post(NextAPIs.AUTOMATE_TESTING_CLIENT, {
               intent,
               modelQuery,
               category, // pass user-typed category for context
@@ -150,7 +152,7 @@ export default function SignupPage() {
 
     try {
       // First step: "sign_up"
-      const res = await axios.post("/api/automate-test", {
+      const res = await axios.post(NextAPIs.AUTOMATE_TESTING_CLIENT, {
         intent: "sign_up",
         modelQuery: `I am a ${category} looking to register on Sahoolat AI.`,
         category,
@@ -185,68 +187,72 @@ export default function SignupPage() {
 
   // ----- Render UI -----
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
-      <div className="max-w-full mx-auto">
-        <h1 className="text-3xl font-bold text-center mb-6">
-          Smart Seller Signup (Auto)
-        </h1>
+    <>
+      <Header />
+      <div className="min-h-screen bg-gray-50 p-6">
+        <div className="max-w-full mx-auto">
+          <h1 className="text-3xl font-bold text-center mb-6">
+            Smart Seller Signup (Auto)
+          </h1>
 
-        <div className="flex flex-col sm:flex-row gap-6">
-          {/* Left Panel for Category Input */}
-          <div className="w-full sm:w-1/3 bg-white rounded-lg shadow p-4">
-            <label className="block mb-4">
+          <div className="flex flex-col sm:flex-row gap-6">
+            {/* Left Panel for Category Input */}
+            <div className="w-full sm:w-1/3 bg-white rounded-lg shadow p-4">
+              <label className="block mb-4">
               <span className="text-gray-700 font-medium">
                 Enter Service Category
               </span>
-              <input
-                type="text"
-                className="mt-2 w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                value={category}
-                onChange={(e) => setCategory(e.target.value)}
-                placeholder="e.g. Software Engineer"
-              />
-            </label>
-            <button
-              onClick={handleStart}
-              className="w-full bg-indigo-600 text-white py-2 rounded hover:bg-indigo-700 transition"
-              disabled={!isConnected}
-            >
-              Start Signup Process
-            </button>
-          </div>
+                <input
+                  type="text"
+                  className="mt-2 w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  value={category}
+                  onChange={(e) => setCategory(e.target.value)}
+                  placeholder="e.g. Software Engineer"
+                />
+              </label>
+              <button
+                onClick={handleStart}
+                className="w-full bg-indigo-600 text-white py-2 rounded hover:bg-indigo-700 transition"
+                disabled={!isConnected}
+              >
+                Start Signup Process
+              </button>
+            </div>
 
-          {/* Right Panel for Messages */}
-          <div
-            className="w-full sm:w-2/3 bg-white rounded-lg shadow p-4 max-h-[800px] overflow-y-auto"
-            ref={messagesContainerRef}
-          >
-            <h2 className="text-lg font-semibold mb-2">Socket Messages</h2>
-            <div className="space-y-3">
-              {log.map((entry, i) => (
-                <div
-                  key={i}
-                  className={`text-sm whitespace-pre-wrap p-3 rounded-md ${
-                    entry.type === "sent"
-                      ? "bg-blue-100 border-l-4 border-blue-500"
-                      : entry.type === "received"
-                        ? "bg-green-100 border-l-4 border-green-500"
-                        : entry.type === "error"
-                          ? "bg-red-100 border-l-4 border-red-500"
-                          : "bg-gray-100 border-l-4 border-gray-400"
-                  }`}
-                >
-                  <strong>{entry.type.toUpperCase()}:</strong>
-                  <pre className="mt-1 whitespace-pre-wrap break-words">
+            {/* Right Panel for Messages */}
+            <div
+              className="w-full sm:w-2/3 bg-white rounded-lg shadow p-4 max-h-[800px] overflow-y-auto"
+              ref={messagesContainerRef}
+            >
+              <h2 className="text-lg font-semibold mb-2">Socket Messages</h2>
+              <div className="space-y-3">
+                {log.map((entry, i) => (
+                  <div
+                    key={i}
+                    className={`text-sm whitespace-pre-wrap p-3 rounded-md ${
+                      entry.type === "sent"
+                        ? "bg-blue-100 border-l-4 border-blue-500"
+                        : entry.type === "received"
+                          ? "bg-green-100 border-l-4 border-green-500"
+                          : entry.type === "error"
+                            ? "bg-red-100 border-l-4 border-red-500"
+                            : "bg-gray-100 border-l-4 border-gray-400"
+                    }`}
+                  >
+                    <strong>{entry.type.toUpperCase()}:</strong>
+                    <pre className="mt-1 whitespace-pre-wrap break-words">
                     {typeof entry.content === "string"
                       ? entry.content
                       : JSON.stringify(entry.content, null, 2)}
                   </pre>
-                </div>
-              ))}
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
+      <Footer />
+    </>
   );
 }
