@@ -8,3 +8,4 @@ export const ThirdPartyAPIs = {
 export const NextAPIs = {
   AUTOMATE_TESTING_CLIENT: `/api/automate-test`,
 }
+
