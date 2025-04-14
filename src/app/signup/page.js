@@ -39,13 +39,11 @@ export default function SignupPage() {
 
         socketRef.current = socket;
 
-        // On successful connect
         socket.on("connect", () => {
           setIsConnected(true);
           addLog(`✅ Connected to Socket.IO namespace ${ThirdPartyAPIs.SIGNUP_SELLER_CHAT}`, "system");
         });
 
-        // Server says "connected"
         socket.on("connected", (data) => {
           addLog(`📡 ${data.message}`, "system");
         });
@@ -66,6 +64,11 @@ export default function SignupPage() {
           }
 
           const { intent, modelQuery } = assistantResponse;
+
+          if(intent==="UNDER_REVIEW"){
+            addLog("Thank you for registering on Sahoolat AI. Your profile is under review","system")
+            return;
+          }
           if (!intent) {
             addLog("⚠️ No intent received, skipping next step", "error");
             return;
@@ -96,6 +99,7 @@ export default function SignupPage() {
             });
 
             const { seller_query } = res.data.response || {};
+            console.log("intent is this ",intent);
             if (!seller_query) {
               addLog("❌ Missing seller_query in LLM response.", "error");
               return;
@@ -114,6 +118,10 @@ export default function SignupPage() {
             socketRef.current.emit("signup-seller", message);
             addLog(message, "sent");
           } catch (err) {
+            if(intent === "UNDER_REVIEW"){
+              return;
+            }
+            console.error(err);
             addLog("❌ Failed to auto-respond based on intent", "error");
             console.error(err);
           }
@@ -152,7 +160,7 @@ export default function SignupPage() {
     addLog(`🔍 Sending category to OpenAI API: ${category}`, "user");
 
     try {
-      setIsLocked(true)
+      setIsLocked(true);
       // First step: "sign_up"
       const res = await axios.post(NextAPIs.AUTOMATE_TESTING_CLIENT, {
         intent: "sign_up",
@@ -162,6 +170,16 @@ export default function SignupPage() {
 
       const { intent, seller_query } = res.data.response || {};
       addLog(`🤖 OpenAI Response: ${JSON.stringify(res.data.response)}`, "openai");
+
+      console.log("This is intent here 1:", intent);
+      console.log("This is seller_query here 2:", seller_query);
+
+      // If the intent is UNDER_REVIEW, don't send to socket
+      if (intent === "UNDER_REVIEW") {
+        addLog("🚫 Skipping socket emission because intent is UNDER_REVIEW", "system");
+        setIsLocked(false);
+        return;
+      }
 
       if (intent && seller_query) {
         // Send to socket
@@ -176,18 +194,19 @@ export default function SignupPage() {
         socketRef.current.emit("signup-seller", message);
         addLog(message, "sent");
       } else {
-        setIsLocked(false)
+        setIsLocked(false);
         addLog("❌ Intent or seller_query not found in OpenAI response.", "error");
       }
     } catch (err) {
-      setIsLocked(false)
+      setIsLocked(false);
       addLog(
         "⚠️ Failed to call OpenAI API via axios. Check network or response format.",
-        "error",
+        "error"
       );
       console.error(err);
     }
   };
+
 
   // ----- Render UI -----
   return (
