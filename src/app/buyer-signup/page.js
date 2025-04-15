@@ -32,7 +32,7 @@ export default function SignupPage() {
     })
       .then((res) => {
         deviceId = res.data.data.device_finger_print
-        const socket = io(ThirdPartyAPIs.SIGNUP_SELLER_CHAT, {
+        const socket = io(ThirdPartyAPIs.SIGNUP_BUYER_CHAT, {
           transports: ["websocket"],
           query: { device_finger_print: res.data.data.device_finger_print },
         });
@@ -41,7 +41,7 @@ export default function SignupPage() {
 
         socket.on("connect", () => {
           setIsConnected(true);
-          addLog(`✅ Connected to Socket.IO namespace ${ThirdPartyAPIs.SIGNUP_SELLER_CHAT}`, "system");
+          addLog(`✅ Connected to Socket.IO namespace ${ThirdPartyAPIs.SIGNUP_BUYER_CHAT}`, "system");
         });
 
         socket.on("connected", (data) => {
