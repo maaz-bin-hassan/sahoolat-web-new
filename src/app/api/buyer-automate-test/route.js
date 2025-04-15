@@ -43,7 +43,7 @@ Assistant Question: ${modelQuery}`,
 
     const data = await openaiRes.json();
     let responseText = data.choices?.[0]?.message?.content ?? '{}';
-    
+
     const startIndex = responseText.indexOf('{');
     const endIndex = responseText.lastIndexOf('}');
     if (startIndex !== -1 && endIndex !== -1) {
