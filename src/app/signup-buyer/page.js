@@ -222,7 +222,6 @@ export default function SignupPage() {
           </h1>
 
           <div className="flex flex-col sm:flex-row gap-6">
-            {/* Left Panel for Category Input */}
             <div className="w-full sm:w-1/3 bg-white rounded-lg shadow p-4">
               <label className="block mb-4">
                 <span className="text-gray-700 font-medium">
