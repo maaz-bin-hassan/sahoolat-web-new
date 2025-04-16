@@ -21,6 +21,8 @@ export default function SignupPage() {
   const socketRef = useRef(null);
   const [isConnected, setIsConnected] = useState(false);
   const [isLocked, setIsLocked] = useState(false);
+  const persistentCategory = useRef("");
+
 
   // For auto-scroll
   const messagesContainerRef = useRef(null);
@@ -56,13 +58,15 @@ export default function SignupPage() {
           addLog(data, "received");
 
           const assistantResponse = data?.assistantResponse;
+          const { intent, modelQuery } = data.assistantResponse || {};
+          console.log("This is complete response :",data.assistantResponse);
+          // const modelQuery = assistant;
+
+
           if (!assistantResponse) {
             addLog("⚠️ Missing assistantResponse in server data.", "error");
             return;
           }
-
-          const { intent, assistant } = assistantResponse;
-
           if(intent==="UNDER_REVIEW"){
             addLog("Thank you for registering on Sahoolat AI. Your profile is under review","system")
             return;
@@ -89,9 +93,12 @@ export default function SignupPage() {
           }
 
           try {
+            console.log("intent new one ",intent);
+            console.log("modelQuery new one ,",modelQuery);
+            console.log("caregiry new one 12345 ,",category);
             const res = await axios.post(NextAPIs.BUYER_AUTOMATE_TESTING, {
               intent,
-              assistant,
+              modelQuery,
               category,
             });
 
@@ -153,11 +160,13 @@ export default function SignupPage() {
   const handleStart = async () => {
     if (!category.trim()) return;
 
+
     addLog(`🔍 Sending category to OpenAI API: ${category}`, "user");
 
     try {
       setIsLocked(true);
       // First step: "sign_up"
+      setCategory(category);
       const res = await axios.post(NextAPIs.BUYER_AUTOMATE_TESTING, {
         intent: "sign_up",
         modelQuery: `I am a buyer who is looking for the ${category} profession to hire on Sahoolat AI.`,
