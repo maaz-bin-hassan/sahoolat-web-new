@@ -7,7 +7,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { NextAPIs, ThirdPartyAPIs } from "@/utils/const";
 
-const promptTitle = "SIGNUP_SELLER";
+const promptTitle = "SIGNUP_BUYER";
 const country = "Pakistan";
 const language = "en";
 let deviceId = null;
@@ -28,7 +28,7 @@ export default function SignupPage() {
   useEffect(() => {
     axios.post(ThirdPartyAPIs.CREATE_SESSION, {
       device_finger_print: generateDeviceId(),
-      session_type: "SIGNUP_SELLER",
+      session_type: "SIGNUP_BUYER",
     })
       .then((res) => {
         deviceId = res.data.data.device_finger_print
@@ -48,13 +48,11 @@ export default function SignupPage() {
           addLog(`📡 ${data.message}`, "system");
         });
 
-        // Socket error
         socket.on("error", (err) => {
           addLog(`❌ Error: ${JSON.stringify(err)}`, "error");
         });
 
-        // ----- Main handler: server -> "text-response" -> LLM -> server
-        socket.on("text-response", async (data) => {
+        socket.on("buyer-signup-response", async (data) => {
           addLog(data, "received");
 
           const assistantResponse = data?.assistantResponse;
@@ -63,7 +61,7 @@ export default function SignupPage() {
             return;
           }
 
-          const { intent, modelQuery } = assistantResponse;
+          const { intent, assistant } = assistantResponse;
 
           if(intent==="UNDER_REVIEW"){
             addLog("Thank you for registering on Sahoolat AI. Your profile is under review","system")
@@ -85,17 +83,16 @@ export default function SignupPage() {
               seller_query: "✅",
               intent,
             };
-            socketRef.current.emit("signup-seller", message);
+            socketRef.current.emit("signup-buyer", message);
             addLog(message, "sent");
             return;
           }
 
-          // Otherwise, let's call your LLM for the next step
           try {
-            const res = await axios.post(NextAPIs.AUTOMATE_TESTING_CLIENT, {
+            const res = await axios.post(NextAPIs.BUYER_AUTOMATE_TESTING, {
               intent,
-              modelQuery,
-              category, // pass user-typed category for context
+              assistant,
+              category,
             });
 
             const { seller_query } = res.data.response || {};
@@ -114,7 +111,7 @@ export default function SignupPage() {
               intent,
             };
 
-            socketRef.current.emit("signup-seller", message);
+            socketRef.current.emit("signup-buyer", message);
             addLog(message, "sent");
           } catch (err) {
             if(intent === "UNDER_REVIEW"){
@@ -163,7 +160,7 @@ export default function SignupPage() {
       // First step: "sign_up"
       const res = await axios.post(NextAPIs.BUYER_AUTOMATE_TESTING, {
         intent: "sign_up",
-        modelQuery: `I am a ${category} looking to register on Sahoolat AI.`,
+        modelQuery: `I am a buyer who is looking for the ${category} profession to hire on Sahoolat AI.`,
         category,
       });
 
@@ -190,7 +187,7 @@ export default function SignupPage() {
           seller_query,
           intent,
         };
-        socketRef.current.emit("signup-seller", message);
+        socketRef.current.emit("signup-buyer", message);
         addLog(message, "sent");
       } else {
         setIsLocked(false);
@@ -206,8 +203,6 @@ export default function SignupPage() {
     }
   };
 
-
-  // ----- Render UI -----
   return (
     <>
       <Header />

@@ -28,7 +28,7 @@ export default function SignupPage() {
   useEffect(() => {
     axios.post(ThirdPartyAPIs.CREATE_SESSION, {
         device_finger_print: generateDeviceId(),
-        session_type: "SIGNUP_SELLER",
+        session_type: "SIGNUP_BUYER",
       })
       .then((res) => {
         deviceId = res.data.data.device_finger_print

@@ -3,6 +3,10 @@ import { NextResponse } from 'next/server';
 export async function POST(req) {
   try {
     const {intent, modelQuery, category } = await req.json();
+    console.log("this is intent :", intent);
+    console.log("this is modelQuery  12345:", modelQuery);
+    console.log("this is category :", category);
+
 
     console.log("This is the category ",category);
     const openaiRes = await fetch('https://api.openai.com/v1/chat/completions', {
@@ -43,7 +47,7 @@ Assistant Question: ${modelQuery}`,
 
     const data = await openaiRes.json();
     let responseText = data.choices?.[0]?.message?.content ?? '{}';
-    
+
     const startIndex = responseText.indexOf('{');
     const endIndex = responseText.lastIndexOf('}');
     if (startIndex !== -1 && endIndex !== -1) {
