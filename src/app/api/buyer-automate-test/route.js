@@ -48,7 +48,7 @@ Keep your responses concise.
 - If the intent is “FULL_NAME” (or an initial "sign_up"), choose a plausible Pakistani name and provide it under "seller_query".
 - If the intent is "LOOKING_FOR", only provide the category in "seller_query" and remember the first time what buyer has been provided the "${persistCategory}" use that category in the seller query as the modelQuery is given to you so your task is to answer of it one by one.
 
-- When asked to confirm final details with '✅', return:
+- Once you are provided the Bank Account Information then next you need to send the given below intent and seller_query.
   {
     "intent": "COMPLETE_INFORMATION",
     "seller_query": "✅"

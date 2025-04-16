@@ -218,7 +218,7 @@ export default function SignupPage() {
       <div className="min-h-screen bg-gray-50 p-6">
         <div className="max-w-full mx-auto">
           <h1 className="text-3xl font-bold text-center mb-6">
-            Smart Seller Signup (Auto)
+            Smart Buyer Signup (Auto)
           </h1>
 
           <div className="flex flex-col sm:flex-row gap-6">
