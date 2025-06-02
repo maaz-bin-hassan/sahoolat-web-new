@@ -1,20 +1,26 @@
 'use client';
 import React, { useEffect, useState } from 'react';
-import {FaCheckCircle, FaHandshake, FaMicrophoneAlt, FaSearch} from 'react-icons/fa';
+import axios from 'axios';
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import { NextAPIs } from '@/utils/const';
 
 export default function HowItWorks() {
   const [privacyTitle, setPrivacyTitle] = useState('');
   const [privacyContent, setPrivacyContent] = useState('');
 
   useEffect(() => {
-    fetch('/api/privacy-policy')
-      .then(res => res.json())
-      .then(data => {
-        setPrivacyTitle(data.title);
-        setPrivacyContent(data.content);
-      });
+    async function fetchPrivacyData() {
+      try {
+        const res = await axios.get(NextAPIs.PRIVACY_POLICY_API);
+        setPrivacyTitle(res.data.title);
+        setPrivacyContent(res.data.content);
+      } catch (error) {
+        console.error('Failed to fetch privacy policy:', error);
+      }
+    }
+
+    fetchPrivacyData();
   }, []);
 
   return (

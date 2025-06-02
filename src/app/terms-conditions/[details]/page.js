@@ -2,6 +2,7 @@
 import { useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+import { NextAPIs } from '@/utils/const';
 
 export default function TermDetails() {
   const params = useParams();
@@ -11,7 +12,7 @@ export default function TermDetails() {
   useEffect(() => {
     async function fetchTerms() {
       try {
-        const res = await axios.get('/api/terms-conditions');
+        const res = await axios.get(NextAPIs.TERMS_CONDITION_API);
         if (res.data && res.data[details]) {
           setCurrent({
             title: res.data[details].title || 'Terms',

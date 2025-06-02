@@ -1,6 +1,8 @@
 'use client';
+'use client';
+import { NextAPIs } from "@/utils/const";
+import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import {FaCheckCircle, FaHandshake, FaMicrophoneAlt, FaSearch} from 'react-icons/fa';
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 
@@ -9,11 +11,14 @@ export default function HowItWorks() {
   const [guidelinesContent, setGuidelinesContent] = useState('');
 
   useEffect(() => {
-    fetch('/api/user-guidelines')
-      .then(res => res.json())
-      .then(data => {
+    axios.get(NextAPIs.USER_GUIDELINES_API)
+      .then(response => {
+        const data = response.data;
         setGuidelinesTitle(data.title);
         setGuidelinesContent(data.content);
+      })
+      .catch(error => {
+        console.error('Failed to fetch user guidelines:', error);
       });
   }, []);
 

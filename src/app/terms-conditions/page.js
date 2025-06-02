@@ -1,6 +1,7 @@
 'use client';
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { NextAPIs } from "@/utils/const";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import Link from 'next/link';
@@ -17,7 +18,7 @@ export default function TermsConditions() {
   useEffect(() => {
     async function fetchLandingData() {
       try {
-        const res = await axios.get('/api/terms-condition-landing');
+        const res = await axios.get(NextAPIs.TERMS_CONDITION_LANDING_API);
         setContent(res.data);
       } catch (error) {
         console.error('Failed to fetch landing content:', error);
