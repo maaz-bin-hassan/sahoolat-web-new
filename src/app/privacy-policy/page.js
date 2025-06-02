@@ -22,61 +22,36 @@ export default function HowItWorks() {
           </p>
         </div>
 
-        {/* How It Works */}
-        <div className="max-w-7xl mx-auto px-4 md:px-8 mt-8">
-          <h3 className="text-center text-2xl md:text-4xl font-bold text-gray-800 mb-12">
-            How Sahoolat AI Works
-          </h3>
+        <div className="max-w-5xl mx-auto px-6 py-10">
+          <h2 className="text-3xl md:text-5xl font-bold text-gray-900 mb-6 border-b-2 border-orangebrand pb-2">How We Use and Protect Your Data</h2>
 
-          {/* Four Steps in a Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8 text-center">
-            {/* Step 1 */}
-            <div className="p-4 bg-white rounded-lg shadow-sm">
-              <FaMicrophoneAlt className="mx-auto text-teal-500 w-12 h-12 mb-4"/>
-              <h4 className="text-xl font-bold text-gray-700 mb-2">1. Say It</h4>
-              <p className="text-gray-600 leading-relaxed">
-                Use our voice or text input to let us know what service
-                or solution you need. Seamless, hands-free, and quick.
-              </p>
-            </div>
+          <p className="text-lg text-gray-700 mb-4">
+            At <strong>Sahoolat AI</strong>, we believe in <em>transparency</em>, <em>respect</em>, and <em>responsibility</em> when it comes to your personal data.
+          </p>
 
-            {/* Step 2 */}
-            <div className="p-4 bg-white rounded-lg shadow-sm">
-              <FaSearch className="mx-auto text-orange-500 w-12 h-12 mb-4"/>
-              <h4 className="text-xl font-bold text-gray-700 mb-2">
-                2. We Find It
-              </h4>
-              <p className="text-gray-600 leading-relaxed">
-                Our AI instantly searches and recommends the best
-                service providers or professionals based on your request.
-              </p>
-            </div>
+          <h3 className="text-2xl font-semibold text-brand mt-6 mb-2">What We Collect</h3>
+          <p className="text-gray-700 mb-4">
+            We only collect personal data that is <strong>essential</strong> to providing our services. This includes your <u>name</u>, <u>contact details</u>, and <u>preferences</u>, all handled with <em>utmost care</em>.
+          </p>
 
-            {/* Step 3 */}
-            <div className="p-4 bg-white rounded-lg shadow-sm">
-              <FaHandshake className="mx-auto text-teal-500 w-12 h-12 mb-4"/>
-              <h4 className="text-xl font-bold text-gray-700 mb-2">
-                3. Connect &amp; Discuss
-              </h4>
-              <p className="text-gray-600 leading-relaxed">
-                Compare providers, chat or call directly, and negotiate
-                terms. You’re always in control of the final decision.
-              </p>
-            </div>
+          <h3 className="text-2xl font-semibold text-brand mt-6 mb-2">How We Use It</h3>
+          <p className="text-gray-700 mb-4">
+            Your data is used <strong>strictly</strong> for improving our services, fulfilling your requests, processing transactions, and communicating updates or support.
+          </p>
 
-            {/* Step 4 */}
-            <div className="p-4 bg-white rounded-lg shadow-sm">
-              <FaCheckCircle className="mx-auto text-orange-500 w-12 h-12 mb-4"/>
-              <h4 className="text-xl font-bold text-gray-700 mb-2">
-                4. Get It Done
-              </h4>
-              <p className="text-gray-600 leading-relaxed">
-                Hire the right person or team, schedule your job, and
-                relax as Sahoolat AI ensures a hassle-free experience
-                from start to finish.
-              </p>
-            </div>
-          </div>
+          <h3 className="text-2xl font-semibold text-brand mt-6 mb-2">Your Control & Rights</h3>
+          <p className="text-gray-700 mb-4">
+            You have <strong>full control</strong> over your data. You can request <u>access</u>, <u>updates</u>, or <u>deletion</u> at any time. We support your right to privacy <em>every step of the way</em>.
+          </p>
+
+          <h3 className="text-2xl font-semibold text-brand mt-6 mb-2">Sharing & Protection</h3>
+          <p className="text-gray-700 mb-4">
+            We <strong>never sell</strong> your data. Any third-party partnerships are vetted and bound by <em>strict data protection agreements</em>. Your information is protected with <u>encryption</u> and <u>secured systems</u>.
+          </p>
+
+          <p className="text-sm text-gray-600 mt-8 border-t pt-4">
+            For questions or concerns, please contact us at <span className="text-orange-500 font-medium">privacy@sahoolat.ai</span>.
+          </p>
         </div>
         {/* Multi-Color (Gradient) Line */}
         <div
