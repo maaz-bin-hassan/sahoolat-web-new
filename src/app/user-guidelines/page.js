@@ -26,7 +26,6 @@ export default function HowItWorks() {
     <>
       <Header/>
       <section className="w-full pb-16 text-gray-800">
-        {/* Mission Header */}
         <div className="bg-gradient-to-r from-teal-400 to-orange-400 py-12 px-4 text-center text-white">
           <h2 className="text-3xl md:text-5xl font-extrabold mb-4">
             Our Mission
