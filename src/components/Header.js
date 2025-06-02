@@ -11,7 +11,16 @@ const Header = () => {
 
   const navItems = [
     { href: "/", label: "Home" },
-    { href: "/about-us", label: "About" },
+    {
+      href: "/about-us",
+      label: "About",
+      submenu: [
+        { href: "/about-us", label: "Our mission & story" },
+        { href: "/terms-conditions", label: "User agreement & policies" },
+        { href: "/privacy-policy", label: "How we protect your data" },
+        { href: "/user-guidelines", label: "Safe & trusted platform" },
+      ],
+    },
     { href: "/sahoolat-social", label: "Social Media" },
     { href: "/sahoolat-experience", label: "Experience Now" },
     { href: "/book-call", label: "Book a call" },
@@ -34,7 +43,7 @@ const Header = () => {
         {/* Navigation Menu (Desktop) */}
         <ul className="hidden lg:flex flex-1 justify-center space-x-8 font-bold text-black">
           {navItems.map((item, index) => (
-            <NavItem key={index} href={item.href} label={item.label} />
+            <NavItem key={index} href={item.href} label={item.label} submenu={item.submenu} />
           ))}
         </ul>
 
@@ -83,7 +92,7 @@ const Header = () => {
           <div className="absolute top-16 left-0 w-full z-50 bg-white shadow-lg lg:hidden">
             <ul className="flex flex-col items-center space-y-4 py-4 font-bold text-white">
               {navItems.map((item, index) => (
-                <NavItem key={index} href={item.href} label={item.label} />
+                <NavItem key={index} href={item.href} label={item.label} submenu={item.submenu} />
               ))}
               <BtnLanguage />
             </ul>
@@ -95,7 +104,7 @@ const Header = () => {
 };
 
 /** NavItem Component */
-const NavItem = ({ href, label }) => {
+const NavItem = ({ href, label, submenu }) => {
   // Current route
   const pathname = usePathname();
 
@@ -104,7 +113,7 @@ const NavItem = ({ href, label }) => {
   // If you prefer partial matching: const isActive = pathname.startsWith(href);
 
   return (
-    <li>
+    <li className="relative group">
       <Link
         href={href}
         className={`block py-2 transition-colors text-xl md:text-lg border-b-2 ${
@@ -116,6 +125,18 @@ const NavItem = ({ href, label }) => {
       >
         {label}
       </Link>
+
+      {submenu && (
+        <ul className="absolute left-0  hidden group-hover:block bg-white shadow-lg rounded-lg p-4 space-y-2 z-10 w-64">
+          {submenu.map((sub, index) => (
+            <li key={index} className="hover:text-[#0EA288] transition duration-300">
+              <Link href={sub.href} className="block px-4 py-2 hover:bg-[#0EA28820] rounded-lg">
+                {sub.label}
+              </Link>
+            </li>
+          ))}
+        </ul>
+      )}
     </li>
   );
 };

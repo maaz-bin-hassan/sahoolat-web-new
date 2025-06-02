@@ -1,6 +1,34 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 export default function Newsletter() {
+  const [inputValue, setInputValue] = useState('');
+
+  const handleSubscribe = async () => {
+    if (!inputValue.trim()) return;
+
+    try {
+      const payload = inputValue.includes('@')
+        ? { email: inputValue }
+        : { phone: inputValue };
+
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+
+      const data = await res.json();
+      if (data.success) {
+        console.log('Subscription sent!');
+        setInputValue('');
+      } else {
+        console.error('Subscription failed:', data.error);
+      }
+    } catch (err) {
+      console.error('Network or server error', err);
+    }
+  };
+
   return (
     <section className="relative bg-gradient-to-r from-teal-400 to-orange-400 py-12 px-4 md:py-16">
       {/* Optional decorative background pattern */}
@@ -32,11 +60,14 @@ export default function Newsletter() {
             <input
               type="text"
               placeholder="Enter your email or phone number"
+              value={inputValue}
+              onChange={(e) => setInputValue(e.target.value)}
               className="flex-grow bg-transparent pl-5 py-3 md:py-4
                          text-gray-700 font-medium focus:outline-none
                          placeholder:text-gray-500 placeholder:font-normal"
             />
             <button
+              onClick={handleSubscribe}
               className="flex items-center justify-center p-2 mr-3
                          bg-teal-500 hover:bg-teal-600 rounded-full
                          transition-colors duration-200"

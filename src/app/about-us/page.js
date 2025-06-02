@@ -1,10 +1,26 @@
 'use client';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 import {FaCheckCircle, FaHandshake, FaMicrophoneAlt, FaSearch} from 'react-icons/fa';
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 
 export default function HowItWorks() {
+  const [aboutData, setAboutData] = useState(null);
+
+  useEffect(() => {
+    async function fetchAboutData() {
+      try {
+        const res = await axios.get('/api/about-us');
+        setAboutData(res.data);
+      } catch (err) {
+        console.error('Failed to load about-us data', err);
+      }
+    }
+
+    fetchAboutData();
+  }, []);
+
   return (
     <>
       <Header/>
@@ -12,13 +28,10 @@ export default function HowItWorks() {
         {/* Mission Header */}
         <div className="bg-gradient-to-r from-teal-400 to-orange-400 py-12 px-4 text-center text-white">
           <h2 className="text-3xl md:text-5xl font-extrabold mb-4">
-            Our Mission
+            {aboutData?.missionTitle || 'Our Mission'}
           </h2>
           <p className="max-w-4xl mx-auto text-base md:text-xl leading-relaxed">
-            At <span className="font-semibold">Sahoolat AI</span>, we leverage
-            the power of AI-driven voice search and intuitive workflows. We’re
-            committed to making everyday tasks simpler, faster, and more
-            reliable so everyone can focus on what truly matters.
+            {aboutData?.missionDescription || 'Default mission description.'}
           </p>
         </div>
 
@@ -30,52 +43,26 @@ export default function HowItWorks() {
 
           {/* Four Steps in a Grid */}
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8 text-center">
-            {/* Step 1 */}
-            <div className="p-4 bg-white rounded-lg shadow-sm">
-              <FaMicrophoneAlt className="mx-auto text-teal-500 w-12 h-12 mb-4"/>
-              <h4 className="text-xl font-bold text-gray-700 mb-2">1. Say It</h4>
-              <p className="text-gray-600 leading-relaxed">
-                Use our voice or text input to let us know what service
-                or solution you need. Seamless, hands-free, and quick.
-              </p>
-            </div>
+            {aboutData?.workflowSteps?.map((step, index) => {
+              const Icon = {
+                FaMicrophoneAlt,
+                FaSearch,
+                FaHandshake,
+                FaCheckCircle
+              }[step.icon] || FaMicrophoneAlt;
 
-            {/* Step 2 */}
-            <div className="p-4 bg-white rounded-lg shadow-sm">
-              <FaSearch className="mx-auto text-orange-500 w-12 h-12 mb-4"/>
-              <h4 className="text-xl font-bold text-gray-700 mb-2">
-                2. We Find It
-              </h4>
-              <p className="text-gray-600 leading-relaxed">
-                Our AI instantly searches and recommends the best
-                service providers or professionals based on your request.
-              </p>
-            </div>
-
-            {/* Step 3 */}
-            <div className="p-4 bg-white rounded-lg shadow-sm">
-              <FaHandshake className="mx-auto text-teal-500 w-12 h-12 mb-4"/>
-              <h4 className="text-xl font-bold text-gray-700 mb-2">
-                3. Connect &amp; Discuss
-              </h4>
-              <p className="text-gray-600 leading-relaxed">
-                Compare providers, chat or call directly, and negotiate
-                terms. You’re always in control of the final decision.
-              </p>
-            </div>
-
-            {/* Step 4 */}
-            <div className="p-4 bg-white rounded-lg shadow-sm">
-              <FaCheckCircle className="mx-auto text-orange-500 w-12 h-12 mb-4"/>
-              <h4 className="text-xl font-bold text-gray-700 mb-2">
-                4. Get It Done
-              </h4>
-              <p className="text-gray-600 leading-relaxed">
-                Hire the right person or team, schedule your job, and
-                relax as Sahoolat AI ensures a hassle-free experience
-                from start to finish.
-              </p>
-            </div>
+              return (
+                <div key={index} className="p-4 bg-white rounded-lg shadow-sm">
+                  <Icon className="mx-auto text-teal-500 w-12 h-12 mb-4" />
+                  <h4 className="text-xl font-bold text-gray-700 mb-2">
+                    {index + 1}. {step.title}
+                  </h4>
+                  <p className="text-gray-600 leading-relaxed">
+                    {step.description}
+                  </p>
+                </div>
+              );
+            })}
           </div>
         </div>
         {/* Multi-Color (Gradient) Line */}
@@ -84,15 +71,16 @@ export default function HowItWorks() {
 
         {/* One-Line Tagline */}
         <div className="flex my-10 justify-center">
-                <span className="text-3xl md:text-[50px] mr-1 text-orangebrand font-bold">
-                    Say It.&nbsp;
-                </span>
-          <span className="text-3xl md:text-[50px] mr-1 text-brand font-bold">
-                    Find it.&nbsp;
-                </span>
-          <span className="text-3xl md:text-[50px] mr-1 text-orangebrand font-bold">
-                    Get it done!
-                </span>
+          {aboutData?.tagline?.map((line, index) => (
+            <span
+              key={index}
+              className={`text-3xl md:text-[50px] mr-1 ${
+                index % 2 === 0 ? 'text-orangebrand' : 'text-brand'
+              } font-bold`}
+            >
+              {line}&nbsp;
+            </span>
+          ))}
         </div>
 
       </section>

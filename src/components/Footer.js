@@ -1,5 +1,6 @@
 "use client";
 import React from "react";
+import Link from "next/link";
 import {FaFacebookF, FaInstagram, FaLinkedinIn, FaTiktok, FaTwitter} from "react-icons/fa";
 
 function Footer() {
@@ -7,10 +8,10 @@ function Footer() {
   const iconSize = 24;
   // Company & Legal Links
   const companyLinks = [
-    {href: "#", label: "About Us – Our mission & story"},
-    {href: "#", label: "Terms & Conditions – User agreement & policies"},
-    {href: "#", label: "Privacy Policy – How we protect your data"},
-    {href: "#", label: "User Guidelines – Safe & trusted platform"},
+    {href: "/about-us", label: "About Us – Our mission & story"},
+    {href: "/terms-conditions", label: "Terms & Conditions – User agreement & policies"},
+    {href: "/privacy-policy", label: "Privacy Policy – How we protect your data"},
+    {href: "/user-guidelines", label: "User Guidelines – Safe & trusted platform"},
   ];
   // Popular Services
   const popularServices = [
@@ -56,9 +57,9 @@ function Footer() {
             <ul className="space-y-7 text-[16px] xl:text-[20px] font-bold">
               {quickLinks.map((link, index) => (
                 <li key={index}>
-                  <a href={link.href} className="hover:underline">
+                  <Link href={link.href} className="hover:underline">
                     {link.label}
-                  </a>
+                  </Link>
                 </li>
               ))}
             </ul>
@@ -71,9 +72,9 @@ function Footer() {
             <ul className="space-y-3 text-[16px] font-bold list-disc ">
               {popularServices.map((service, index) => (
                 <li key={index} className="ml-[25px]">
-                  <a href={service.href} className="no-underline hover:underline">
+                  <Link href={service.href} className="no-underline hover:underline">
                     {service.label}
-                  </a>
+                  </Link>
                 </li>
               ))}
             </ul>
@@ -86,9 +87,9 @@ function Footer() {
             <ul className="space-y-7 text-[16px] xl:text-[20px] font-bold">
               {companyLinks.map((item, index) => (
                 <li key={index}>
-                  <a href={item.href} className="hover:underline">
+                  <Link href={item.href} className="hover:underline">
                     {item.label}
-                  </a>
+                  </Link>
                 </li>
               ))}
             </ul>
