@@ -1,100 +1,82 @@
 'use client';
 import React from 'react';
-import {FaCheckCircle, FaHandshake, FaMicrophoneAlt, FaSearch} from 'react-icons/fa';
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import Link from 'next/link';
 
-export default function HowItWorks() {
+
+export default function TermsConditions() {
+  const categories = [
+    { title: "Terms of Use", key: "general" },
+    { title: "User Terms", key: "users" },
+    { title: "Service Provider Terms", key: "providers" },
+    { title: "AI Voice Terms", key: "ai" }
+  ];
+
   return (
     <>
       <Header/>
       <section className="w-full pb-16 text-gray-800">
-        {/* Mission Header */}
         <div className="bg-gradient-to-r from-teal-400 to-orange-400 py-12 px-4 text-center text-white">
           <h2 className="text-3xl md:text-5xl font-extrabold mb-4">
-            Our Mission
+            Terms & Conditions
           </h2>
           <p className="max-w-4xl mx-auto text-base md:text-xl leading-relaxed">
-            At <span className="font-semibold">Sahoolat AI</span>, we leverage
-            the power of AI-driven voice search and intuitive workflows. We’re
-            committed to making everyday tasks simpler, faster, and more
-            reliable so everyone can focus on what truly matters.
+            At Sahoolat, we are committed to providing a safe, reliable, and user-friendly platform where both users and service providers can engage with confidence. These Terms & Conditions outline the expectations, responsibilities, and rights of all parties involved.
           </p>
         </div>
 
-        {/* How It Works */}
-        <div className="max-w-7xl mx-auto px-4 md:px-8 mt-8">
-          <h3 className="text-center text-2xl md:text-4xl font-bold text-gray-800 mb-12">
-            How Sahoolat AI Works
-          </h3>
+        {/*<div className="py-12 px-4 bg-gray-100">*/}
+        {/*  <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">*/}
+        {/*    {[*/}
+        {/*      {*/}
+        {/*        icon: "/assets/ai-mic.png",*/}
+        {/*        title: "AI-Powered Voice Search",*/}
+        {/*        desc: "Simply speak, and AI understands your service needs instantly.",*/}
+        {/*      },*/}
+        {/*      {*/}
+        {/*        icon: "/assets/verified.png",*/}
+        {/*        title: "Instant Matchmaking",*/}
+        {/*        desc: "Get connected to the best-skilled workers in real time.",*/}
+        {/*      },*/}
+        {/*      {*/}
+        {/*        icon: "/assets/audio.png",*/}
+        {/*        title: "Real-time Audio Chat",*/}
+        {/*        desc: "Talk to service providers directly via voice chat.",*/}
+        {/*      }*/}
+        {/*    ].map((card, i) => (*/}
+        {/*      <div key={i} className="bg-white rounded-xl shadow-[0_0_15px_rgba(0,0,0,0.1)] p-6 border-l-[6px] border-transparent flex flex-col items-center text-center" style={{ borderImage: "linear-gradient(to bottom, #14b8a6, #f97316) 1" }}>*/}
+        {/*        <img src={card.icon} alt={card.title} className="w-12 h-12 mb-4" />*/}
+        {/*        <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-2">{card.title}</h2>*/}
+        {/*        <p className="text-gray-600 mb-4">{card.desc}</p>*/}
+        {/*      </div>*/}
+        {/*    ))}*/}
+        {/*  </div>*/}
+        {/*</div>*/}
 
-          {/* Four Steps in a Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8 text-center">
-            {/* Step 1 */}
-            <div className="p-4 bg-white rounded-lg shadow-sm">
-              <FaMicrophoneAlt className="mx-auto text-teal-500 w-12 h-12 mb-4"/>
-              <h4 className="text-xl font-bold text-gray-700 mb-2">1. Say It</h4>
-              <p className="text-gray-600 leading-relaxed">
-                Use our voice or text input to let us know what service
-                or solution you need. Seamless, hands-free, and quick.
-              </p>
-            </div>
-
-            {/* Step 2 */}
-            <div className="p-4 bg-white rounded-lg shadow-sm">
-              <FaSearch className="mx-auto text-orange-500 w-12 h-12 mb-4"/>
-              <h4 className="text-xl font-bold text-gray-700 mb-2">
-                2. We Find It
-              </h4>
-              <p className="text-gray-600 leading-relaxed">
-                Our AI instantly searches and recommends the best
-                service providers or professionals based on your request.
-              </p>
-            </div>
-
-            {/* Step 3 */}
-            <div className="p-4 bg-white rounded-lg shadow-sm">
-              <FaHandshake className="mx-auto text-teal-500 w-12 h-12 mb-4"/>
-              <h4 className="text-xl font-bold text-gray-700 mb-2">
-                3. Connect &amp; Discuss
-              </h4>
-              <p className="text-gray-600 leading-relaxed">
-                Compare providers, chat or call directly, and negotiate
-                terms. You’re always in control of the final decision.
-              </p>
-            </div>
-
-            {/* Step 4 */}
-            <div className="p-4 bg-white rounded-lg shadow-sm">
-              <FaCheckCircle className="mx-auto text-orange-500 w-12 h-12 mb-4"/>
-              <h4 className="text-xl font-bold text-gray-700 mb-2">
-                4. Get It Done
-              </h4>
-              <p className="text-gray-600 leading-relaxed">
-                Hire the right person or team, schedule your job, and
-                relax as Sahoolat AI ensures a hassle-free experience
-                from start to finish.
-              </p>
-            </div>
-          </div>
+        <div className="max-w-4xl mx-auto px-4 md:mt-24 md:px-8 mt-10">
+          {/*<h3 className="text-2xl font-bold mb-6">Terms of Use</h3>*/}
+          <ul className="bg-white rounded-lg shadow-md divide-y divide-gray-200">
+            {categories.map((item) => (
+              <li key={item.key}>
+                <Link
+                  href={`/terms-conditions/${item.key}`}
+                  className="flex justify-between items-center p-4 hover:bg-gray-50 transition border-b border-gray-200"
+                >
+                  <span className="font-medium text-lg">{item.title}</span>
+                  <span className="text-gray-400 text-xl">&rsaquo;</span>
+                </Link>
+              </li>
+            ))}
+          </ul>
         </div>
-        {/* Multi-Color (Gradient) Line */}
-        <div
-          className="h-1 w-5/12 my-10 mx-auto bg-gradient-to-r from-teal-400 via-pink-500 to-orange-500 mb-8"></div>
 
-        {/* One-Line Tagline */}
+        <div className="h-1 w-5/12 my-10 mx-auto bg-gradient-to-r from-teal-400 via-pink-500 to-orange-500"></div>
         <div className="flex my-10 justify-center">
-                <span className="text-3xl md:text-[50px] mr-1 text-orangebrand font-bold">
-                    Say It.&nbsp;
-                </span>
-          <span className="text-3xl md:text-[50px] mr-1 text-brand font-bold">
-                    Find it.&nbsp;
-                </span>
-          <span className="text-3xl md:text-[50px] mr-1 text-orangebrand font-bold">
-                    Get it done!
-                </span>
+          <span className="text-3xl md:text-[40px] mr-1 text-orangebrand font-bold">Clarity.</span>
+          <span className="text-3xl md:text-[40px] mr-1 text-brand font-bold">Trust.</span>
+          <span className="text-3xl md:text-[40px] mr-1 text-orangebrand font-bold">Sahoolat.</span>
         </div>
-
       </section>
       <Footer/>
     </>
