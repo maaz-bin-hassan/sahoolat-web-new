@@ -40,34 +40,6 @@ export default function TermsConditions() {
           </p>
         </div>
 
-        {/*<div className="py-12 px-4 bg-gray-100">*/}
-        {/*  <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">*/}
-        {/*    {[*/}
-        {/*      {*/}
-        {/*        icon: "/assets/ai-mic.png",*/}
-        {/*        title: "AI-Powered Voice Search",*/}
-        {/*        desc: "Simply speak, and AI understands your service needs instantly.",*/}
-        {/*      },*/}
-        {/*      {*/}
-        {/*        icon: "/assets/verified.png",*/}
-        {/*        title: "Instant Matchmaking",*/}
-        {/*        desc: "Get connected to the best-skilled workers in real time.",*/}
-        {/*      },*/}
-        {/*      {*/}
-        {/*        icon: "/assets/audio.png",*/}
-        {/*        title: "Real-time Audio Chat",*/}
-        {/*        desc: "Talk to service providers directly via voice chat.",*/}
-        {/*      }*/}
-        {/*    ].map((card, i) => (*/}
-        {/*      <div key={i} className="bg-white rounded-xl shadow-[0_0_15px_rgba(0,0,0,0.1)] p-6 border-l-[6px] border-transparent flex flex-col items-center text-center" style={{ borderImage: "linear-gradient(to bottom, #14b8a6, #f97316) 1" }}>*/}
-        {/*        <img src={card.icon} alt={card.title} className="w-12 h-12 mb-4" />*/}
-        {/*        <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-2">{card.title}</h2>*/}
-        {/*        <p className="text-gray-600 mb-4">{card.desc}</p>*/}
-        {/*      </div>*/}
-        {/*    ))}*/}
-        {/*  </div>*/}
-        {/*</div>*/}
-
         <div className="max-w-4xl mx-auto px-4 md:mt-24 md:px-8 mt-10">
           {/*<h3 className="text-2xl font-bold mb-6">Terms of Use</h3>*/}
           <ul className="bg-white rounded-lg shadow-md divide-y divide-gray-200">
