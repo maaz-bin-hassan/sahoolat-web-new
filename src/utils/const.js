@@ -6,6 +6,8 @@ export const ThirdPartyAPIs = {
   SIGNUP_BUYER_CHAT:  `${BASE_URL_SMART_SERVICE}/signUpBuyerChat`
 }
 
+
+
 export const NextAPIs = {
   AUTOMATE_TESTING_CLIENT: `/api/automate-test`,
   BUYER_AUTOMATE_TESTING:`/api/buyer-automate-test`,
