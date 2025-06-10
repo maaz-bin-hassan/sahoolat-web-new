@@ -2,6 +2,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Script from "next/script";
 import GoogleTranslate from "@/app/GoogleTranslate";
+import { GoogleAnalytics } from '@next/third-parties/google';
 
 // Font configuration
 const geistSans = Geist({
@@ -122,6 +123,8 @@ export default function RootLayout({ children }) {
 
     {/* Google Translate (optional performance improvement) */}
     <GoogleTranslate />
+
+    <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS} />
 
     {children}
     </body>
