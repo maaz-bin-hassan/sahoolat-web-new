@@ -117,7 +117,7 @@ export default function HowItWorks() {
           (src, index) => (
             <img
               key={index}
-              className={`rounded-lg cursor-pointer transition-all duration-300 hover:scale-105 ${index === 1 ? "w-[380px] md:w-[420px] h-[780px]" : "w-[380px] h-[750px]"}`}
+              className={`rounded-lg cursor-pointer transition-all duration-300 hover:scale-105 ${index === 1 ? "w-[400px] md:w-[550px] h-[780px]" : "w-[420px] h-[750px]"}`}
               src={src}
               alt={`Step ${index + 1}`}
               onClick={() => setSelectedImage(src)} // Open full-screen image on click
