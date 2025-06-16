@@ -1,50 +1,57 @@
 "use client";
 import React from "react";
 import Link from "next/link";
-import {FaFacebookF, FaInstagram, FaLinkedinIn, FaTiktok, FaTwitter} from "react-icons/fa";
+import {
+  FaFacebookF,
+  FaInstagram,
+  FaLinkedinIn,
+  FaTiktok,
+  FaTwitter,
+} from "react-icons/fa";
+import Image from "next/image";
 
 function Footer() {
   // iconSize for Social Links
   const iconSize = 24;
   // Company & Legal Links
   const companyLinks = [
-    {href: "/about-us", label: "About Us – Our mission & story"},
-    {href: "/terms-conditions", label: "Terms & Conditions – User agreement & policies"},
-    {href: "/privacy-policy", label: "Privacy Policy – How we protect your data"},
-    {href: "/user-guidelines", label: "User Guidelines – Safe & trusted platform"},
+    { href: "/about-us", label: "About Us – Our mission & story" },
+    {
+      href: "/terms-conditions",
+      label: "Terms & Conditions – User agreement & policies",
+    },
+    { href: "/privacy-policy", label: "Privacy Policy – How we protect your data" },
+    { href: "/user-guidelines", label: "User Guidelines – Safe & trusted platform" },
   ];
   // Popular Services
   const popularServices = [
-    {href: "#", label: "Electricians"},
-    {href: "#", label: "Plumbers"},
-    {href: "#", label: "Carpenters"},
-    {href: "#", label: "Mechanics"},
-    {href: "#", label: "Home Cleaning"},
-    {href: "#", label: "Tutor"},
-    {href: "#", label: "Transport & Movers"},
-    {href: "#", label: "Vehicle Repair"},
-    {href: "#", label: "Gutter Cleaner"},
-    {href: "#", label: "Carpet Installation"},
-
-
+    { href: "#", label: "Electricians" },
+    { href: "#", label: "Plumbers" },
+    { href: "#", label: "Carpenters" },
+    { href: "#", label: "Mechanics" },
+    { href: "#", label: "Home Cleaning" },
+    { href: "#", label: "Tutor" },
+    { href: "#", label: "Transport & Movers" },
+    { href: "#", label: "Vehicle Repair" },
+    { href: "#", label: "Gutter Cleaner" },
+    { href: "#", label: "Carpet Installation" },
   ];
   // Quick Links
   const quickLinks = [
-    {href: "#", label: "Explore our platform & features"},
-    {href: "#", label: "Get Sahoolat AI on Google Play & App Store"},
-    {href: "#", label: "Browse skilled workers & professionals"},
-    {href: "#", label: "Start getting jobs today!"},
-    {href: "#", label: "Need help? Reach out anytime"},
+    { href: "#", label: "Explore our platform & features" },
+    { href: "#", label: "Get Sahoolat AI on Google Play & App Store" },
+    { href: "#", label: "Browse skilled workers & professionals" },
+    { href: "#", label: "Start getting jobs today!" },
+    { href: "#", label: "Need help? Reach out anytime" },
   ];
   // Social Links
   const socialLinks = [
-    {href: "#", icon: <FaFacebookF size={iconSize}/>, label: "Facebook"},
-    {href: "#", icon: <FaTwitter size={iconSize}/>, label: "Twitter"},
-    {href: "#", icon: <FaInstagram size={iconSize}/>, label: "Instagram"},
-    {href: "#", icon: <FaLinkedinIn size={iconSize}/>, label: "LinkedIn"},
-    {href: "#", icon: <FaTiktok size={iconSize}/>, label: "Tiktok"},
+    { href: "#", icon: <FaFacebookF size={iconSize} />, label: "Facebook" },
+    { href: "#", icon: <FaTwitter size={iconSize} />, label: "Twitter" },
+    { href: "#", icon: <FaInstagram size={iconSize} />, label: "Instagram" },
+    { href: "#", icon: <FaLinkedinIn size={iconSize} />, label: "LinkedIn" },
+    { href: "#", icon: <FaTiktok size={iconSize} />, label: "Tiktok" },
   ];
-
 
   return (
     <footer className="bg-[#0f2332] text-white py-10">
@@ -53,6 +60,12 @@ function Footer() {
         <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
           {/* Quick Links */}
           <div>
+            <Image
+              width={400}
+              height={400}
+              src="/assets/logo-full-black-version.png"
+              alt="Sahoolat AI Logo"
+            />
             <h2 className="text-[35px] font-semibold mb-6">Quick Links</h2>
             <ul className="space-y-7 text-[16px] xl:text-[20px] font-bold">
               {quickLinks.map((link, index) => (
@@ -64,7 +77,6 @@ function Footer() {
               ))}
             </ul>
           </div>
-
 
           {/* Popular Services */}
           <div>
@@ -80,7 +92,6 @@ function Footer() {
             </ul>
           </div>
 
-
           {/* Company & Legal */}
           <div>
             <h2 className="text-[35px] font-bold mb-6">Company &amp; Legal</h2>
@@ -94,7 +105,6 @@ function Footer() {
               ))}
             </ul>
           </div>
-
         </div>
 
         {/* Stay Connected */}
@@ -107,7 +117,6 @@ function Footer() {
                 href={link.href}
                 className="hover:text-brand transition-colors "
                 aria-label={link.label}
-
               >
                 {link.icon}
               </a>
@@ -115,16 +124,15 @@ function Footer() {
           </div>
         </div>
 
-
         {/* Bottom Note */}
         <div className="mt-10 text-center text-sm text-gray-300">
           <p>
             2025 All copyrights are reserved by
             <a target="_blank" href={"https://novasyncdynamics.com"}>
-                        <span className="font-bold text-white">
-                            {" "}
-                          NovaSync Dynamics Private Limited
-                        </span>
+              <span className="font-bold text-white">
+                {" "}
+                NovaSync Dynamics Private Limited
+              </span>
             </a>
           </p>
         </div>
