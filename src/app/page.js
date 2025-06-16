@@ -43,18 +43,12 @@ export default function App() {
       return () => clearTimeout(popupTimer);
     }
   }, []);
-
-  // Handle submission of phone number
   const handleSubmit = () => {
     if (phoneNumber.length < 10) {
       alert("Please enter a valid phone number.");
       return;
     }
-
-    // Store flag in localStorage
     localStorage.setItem("received", "true");
-
-    // Close the popup
     setShowPopup(false);
   };
 
@@ -62,14 +56,6 @@ export default function App() {
     <div className="relative w-full h-screen">
       {isLoading ? (
         <div className="fixed inset-0 flex items-center justify-center bg-[#F2F6F7] z-50">
-          {/*<Image*/}
-          {/*  src="/assets/logo.png" // Replace with your splash image path*/}
-          {/*  alt="Splash Screen"*/}
-          {/*  width={500}*/}
-          {/*  height={500}*/}
-          {/*  className="object-contain"*/}
-          {/*  priority*/}
-          {/*/>*/}
           <Lottie
             animationData={animationData}
             loop
