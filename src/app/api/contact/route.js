@@ -33,7 +33,7 @@ export async function POST(request) {
     await transporter.sendMail({
       from: process.env.EMAIL_FROM,
       to: toList,
-      subject: 'New Lead Submission',
+      subject: 'Sahoolat AI: got a new lead!',
       text: message
     })
 
