@@ -3,7 +3,7 @@ import React, {useEffect, useState} from "react";
 import {AnimatePresence, motion} from "framer-motion";
 
 function LaunchingTimer() {
-  const launchDate = new Date("2025-07-01T00:00:00");
+  const launchDate = new Date("2025-11-01T00:00:00");
   const [timeLeft, setTimeLeft] = useState(getTimeRemaining(launchDate));
   const [isVisible, setIsVisible] = useState(true);
 

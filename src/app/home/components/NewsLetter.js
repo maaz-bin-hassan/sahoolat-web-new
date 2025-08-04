@@ -1,31 +1,31 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 
 export default function Newsletter() {
-  const [inputValue, setInputValue] = useState('');
+  const [inputValue, setInputValue] = useState("");
 
   const handleSubscribe = async () => {
     if (!inputValue.trim()) return;
 
     try {
-      const payload = inputValue.includes('@')
+      const payload = inputValue.includes("@")
         ? { email: inputValue }
         : { phone: inputValue };
 
-      const res = await fetch('/api/contact', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
 
       const data = await res.json();
       if (data.success) {
-        console.log('Subscription sent!');
-        setInputValue('');
+        console.log("Subscription sent!");
+        setInputValue("");
       } else {
-        console.error('Subscription failed:', data.error);
+        console.error("Subscription failed:", data.error);
       }
     } catch (err) {
-      console.error('Network or server error', err);
+      console.error("Network or server error", err);
     }
   };
 
@@ -34,20 +34,30 @@ export default function Newsletter() {
       {/* Optional decorative background pattern */}
       <div
         className="absolute inset-0 bg-no-repeat bg-center bg-cover opacity-10 pointer-events-none"
-        style={{backgroundImage: 'url("/assets/bg-pattern.png")'}}
+        style={{ backgroundImage: 'url("/assets/bg-pattern.png")' }}
       ></div>
 
       <div className="relative z-10 max-w-3xl mx-auto text-center">
         {/* Heading */}
         <h2 className="text-white text-2xl md:text-5xl font-extrabold tracking-tight">
-          Subscribe to our Newsletter!
+          Get Early Access!
         </h2>
 
         {/* Subheading or quick note */}
         <p className="mt-3 text-white text-sm md:text-lg max-w-xl mx-auto">
-          Stay in the loop with updates, tips, and services from
-          <span className="font-bold"> Sahoolat AI</span>. We promise to keep it
-          interesting—no spam, ever!
+          Looking for top-tier professional services — from basic to elite — without
+          paying a single extra rupee? 💸
+          <br/>
+          <ul>
+            <li className={'text-left'}>- Multiple verified options</li>
+            <li className={'text-left'}>- Zero extra cost</li>
+            <li className={'text-left'}>- Delivered right to your doorstep</li>
+            <li className={'text-left'}>- 100% hassle-free</li>
+            <li className={'text-left'}>- Powered by cutting-edge AI</li>
+          </ul>
+          <br/>
+          Welcome to Sahoolat AI — your smart gateway to effortless service.
+          Experience a new era of convenience and control.
         </p>
 
         {/* Input & Send Button Container */}
