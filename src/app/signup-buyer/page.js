@@ -35,22 +35,22 @@ export default function SignupPage() {
 
   return (
     <>
-      <Header />
-      <div className="min-h-screen bg-gray-50 p-6">
-        <div className="max-w-full mx-auto">
-          <h1 className="text-3xl font-bold text-center mb-6">Smart Buyer Signup (Auto)</h1>
-
-          {runningName && (
-            <div className="max-w-4xl mx-auto mb-4">
-              <div className="bg-indigo-50 border-l-4 border-indigo-600 p-3 rounded">
-                <span className="font-semibold">Current Category:</span>{" "}
-                <span className="text-indigo-700">{runningName}</span>
+      {/*<Header />*/}
+      <div className="h-screen overflow-hidden bg-gray-50">
+        <div className="max-w-full mx-auto h-full grid grid-rows-[auto,1fr] gap-4 p-6">
+          <div>
+            <h1 className="text-3xl font-bold text-center mb-4">Smart Buyer Signup (Auto)</h1>
+            {runningName && (
+              <div className="max-w-4xl mx-auto">
+                <div className="bg-indigo-50 border-l-4 border-indigo-600 p-3 rounded">
+                  <span className="font-semibold">Current Category:</span>{" "}
+                  <span className="text-indigo-700">{runningName}</span>
+                </div>
               </div>
-            </div>
-          )}
-
-          <div className="flex flex-col sm:flex-row gap-6">
-            <div className="w-full sm:w-1/3 bg-white rounded-lg shadow p-4">
+            )}
+          </div>
+          <div className="flex flex-col sm:flex-row gap-6 h-full overflow-hidden">
+            <div className="w-full sm:w-1/3 bg-white rounded-lg shadow p-4 min-w-0 h-full overflow-y-auto">
 
               <CategoryTabs
                 categories={categories}
@@ -80,7 +80,7 @@ export default function SignupPage() {
           </div>
         </div>
       </div>
-      <Footer />
+      {/*<Footer />*/}
     </>
   );
 }
