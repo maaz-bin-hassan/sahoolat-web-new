@@ -21,6 +21,7 @@ export default function SignupPage() {
     addCategoryTab,
     handleCategoryInput,
     startActiveCategory,
+    removeCategory,
     startRunAll,
     maxCategories,
   } = useSignupBuyer(5);
@@ -50,12 +51,14 @@ export default function SignupPage() {
 
           <div className="flex flex-col sm:flex-row gap-6">
             <div className="w-full sm:w-1/3 bg-white rounded-lg shadow p-4">
+
               <CategoryTabs
                 categories={categories}
                 activeTab={activeTab}
                 statuses={statuses}
                 onTabClick={setActiveTab}
                 onAdd={addCategoryTab}
+                onDelete={removeCategory}
                 maxCategories={maxCategories}
               />
 

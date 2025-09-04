@@ -42,6 +42,50 @@ export default function useSignupBuyer(maxCategories = 5) {
     };
   }, []);
 
+
+  const removeCategory = (idx) => {
+    // If this tab has an open socket, close it
+    const sock = socketsRef.current[idx];
+    if (sock) {
+      try { sock.disconnect(); } catch {}
+      delete socketsRef.current[idx];
+    }
+
+    // If we’re deleting the currently running one, stop runAll and unlock UI
+    if (currentRunningIndex === idx) {
+      setCurrentRunningIndex(null);
+      setIsLocked(false);
+      setRunAll(false);
+    }
+
+    // Remove from arrays (keep at least one slot)
+    setCategories((prev) => {
+      const next = prev.filter((_, i) => i !== idx);
+      return next.length ? next : [""];
+    });
+    setStatuses((prev) => {
+      const next = prev.filter((_, i) => i !== idx);
+      return next.length ? next : ["idle"];
+    });
+    setDeviceIds((prev) => {
+      const next = prev.filter((_, i) => i !== idx);
+      return next.length ? next : [null];
+    });
+
+    // Fix active tab
+    setActiveTab((prev) => {
+      if (idx < prev) return prev - 1;
+      if (idx === prev) return Math.max(0, prev - 1);
+      return prev;
+    });
+
+    // Optional: log it
+    const name = (categoriesRef.current[idx] || `Category ${idx + 1}`).trim();
+    if (name) addLog(`🗑️ Removed category: ${name}`, "system", name);
+  };
+
+
+
   // Helpers
   const addLog = (content, type, category) => {
     setLog((prev) => [...prev, { content, type, category }]);
@@ -277,7 +321,10 @@ export default function useSignupBuyer(maxCategories = 5) {
     // state
     categories, activeTab, statuses, log, isLocked, runningName,
     // actions
-    setActiveTab, addCategoryTab, handleCategoryInput, startActiveCategory, startRunAll,
+    setActiveTab, addCategoryTab, handleCategoryInput,
+    startActiveCategory, startRunAll,
+    // NEW:
+    removeCategory,
     // expose max
     maxCategories,
   };
