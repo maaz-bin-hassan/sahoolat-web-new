@@ -22,9 +22,9 @@ export default function SignupPage() {
   const [isConnected, setIsConnected] = useState(false);
   const [isLocked, setIsLocked] = useState(false);
 
-  // For auto-scroll
+
   const messagesContainerRef = useRef(null);
-  // ----- Setup Socket.IO connection -----
+
   useEffect(() => {
     axios.post(ThirdPartyAPIs.CREATE_SESSION, {
         device_finger_print: generateDeviceId(),
@@ -48,12 +48,11 @@ export default function SignupPage() {
           addLog(`📡 ${data.message}`, "system");
         });
 
-        // Socket error
         socket.on("error", (err) => {
           addLog(`❌ Error: ${JSON.stringify(err)}`, "error");
         });
 
-        // ----- Main handler: server -> "text-response" -> LLM -> server
+
         socket.on("text-response", async (data) => {
           addLog(data, "received");
 
@@ -74,7 +73,6 @@ export default function SignupPage() {
             return;
           }
 
-          // Special case: COMPLETE_INFORMATION => send "✅"
           if (intent === "COMPLETE_INFORMATION") {
             addLog(`🎉 "COMPLETE_INFORMATION" recognized. Sending "✅"`, "system");
             const message = {
@@ -90,12 +88,11 @@ export default function SignupPage() {
             return;
           }
 
-          // Otherwise, let's call your LLM for the next step
           try {
             const res = await axios.post(NextAPIs.AUTOMATE_TESTING_CLIENT, {
               intent,
               modelQuery,
-              category, // pass user-typed category for context
+              category,
             });
 
             const { seller_query } = res.data.response || {};
@@ -105,7 +102,6 @@ export default function SignupPage() {
               return;
             }
 
-            // Send that LLM-generated query back to the socket
             const message = {
               language,
               prompt_title: promptTitle,
@@ -127,20 +123,17 @@ export default function SignupPage() {
           }
         });
 
-        // On disconnect
         socket.on("disconnect", (reason) => {
           setIsConnected(false);
           addLog(`🔌 Disconnected: ${reason}`, "system");
         });
 
-        // Cleanup
         return () => {
           socket.disconnect();
         };
       });
   }, []);
 
-  // ----- Auto-scroll whenever log changes -----
   useEffect(() => {
     if (messagesContainerRef.current) {
       messagesContainerRef.current.scrollTop =
@@ -148,12 +141,10 @@ export default function SignupPage() {
     }
   }, [log]);
 
-  // ----- Logger helper -----
   const addLog = (content, type) => {
     setLog((prev) => [...prev, { content, type }]);
   };
 
-  // ----- Called when user clicks "Start Signup Process" -----
   const handleStart = async () => {
     if (!category.trim()) return;
 
@@ -161,7 +152,6 @@ export default function SignupPage() {
 
     try {
       setIsLocked(true);
-      // First step: "sign_up"
       const res = await axios.post(NextAPIs.AUTOMATE_TESTING_CLIENT, {
         intent: "sign_up",
         modelQuery: `I am a ${category} looking to register on Sahoolat AI.`,
@@ -171,10 +161,7 @@ export default function SignupPage() {
       const { intent, seller_query } = res.data.response || {};
       addLog(`🤖 OpenAI Response: ${JSON.stringify(res.data.response)}`, "openai");
 
-      console.log("This is intent here 1:", intent);
-      console.log("This is seller_query here 2:", seller_query);
 
-      // If the intent is UNDER_REVIEW, don't send to socket
       if (intent === "UNDER_REVIEW") {
         addLog("🚫 Skipping socket emission because intent is UNDER_REVIEW", "system");
         setIsLocked(false);
@@ -182,7 +169,6 @@ export default function SignupPage() {
       }
 
       if (intent && seller_query) {
-        // Send to socket
         const message = {
           language,
           prompt_title: promptTitle,
@@ -208,7 +194,6 @@ export default function SignupPage() {
   };
 
 
-  // ----- Render UI -----
   return (
     <>
       <Header />
@@ -219,7 +204,6 @@ export default function SignupPage() {
           </h1>
 
           <div className="flex flex-col sm:flex-row gap-6">
-            {/* Left Panel for Category Input */}
             <div className="w-full sm:w-1/3 bg-white rounded-lg shadow p-4">
               <label className="block mb-4">
                 <span className="text-gray-700 font-medium">
@@ -242,7 +226,6 @@ export default function SignupPage() {
               </button>
             </div>
 
-            {/* Right Panel for Messages */}
             <div
               className="w-full sm:w-2/3 bg-white rounded-lg shadow p-4 max-h-[800px] overflow-y-auto"
               ref={messagesContainerRef}
