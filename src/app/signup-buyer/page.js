@@ -10,15 +10,9 @@ import CategoryInput from "@/components/CategoryInput";
 import Controls from "@/components/Controls";
 import LogsPanel from "@/components/LogsPanel";
 
-/**
- * DEV-ONLY GUARD:
- * Prompts for a password and compares with NEXT_PUBLIC_SIGNUP_BUYER_PASSWORD.
- * If correct, unlocks this tab (stored in sessionStorage) and renders the real page.
- * NOTE: This is NOT secure for production (password is visible in DevTools).
- */
 export default function SignupPage() {
   const [authorized, setAuthorized] = useState(false);
-  const [mounted, setMounted] = useState(false); // avoid hydration flicker
+  const [mounted, setMounted] = useState(false);
   const [pw, setPw] = useState("");
   const [error, setError] = useState(null);
   const router = useRouter();
@@ -108,6 +102,7 @@ function SignupBuyerInner() {
     removeCategory,
     startRunAll,
     maxCategories,
+    committed
   } = useSignupBuyer(5);
 
   const messagesContainerRef = useRef(null);
@@ -142,6 +137,7 @@ function SignupBuyerInner() {
               <CategoryTabs
                 categories={categories}
                 activeTab={activeTab}
+                committed={committed}
                 statuses={statuses}
                 onTabClick={setActiveTab}
                 onAdd={addCategoryTab}

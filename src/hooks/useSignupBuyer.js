@@ -18,6 +18,9 @@ export default function useSignupBuyer(maxCategories = 5) {
   const [activeTab, setActiveTab] = useState(0);
   const categoriesRef = useRef(categories);
   useEffect(() => { categoriesRef.current = categories; }, [categories]);
+  const [committed, setCommitted] = useState([false]);
+
+
 
   // Per-category session/socket/status
   const socketsRef = useRef({});
@@ -72,6 +75,13 @@ export default function useSignupBuyer(maxCategories = 5) {
       return next.length ? next : [null];
     });
 
+    setCommitted(prev => {
+      const next = prev.filter((_, i) => i !== idx);
+      return next.length ? next : [false];
+    });
+
+
+
     // Fix active tab
     setActiveTab((prev) => {
       if (idx < prev) return prev - 1;
@@ -110,14 +120,31 @@ export default function useSignupBuyer(maxCategories = 5) {
       while (copy.length < len) copy.push("idle");
       return copy.slice(0, len);
     });
+
+    setCommitted(prev => {
+      const copy = [...prev];
+      while (copy.length < len) copy.push(false);
+      return copy.slice(0, len);
+    });
+
   };
 
   const addCategoryTab = () => {
     if (categories.length >= maxCategories) return;
     const next = [...categories, ""];
     setCategories(next);
+
+    setCommitted(prev => {
+      const copy = [...prev];
+      copy[activeTab] = true;
+      while (copy.length < next.length) copy.push(false);
+      return copy.slice(0, next.length);
+    });
+
     ensureArraysLength(next.length);
     setActiveTab(next.length - 1);
+
+
   };
 
   const handleCategoryInput = (value) => {
@@ -325,6 +352,7 @@ export default function useSignupBuyer(maxCategories = 5) {
     startActiveCategory, startRunAll,
     // NEW:
     removeCategory,
+    committed,
     // expose max
     maxCategories,
   };
