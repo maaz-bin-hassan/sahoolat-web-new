@@ -1,4 +1,4 @@
-// export const BASE_URL_SMART_SERVICE = "http://localhost:5005"
+ // export const BASE_URL_SMART_SERVICE = "http://localhost:5005"
 
 const BASE_URL_SMART_SERVICE = process.env.NEXT_PUBLIC_BASE_URL_SMART_SERVICE;
 

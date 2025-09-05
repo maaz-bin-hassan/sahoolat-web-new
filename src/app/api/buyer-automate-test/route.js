@@ -2,6 +2,11 @@ import { NextResponse } from 'next/server';
 let persistedCategory = "";
 
 export async function POST(req) {
+
+   if (!process.env.OPENAI_API_KEY) {
+       return NextResponse.json({ error: 'Missing OPENAI_API_KEY' }, { status: 500 });
+    }
+
   try {
     const { intent, modelQuery, category } = await req.json();
     console.log("this is intent :", intent);
@@ -13,15 +18,18 @@ export async function POST(req) {
 
     console.log("this is category :", persistCategory);
 
-    const openaiRes = await fetch('https://api.openai.com/v1/chat/completions', {
+    const url = 'https://api.openai.com/v1/chat/completions';
+    const init = {
       method: 'POST',
+      cache: 'no-store',
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
       },
       body: JSON.stringify({
-        model: 'gpt-4o',
+        model: 'gpt-4o', // ← do not change the prompt or this model unless you want a fallback
         messages: [
+
           {
             role: 'system',
             content: `You are a buyer from Pakistan signing up on Sahoolat AI because you need a professional in the "${persistCategory}" field to get your work done.
@@ -62,10 +70,51 @@ Keep your responses concise.
 Assistant Question: ${modelQuery}`,
 
           },
+
         ],
         temperature: 0.7,
       }),
-    });
+    };
+
+    let openaiRes;
+    for (let attempt = 0; attempt < 5; attempt++) {
+        try {
+            openaiRes = await fetch(url, init);
+          } catch (err) {
+            if (attempt === 4) throw err; // last attempt
+            const backoffMs = Math.round(200 * (2 ** attempt) * (1 + Math.random() * 0.25));
+            console.warn(`OpenAI network error, retry ${attempt + 1}/5 in ${backoffMs}ms:`, err?.message || err);
+            await new Promise(r => setTimeout(r, backoffMs));
+            continue;
+          }
+      if (openaiRes.ok) break;
+
+      // retry only on 429 / 5xx
+      const retryable = [429, 500, 502, 503, 504].includes(openaiRes.status);
+      if (!retryable || attempt === 4) break;
+
+      let message = '';
+      try {
+        const body = await openaiRes.json();
+        message = body?.error?.message || '';
+      } catch {
+        try { message = await openaiRes.text(); } catch {}
+      }
+
+      // honor Retry-After header or fall back to exponential backoff + jitter
+      const retryAfter = openaiRes.headers.get('retry-after');
+      const hintedMs = retryAfter ? Number(retryAfter) * 1000
+        : parseInt((message.match(/try again in\s+(\d+)ms/i)?.[1] || '0'), 10);
+
+      const backoffMs = hintedMs || Math.round(200 * (2 ** attempt) * (1 + Math.random() * 0.25));
+      console.warn(`OpenAI retry ${attempt + 1}/5 in ${backoffMs}ms (status ${openaiRes.status})`);
+      await new Promise(r => setTimeout(r, backoffMs));
+    }
+
+    if (!openaiRes?.ok) {
+      const txt = await openaiRes.text().catch(() => '');
+      throw new Error(`OpenAI request failed: ${openaiRes?.status} ${txt}`);
+    }
 
     const data = await openaiRes.json();
     let responseText = data.choices?.[0]?.message?.content ?? '{}';
