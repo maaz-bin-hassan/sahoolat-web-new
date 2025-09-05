@@ -1,5 +1,5 @@
-const BASE_URL_SMART_SERVICE = "http://localhost:5005"
-
+// const BASE_URL_SMART_SERVICE = "http://localhost:5005"
+h
 export const ThirdPartyAPIs = {
   CREATE_SESSION: `${BASE_URL_SMART_SERVICE}/api/sessions/create`,
   SIGNUP_SELLER_CHAT: `${BASE_URL_SMART_SERVICE}/signUpSellerChat`,
