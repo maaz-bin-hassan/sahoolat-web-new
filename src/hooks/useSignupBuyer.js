@@ -21,6 +21,17 @@ export default function useSignupBuyer(maxCategories = 5) {
   const [committed, setCommitted] = useState([false]);
 
 
+  const resetTabs = () => {
+    try { Object.values(socketsRef.current).forEach(s => s?.disconnect?.()); } catch {}
+    socketsRef.current = {};
+    setCategories([""]);
+    setStatuses(["idle"]);
+    setDeviceIds([null]);
+    setCommitted([false]);
+    setActiveTab(0);
+    // optional: also clear logs
+    // setLog([]);
+  };
 
   // Per-category session/socket/status
   const socketsRef = useRef({});
@@ -174,6 +185,7 @@ export default function useSignupBuyer(maxCategories = 5) {
       setRunAll(false);
       setCurrentRunningIndex(null);
       setIsLocked(false);
+      resetTabs();
       return;
     }
     setActiveTab(nextIdx);
@@ -257,13 +269,20 @@ export default function useSignupBuyer(maxCategories = 5) {
       setIsLocked(false);
       setCurrentRunningIndex(null);
       if (runAllRef.current && wasDone) proceedNext(idx);
+      else if (wasDone) resetTabs();
     });
   };
 
-  // Start flow for a given tab
   const startCategory = async (idx) => {
     const category = (categoriesRef.current[idx] || "").trim();
     if (!category) return;
+
+    setCommitted(prev => {
+      const copy = [...prev];
+      copy[idx] = true;
+      return copy;
+    });
+
 
     setIsLocked(true);
     setCurrentRunningIndex(idx);
