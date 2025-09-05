@@ -59,15 +59,28 @@ export default function CategoryTabs({ categories, activeTab, statuses, onTabCli
       <button
         onClick={onAdd}
         disabled={categories.length >= maxCategories}
-        className={`px-3 py-1 rounded-full border text-sm transition ${
-          categories.length >= maxCategories
-            ? "bg-gray-200 text-gray-500 border-gray-200 cursor-not-allowed"
-            : "bg-white text-gray-700 border-gray-300 hover:bg-gray-50"
-        }`}
-          title="Add another category"
+        aria-label="Add category"
+        title="Add another category"
+        className={`h-9 w-9 rounded-lg border flex items-center justify-center transition
+    ${categories.length >= maxCategories
+          ? "bg-gray-200 text-gray-400 border-gray-200 cursor-not-allowed"
+          : "bg-white text-black border-gray-300 hover:bg-gray-50 shadow-sm"}`}  // ← text-black drives icon color
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          className="h-5 w-5"
+          fill="none"
         >
-        + Add
+          <rect x="3.5" y="3.5" width="17" height="17" rx="3.5"
+                fill="currentColor" stroke="currentColor" strokeWidth="1.5" />
+
+          <path d="M12 8v8M8 12h8"
+                stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
       </button>
+
+
     </div>
   );
-}
+ }

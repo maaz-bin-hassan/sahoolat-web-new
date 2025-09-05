@@ -13,7 +13,8 @@ const generateDeviceId = () =>
   Math.floor(10000 + Math.random() * 90000).toString();
 
 export default function useSignupBuyer(maxCategories = 5) {
-  // Categories & tabs
+
+  const finishedRef = useRef([]);
   const [categories, setCategories] = useState([""]);
   const [activeTab, setActiveTab] = useState(0);
   const categoriesRef = useRef(categories);
@@ -29,27 +30,25 @@ export default function useSignupBuyer(maxCategories = 5) {
     setDeviceIds([null]);
     setCommitted([false]);
     setActiveTab(0);
-    // optional: also clear logs
-    // setLog([]);
+    finishedRef.current = [];
   };
 
-  // Per-category session/socket/status
   const socketsRef = useRef({});
   const [deviceIds, setDeviceIds] = useState([null]);
-  const [statuses, setStatuses] = useState(["idle"]); // "idle" | "running" | "done" | "error"
+  const [statuses, setStatuses] = useState(["idle"]);
   const statusesRef = useRef(statuses);
   useEffect(() => { statusesRef.current = statuses; }, [statuses]);
 
-  // Run-all & UX
+
   const [runAll, setRunAll] = useState(false);
   const runAllRef = useRef(runAll);
   useEffect(() => { runAllRef.current = runAll; }, [runAll]);
 
   const [currentRunningIndex, setCurrentRunningIndex] = useState(null);
   const [log, setLog] = useState([]);
-  const [isLocked, setIsLocked] = useState(false); // purely visual
+  const [isLocked, setIsLocked] = useState(false);
 
-  // Cleanup sockets on unmount
+
   useEffect(() => {
     return () => {
       Object.values(socketsRef.current).forEach((s) => s && s.disconnect());
@@ -58,21 +57,18 @@ export default function useSignupBuyer(maxCategories = 5) {
 
 
   const removeCategory = (idx) => {
-    // If this tab has an open socket, close it
     const sock = socketsRef.current[idx];
     if (sock) {
       try { sock.disconnect(); } catch {}
       delete socketsRef.current[idx];
     }
 
-    // If we’re deleting the currently running one, stop runAll and unlock UI
     if (currentRunningIndex === idx) {
       setCurrentRunningIndex(null);
       setIsLocked(false);
       setRunAll(false);
     }
 
-    // Remove from arrays (keep at least one slot)
     setCategories((prev) => {
       const next = prev.filter((_, i) => i !== idx);
       return next.length ? next : [""];
@@ -92,30 +88,28 @@ export default function useSignupBuyer(maxCategories = 5) {
     });
 
 
-
-    // Fix active tab
     setActiveTab((prev) => {
       if (idx < prev) return prev - 1;
       if (idx === prev) return Math.max(0, prev - 1);
       return prev;
     });
 
-    // Optional: log it
     const name = (categoriesRef.current[idx] || `Category ${idx + 1}`).trim();
     if (name) addLog(`🗑️ Removed category: ${name}`, "system", name);
   };
 
 
 
-  // Helpers
   const addLog = (content, type, category) => {
     setLog((prev) => [...prev, { content, type, category }]);
   };
 
   const setStatusAt = (idx, status) => {
-    setStatuses((prev) => {
+    setStatuses(prev => {
       const copy = [...prev];
       copy[idx] = status;
+
+      statusesRef.current = copy;
       return copy;
     });
   };
@@ -166,7 +160,6 @@ export default function useSignupBuyer(maxCategories = 5) {
     });
   };
 
-  // --- auto-run helpers ---
   const getNextIndex = (from = -1) => {
     for (let i = from + 1; i < categoriesRef.current.length; i++) {
       const val = (categoriesRef.current[i] || "").trim();
@@ -191,9 +184,8 @@ export default function useSignupBuyer(maxCategories = 5) {
     setActiveTab(nextIdx);
     startCategory(nextIdx);
   };
-  // -----------------------
 
-  // Socket listeners for a category
+
   const registerSocketListeners = (socket, idx, deviceId) => {
     const catLabel = () => categoriesRef.current[idx] || `Category ${idx + 1}`;
 
@@ -223,11 +215,15 @@ export default function useSignupBuyer(maxCategories = 5) {
 
       if (intent === "UNDER_REVIEW") {
         addLog("Thank you for registering on Sahoolat AI. Your profile is under review.", "system", catLabel());
+        finishedRef.current[idx] = true;
         setStatusAt(idx, "done");
         setIsLocked(false);
         setCurrentRunningIndex(null);
-        if (socketsRef.current[idx]) socketsRef.current[idx].disconnect();
+
+        const s = socketsRef.current[idx];
+        if (s) s.disconnect();
         socketsRef.current[idx] = null;
+
         proceedNext(idx);
         return;
       }
@@ -264,7 +260,7 @@ export default function useSignupBuyer(maxCategories = 5) {
 
     socket.on("disconnect", (reason) => {
       addLog(`🔌 Disconnected: ${reason}`, "system", catLabel());
-      const wasDone = statusesRef.current[idx] === "done";
+      const wasDone = finishedRef.current[idx] || statusesRef.current[idx] === "done";
       setStatusAt(idx, wasDone ? "done" : "idle");
       setIsLocked(false);
       setCurrentRunningIndex(null);
@@ -289,7 +285,6 @@ export default function useSignupBuyer(maxCategories = 5) {
     addLog(`🔍 Sending category to OpenAI API: ${category}`, "user", category);
 
     try {
-      // 1) Create fresh session
       const sessionRes = await axios.post(ThirdPartyAPIs.CREATE_SESSION, {
         device_finger_print: generateDeviceId(),
         session_type: "SIGNUP_BUYER",
@@ -297,7 +292,6 @@ export default function useSignupBuyer(maxCategories = 5) {
       const deviceId = sessionRes?.data?.data?.device_finger_print;
       setDeviceIds((prev) => { const copy = [...prev]; copy[idx] = deviceId; return copy; });
 
-      // 2) Connect socket for this category
       const socket = io(ThirdPartyAPIs.SIGNUP_BUYER_CHAT, {
         transports: ["websocket"],
         query: { device_finger_print: deviceId },
@@ -305,7 +299,6 @@ export default function useSignupBuyer(maxCategories = 5) {
       socketsRef.current[idx] = socket;
       registerSocketListeners(socket, idx, deviceId);
 
-      // 3) First step: "sign_up"
       const res = await axios.post(NextAPIs.BUYER_AUTOMATE_TESTING, {
         intent: "sign_up",
         modelQuery: `I am a buyer who is looking for the ${category} profession to hire on Sahoolat AI.`,
@@ -346,10 +339,22 @@ export default function useSignupBuyer(maxCategories = 5) {
     }
   };
 
-  // UI actions
-  const startActiveCategory = () => startCategory(activeTab);
+  const startActiveCategory = () => {
+    setCommitted(prev => {
+      const copy = [...prev];
+      if ((categoriesRef.current[activeTab] || "").trim()) copy[activeTab] = true;
+      return copy;
+    });
+    startCategory(activeTab);
+  };
 
   const startRunAll = () => {
+    setCommitted(prev => {
+      const copy = [...prev];
+      if ((categoriesRef.current[activeTab] || "").trim()) copy[activeTab] = true;
+      return copy;
+    });
+
     setRunAll(true);
     const first = getNextIndex(-1);
     if (first === null) {
@@ -364,15 +369,11 @@ export default function useSignupBuyer(maxCategories = 5) {
   const runningName = currentRunningIndex !== null ? categories[currentRunningIndex] : null;
 
   return {
-    // state
     categories, activeTab, statuses, log, isLocked, runningName,
-    // actions
     setActiveTab, addCategoryTab, handleCategoryInput,
     startActiveCategory, startRunAll,
-    // NEW:
     removeCategory,
     committed,
-    // expose max
     maxCategories,
   };
 }
