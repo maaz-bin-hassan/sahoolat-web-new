@@ -1,6 +1,6 @@
 // const BASE_URL_SMART_SERVICE = "http://localhost:5005"
 
-const BASE_URL_SMART_SERVICE = process.env.BASE_URL_SMART_SERVICE;
+const BASE_URL_SMART_SERVICE = "https://sahoolat-smart.callsense.ai";
 
 export const ThirdPartyAPIs = {
   CREATE_SESSION: `${BASE_URL_SMART_SERVICE}/api/sessions/create`,
