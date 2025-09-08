@@ -9,12 +9,10 @@ export const ThirdPartyAPIs = {
 }
 
 
-
 export const NextAPIs = {
   AUTOMATE_TESTING_CLIENT: `/api/automate-test`,
   BUYER_AUTOMATE_TESTING:`/api/buyer-automate-test`,
 
-  // content update api
   PRIVACY_POLICY_API: "/api/privacy-policy",
   USER_GUIDELINES_API: "/api/user-guidelines",
   TERMS_CONDITION_LANDING_API: "/api/terms-condition-landing",
