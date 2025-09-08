@@ -1,264 +1,121 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
-import { io } from "socket.io-client";
-import axios from "axios";
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
-import { NextAPIs, ThirdPartyAPIs } from "@/utils/const";
+import { useEffect, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
+import useSignupSeller from "@/hooks/useSignupSeller";
+import CategoryTabs from "@/components/CategoryTabs";
+import CategoryInput from "@/components/CategoryInput";
+import Controls from "@/components/Controls";
+import LogsPanel from "@/components/LogsPanel";
 
-const promptTitle = "SIGNUP_SELLER";
-const country = "Pakistan";
-const language = "en";
-let deviceId = null;
-
-const generateDeviceId = () => {
-  return Math.floor(10000 + Math.random() * 90000).toString();
-};
-export default function SignupPage() {
-  const [category, setCategory] = useState("");
-  const [log, setLog] = useState([]);
-  const socketRef = useRef(null);
-  const [isConnected, setIsConnected] = useState(false);
-  const [isLocked, setIsLocked] = useState(false);
-
-
-  const messagesContainerRef = useRef(null);
+export default function SignupSellerPage() {
+  // Optional password gate (use your own env var)
+  const [authorized, setAuthorized] = useState(false);
+  const [mounted, setMounted] = useState(false);
+  const [pw, setPw] = useState("");
+  const [error, setError] = useState(null);
+  const router = useRouter();
 
   useEffect(() => {
-    axios.post(ThirdPartyAPIs.CREATE_SESSION, {
-        device_finger_print: generateDeviceId(),
-        session_type: "SIGNUP_BUYER",
-      })
-      .then((res) => {
-        deviceId = res.data.data.device_finger_print
-        const socket = io(ThirdPartyAPIs.SIGNUP_SELLER_CHAT, {
-          transports: ["websocket"],
-          query: { device_finger_print: res.data.data.device_finger_print },
-        });
-
-        socketRef.current = socket;
-
-        socket.on("connect", () => {
-          setIsConnected(true);
-          addLog(`✅ Connected to Socket.IO namespace ${ThirdPartyAPIs.SIGNUP_SELLER_CHAT}`, "system");
-        });
-
-        socket.on("connected", (data) => {
-          addLog(`📡 ${data.message}`, "system");
-        });
-
-        socket.on("error", (err) => {
-          addLog(`❌ Error: ${JSON.stringify(err)}`, "error");
-        });
-
-
-        socket.on("text-response", async (data) => {
-          addLog(data, "received");
-
-          const assistantResponse = data?.assistantResponse;
-          if (!assistantResponse) {
-            addLog("⚠️ Missing assistantResponse in server data.", "error");
-            return;
-          }
-
-          const { intent, modelQuery } = assistantResponse;
-
-          if(intent==="UNDER_REVIEW"){
-            addLog("Thank you for registering on Sahoolat AI. Your profile is under review","system")
-            return;
-          }
-          if (!intent) {
-            addLog("⚠️ No intent received, skipping next step", "error");
-            return;
-          }
-
-          if (intent === "COMPLETE_INFORMATION") {
-            addLog(`🎉 "COMPLETE_INFORMATION" recognized. Sending "✅"`, "system");
-            const message = {
-              language,
-              prompt_title: promptTitle,
-              country,
-              device_id: deviceId,
-              seller_query: "✅",
-              intent,
-            };
-            socketRef.current.emit("signup-seller", message);
-            addLog(message, "sent");
-            return;
-          }
-
-          try {
-            const res = await axios.post(NextAPIs.AUTOMATE_TESTING_CLIENT, {
-              intent,
-              modelQuery,
-              category,
-            });
-
-            const { seller_query } = res.data.response || {};
-            console.log("intent is this ",intent);
-            if (!seller_query) {
-              addLog("❌ Missing seller_query in LLM response.", "error");
-              return;
-            }
-
-            const message = {
-              language,
-              prompt_title: promptTitle,
-              country,
-              device_id: deviceId,
-              seller_query,
-              intent,
-            };
-
-            socketRef.current.emit("signup-seller", message);
-            addLog(message, "sent");
-          } catch (err) {
-            if(intent === "UNDER_REVIEW"){
-              return;
-            }
-            console.error(err);
-            addLog("❌ Failed to auto-respond based on intent", "error");
-            console.error(err);
-          }
-        });
-
-        socket.on("disconnect", (reason) => {
-          setIsConnected(false);
-          addLog(`🔌 Disconnected: ${reason}`, "system");
-        });
-
-        return () => {
-          socket.disconnect();
-        };
-      });
+    setMounted(true);
+    if (typeof window !== "undefined") {
+      if (sessionStorage.getItem("ss_ok") === "1") setAuthorized(true);
+    }
   }, []);
 
+  function handleSubmit(e) {
+    e.preventDefault();
+    setError(null);
+    const expected = process.env.NEXT_PUBLIC_SIGNUP_SELLER_PASSWORD || "";
+    if (pw && pw === expected) {
+      sessionStorage.setItem("ss_ok", "1");
+      setAuthorized(true);
+    } else {
+      setError("Wrong password");
+    }
+  }
+
+  if (!mounted) return null;
+  if (!authorized) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50 p-6">
+        <form onSubmit={handleSubmit} className="w-full max-w-sm bg-white rounded-2xl shadow p-6 space-y-4">
+          <h1 className="text-xl font-semibold text-center">Restricted Access</h1>
+          <p className="text-sm text-gray-600 text-center">Enter the access password to continue.</p>
+          <input type="password" className="w-full border rounded-lg px-3 py-2" placeholder="Password"
+                 value={pw} onChange={(e) => setPw(e.target.value)} autoFocus />
+          {error && <p className="text-red-600 text-sm">{error}</p>}
+          <div className="flex gap-2">
+            <button type="submit" className="flex-1 rounded-xl bg-black text-white py-2">Continue</button>
+            <button type="button" onClick={() => router.replace("/")} className="flex-1 rounded-xl bg-gray-200 text-gray-900 py-2">Cancel</button>
+          </div>
+        </form>
+      </div>
+    );
+  }
+
+  return <SignupSellerInner />;
+}
+
+function SignupSellerInner() {
+  const {
+    categories, committed, activeTab, statuses, log, isLocked, runningName,
+    setActiveTab, addCategoryTab, handleCategoryInput,
+    startActiveCategory, startRunAll, removeCategory, maxCategories,
+  } = useSignupSeller(5);
+
+  const messagesContainerRef = useRef(null);
   useEffect(() => {
     if (messagesContainerRef.current) {
-      messagesContainerRef.current.scrollTop =
-        messagesContainerRef.current.scrollHeight;
+      messagesContainerRef.current.scrollTop = messagesContainerRef.current.scrollHeight;
     }
   }, [log]);
 
-  const addLog = (content, type) => {
-    setLog((prev) => [...prev, { content, type }]);
-  };
-
-  const handleStart = async () => {
-    if (!category.trim()) return;
-
-    addLog(`🔍 Sending category to OpenAI API: ${category}`, "user");
-
-    try {
-      setIsLocked(true);
-      const res = await axios.post(NextAPIs.AUTOMATE_TESTING_CLIENT, {
-        intent: "sign_up",
-        modelQuery: `I am a ${category} looking to register on Sahoolat AI.`,
-        category,
-      });
-
-      const { intent, seller_query } = res.data.response || {};
-      addLog(`🤖 OpenAI Response: ${JSON.stringify(res.data.response)}`, "openai");
-
-
-      if (intent === "UNDER_REVIEW") {
-        addLog("🚫 Skipping socket emission because intent is UNDER_REVIEW", "system");
-        setIsLocked(false);
-        return;
-      }
-
-      if (intent && seller_query) {
-        const message = {
-          language,
-          prompt_title: promptTitle,
-          country,
-          device_id: deviceId,
-          seller_query,
-          intent,
-        };
-        socketRef.current.emit("signup-seller", message);
-        addLog(message, "sent");
-      } else {
-        setIsLocked(false);
-        addLog("❌ Intent or seller_query not found in OpenAI response.", "error");
-      }
-    } catch (err) {
-      setIsLocked(false);
-      addLog(
-        "⚠️ Failed to call OpenAI API via axios. Check network or response format.",
-        "error"
-      );
-      console.error(err);
-    }
-  };
-
-
   return (
-    <>
-      <Header />
-      <div className="min-h-screen bg-gray-50 p-6">
-        <div className="max-w-full mx-auto">
-          <h1 className="text-3xl font-bold text-center mb-6">
-            Smart Seller Signup (Auto)
-          </h1>
-
-          <div className="flex flex-col sm:flex-row gap-6">
-            <div className="w-full sm:w-1/3 bg-white rounded-lg shadow p-4">
-              <label className="block mb-4">
-                <span className="text-gray-700 font-medium">
-                  Enter Service Category
-                </span>
-                <input
-                  type="text"
-                  className="mt-2 w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                  value={category}
-                  onChange={(e) => setCategory(e.target.value)}
-                  placeholder="e.g. Software Engineer"
-                />
-              </label>
-              <button
-                onClick={handleStart}
-                className={`w-full ${isLocked? 'bg-gray-300 text-black': "bg-indigo-600 hover:bg-indigo-700 text-white"}  py-2 rounded transition`}
-                disabled={isLocked}
-              >
-                Start Signup Process
-              </button>
-            </div>
-
-            <div
-              className="w-full sm:w-2/3 bg-white rounded-lg shadow p-4 max-h-[800px] overflow-y-auto"
-              ref={messagesContainerRef}
-            >
-              <h2 className="text-lg font-semibold mb-2">Socket Messages</h2>
-              <div className="space-y-3">
-                {log.map((entry, i) => (
-                  <div
-                    key={i}
-                    className={`text-sm whitespace-pre-wrap p-3 rounded-md ${
-                      entry.type === "sent"
-                        ? "bg-blue-100 border-l-4 border-blue-500"
-                        : entry.type === "received"
-                          ? "bg-green-100 border-l-4 border-green-500"
-                          : entry.type === "error"
-                            ? "bg-red-100 border-l-4 border-red-500"
-                            : "bg-gray-100 border-l-4 border-gray-400"
-                    }`}
-                  >
-                    <strong>{entry.type.toUpperCase()}:</strong>
-                    <pre className="mt-1 whitespace-pre-wrap break-words">
-                      {typeof entry.content === "string"
-                        ? entry.content
-                        : JSON.stringify(entry.content, null, 2)}
-                    </pre>
-                  </div>
-                ))}
+    <div className="h-screen overflow-hidden bg-gray-50">
+      <div className="max-w-full mx-auto h-full grid grid-rows-[auto,1fr] gap-4 p-6">
+        <div>
+          <h1 className="text-3xl font-bold text-center mb-4">Smart Seller Signup (Auto)</h1>
+          {runningName && (
+            <div className="max-w-4xl mx-auto">
+              <div className="bg-indigo-50 border-l-4 border-indigo-600 p-3 rounded">
+                <span className="font-semibold">Current Category:</span>{" "}
+                <span className="text-indigo-700">{runningName}</span>
               </div>
             </div>
+          )}
+        </div>
+
+        <div className="flex flex-col sm:flex-row gap-6 h-full overflow-hidden">
+          <div className="w-full sm:w-1/3 bg-white rounded-lg shadow p-4 min-w-0 h-full overflow-y-auto">
+            <CategoryTabs
+              categories={categories}
+              committed={committed}
+              activeTab={activeTab}
+              statuses={statuses}
+              onTabClick={setActiveTab}
+              onAdd={addCategoryTab}
+              onDelete={removeCategory}
+              maxCategories={maxCategories}
+            />
+
+            <CategoryInput
+              value={categories[activeTab]}
+              onChange={handleCategoryInput}
+            />
+
+            <Controls
+              disabledStart={statuses[activeTab] === "running" || !(categories[activeTab] || "").trim()}
+              onStart={startActiveCategory}
+              disabledRunAll={statuses.some((s) => s === "running")}
+              onRunAll={startRunAll}
+              maxCategories={maxCategories}
+            />
           </div>
+
+          <LogsPanel log={log} ref={messagesContainerRef} />
         </div>
       </div>
-      <Footer />
-    </>
+    </div>
   );
 }
