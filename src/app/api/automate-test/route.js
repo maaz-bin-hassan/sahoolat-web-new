@@ -61,7 +61,6 @@ Assistant Question: ${modelQuery}`,
       parsed.seller_query = 'ASK: Please provide the required information.';
       if (!parsed.intent) parsed.intent = 'ASK';
     }
-    // --------------------------------------------------------------
 
     return NextResponse.json({ response: parsed });
 

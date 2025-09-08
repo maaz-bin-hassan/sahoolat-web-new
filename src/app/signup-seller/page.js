@@ -9,7 +9,7 @@ import Controls from "@/components/Controls";
 import LogsPanel from "@/components/LogsPanel";
 
 export default function SignupSellerPage() {
-  // Optional password gate (use your own env var)
+
   const [authorized, setAuthorized] = useState(false);
   const [mounted, setMounted] = useState(false);
   const [pw, setPw] = useState("");

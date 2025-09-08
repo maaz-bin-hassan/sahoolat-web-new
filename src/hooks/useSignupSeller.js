@@ -11,25 +11,23 @@ const language = "en";
 const genId = () => Math.floor(10000 + Math.random() * 90000).toString();
 
 export default function useSignupSeller(maxCategories = 5) {
-  // categories, committed label visibility, and active tab
+
   const [categories, setCategories] = useState([""]);
   const categoriesRef = useRef(categories);
   useEffect(() => { categoriesRef.current = categories; }, [categories]);
 
-  const [committed, setCommitted] = useState([false]); // controls when tab shows the typed name
+  const [committed, setCommitted] = useState([false]);
   const committedRef = useRef(committed);
   useEffect(() => { committedRef.current = committed; }, [committed]);
 
   const [activeTab, setActiveTab] = useState(0);
 
-  // per-category session/socket/status
   const socketsRef = useRef({});
   const [deviceIds, setDeviceIds] = useState([null]);
-  const [statuses, setStatuses] = useState(["idle"]); // idle | running | done | error
+  const [statuses, setStatuses] = useState(["idle"]);
   const statusesRef = useRef(statuses);
   useEffect(() => { statusesRef.current = statuses; }, [statuses]);
 
-  // run-all + UX
   const [runAll, setRunAll] = useState(false);
   const runAllRef = useRef(runAll);
   useEffect(() => { runAllRef.current = runAll; }, [runAll]);
@@ -38,12 +36,10 @@ export default function useSignupSeller(maxCategories = 5) {
   const [log, setLog] = useState([]);
   const [isLocked, setIsLocked] = useState(false);
 
-  // cleanup
   useEffect(() => () => {
     Object.values(socketsRef.current).forEach(s => s && s.disconnect());
   }, []);
 
-  // helpers
   const addLog = (content, type, category) =>
     setLog(prev => [...prev, { content, type, category }]);
 
@@ -66,10 +62,9 @@ export default function useSignupSeller(maxCategories = 5) {
 
   const handleCategoryInput = (value) => {
     setCategories(prev => { const c=[...prev]; c[activeTab]=value; return c; });
-    // do NOT change committed here; label visibility is controlled elsewhere
   };
 
-  // next runnable tab index for Run All
+
   const getNextIndex = (from = -1) => {
     for (let i = from + 1; i < categoriesRef.current.length; i++) {
       const val = (categoriesRef.current[i] || "").trim();
@@ -92,7 +87,7 @@ export default function useSignupSeller(maxCategories = 5) {
     startCategory(nextIdx);
   };
 
-  // socket listeners (SELLER)
+
   const registerSocketListeners = (socket, idx, deviceId) => {
     const catLabel = () => categoriesRef.current[idx] || `Category ${idx + 1}`;
 
@@ -110,7 +105,6 @@ export default function useSignupSeller(maxCategories = 5) {
       setStatusAt(idx, "error");
     });
 
-    // SELLER stream comes on "text-response"
     socket.on("text-response", async (data) => {
       addLog(data, "received", catLabel());
 
@@ -164,12 +158,11 @@ export default function useSignupSeller(maxCategories = 5) {
     });
   };
 
-  // start a category
+
   const startCategory = async (idx) => {
     const category = (categoriesRef.current[idx] || "").trim();
     if (!category) return;
 
-    // mark label as committed when the run starts (tabs will show the typed name)
     setCommitted(prev => { const c=[...prev]; c[idx] = true; return c; });
 
     setIsLocked(true);
@@ -177,7 +170,7 @@ export default function useSignupSeller(maxCategories = 5) {
     addLog(`🔍 Sending category to OpenAI API: ${category}`, "user", category);
 
     try {
-      // 1) create session
+
       const sessionRes = await axios.post(ThirdPartyAPIs.CREATE_SESSION, {
         device_finger_print: genId(),
         session_type: "SIGNUP_SELLER",
@@ -185,7 +178,7 @@ export default function useSignupSeller(maxCategories = 5) {
       const deviceId = sessionRes?.data?.data?.device_finger_print;
       setDeviceIds(prev => { const c=[...prev]; c[idx]=deviceId; return c; });
 
-      // 2) connect socket
+
       const socket = io(ThirdPartyAPIs.SIGNUP_SELLER_CHAT, {
         transports: ["websocket"],
         query: { device_finger_print: deviceId },
@@ -193,7 +186,6 @@ export default function useSignupSeller(maxCategories = 5) {
       socketsRef.current[idx] = socket;
       registerSocketListeners(socket, idx, deviceId);
 
-      // 3) first step to LLM
       const res = await axios.post(NextAPIs.AUTOMATE_TESTING_CLIENT, {
         intent: "sign_up",
         modelQuery: `I am a ${category} looking to register on Sahoolat AI.`,
@@ -263,12 +255,9 @@ export default function useSignupSeller(maxCategories = 5) {
     currentRunningIndex !== null ? categories[currentRunningIndex] : null;
 
   return {
-    // state
     categories, committed, activeTab, statuses, log, isLocked, runningName,
-    // actions
     setActiveTab, addCategoryTab, handleCategoryInput,
     startActiveCategory, startRunAll, removeCategory,
-    // misc
     maxCategories,
   };
 }
