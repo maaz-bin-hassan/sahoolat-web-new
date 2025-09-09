@@ -301,7 +301,7 @@ export default function useSignupSeller(maxCategories = 5) {
 
       const res = await axios.post(NextAPIs.AUTOMATE_TESTING_CLIENT, {
         intent: "sign_up",
-        modelQuery: `I am a buyer who is looking for the ${category} profession to hire on Sahoolat AI.`,
+        modelQuery: `I am a ${category} looking to register as Seller Role on Sahoolat AI Platform.`,
         category,
       });
 
