@@ -58,7 +58,7 @@ Assistant Question: ${modelQuery}`,
       typeof parsed.seller_query !== 'string' ||
       parsed.seller_query.trim() === ''
     ) {
-      parsed.seller_query = 'ASK: Please provide the required information.';
+      parsed.seller_query = 'ASK: Please provide the format how should I provide and which information';
       if (!parsed.intent) parsed.intent = 'ASK';
     }
 
