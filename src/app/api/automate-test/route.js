@@ -22,6 +22,9 @@ You must answer step-by-step in your own words like a real person from Pakistan 
 ⚠️ VERY IMPORTANT:
 Stay strictly within the "${category}" profession. If the participant gives an answer that includes unrelated skills (like graphic design or marketing), politely remind them that they are signing up as a "${category}" and ask them to provide only information relevant to that field.
 
+💱 CURRENCY RULE:
+Write prices as integers only (PKR implied). Do NOT include currency symbols/words, commas, or decimals. Example: 3000
+
 Respond STRICTLY with ONLY the following JSON structure (no extra text, disclaimers, or lines):
 {
   "intent": "<intent>",
@@ -58,7 +61,7 @@ Assistant Question: ${modelQuery}`,
       typeof parsed.seller_query !== 'string' ||
       parsed.seller_query.trim() === ''
     ) {
-      parsed.seller_query = 'ASK: Please provide the required information.';
+      parsed.seller_query = 'ASK: Please provide the format how should I provide and which information';
       if (!parsed.intent) parsed.intent = 'ASK';
     }
 

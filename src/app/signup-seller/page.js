@@ -88,16 +88,18 @@ function SignupSellerInner() {
 
         <div className="flex flex-col sm:flex-row gap-6 h-full overflow-hidden">
           <div className="w-full sm:w-1/3 bg-white rounded-lg shadow p-4 min-w-0 h-full overflow-y-auto">
+
             <CategoryTabs
               categories={categories}
-              committed={committed}
               activeTab={activeTab}
+              committed={committed}
               statuses={statuses}
               onTabClick={setActiveTab}
               onAdd={addCategoryTab}
               onDelete={removeCategory}
               maxCategories={maxCategories}
             />
+
 
             <CategoryInput
               value={categories[activeTab]}
