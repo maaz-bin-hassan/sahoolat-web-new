@@ -36,7 +36,9 @@ export default function BuyerExtras({
       </label>
 
       <label className="block">
-        <span className="text-gray-700 font-medium">Image URL (optional)</span>
+        <span className="text-gray-700 font-medium">
+          Assets URLs (JSON array, optional)
+        </span>
         <input
           type="url"
           className={`mt-2 w-full border rounded-md px-3 py-2 focus:outline-none focus:ring-2 ${

@@ -9,6 +9,7 @@ const promptTitle = "POST_A_JOB_WHEN_BUYER";
 const country = "PK";
 const language = "en";
 
+
 const generateDeviceId = () =>
   Math.floor(10000 + Math.random() * 90000).toString();
 
@@ -20,6 +21,18 @@ export default function usePostJobBuyer(maxCategories = 5) {
 
   const SOCKET_SEND_EVENT = "job-post-buyer";
   const SOCKET_RECV_EVENT = "post-job-response";
+
+   const resolveJobQueryForIntent = (idx, intent, defaultValue) => {
+       const raw = (imageUrls[idx] || "").trim();
+         if (intent === "ASSETS_URLS" && raw) {
+           return raw;
+         }
+
+         if (intent === "JOB_LOCATION" && typeof defaultValue === "object" && defaultValue !== null) {
+           try { return JSON.stringify(defaultValue); } catch { /* noop */ }
+         }
+       return defaultValue;
+     };
 
   const [activeTab, setActiveTab] = useState(0);
   const [committed, setCommitted] = useState([false]);
@@ -263,7 +276,6 @@ export default function usePostJobBuyer(maxCategories = 5) {
         return;
       }
 
-      // If assistant asks for confirmation to complete info
       if (intent === "COMPLETE_INFORMATION") {
         addLog(`🎉 "COMPLETE_INFORMATION" recognized. Sending "✅"`, "system", catLabel());
         const message = {
@@ -272,7 +284,7 @@ export default function usePostJobBuyer(maxCategories = 5) {
             country,
             device_id: deviceId,
             buyerId: (buyerIds[idx] || "").trim(),
-            intent,              // "COMPLETE_INFORMATION"
+            intent,
             job_query: "✅",
       };
         socketsRef.current[idx] && socketsRef.current[idx].emit(SOCKET_SEND_EVENT, message);
@@ -280,18 +292,16 @@ export default function usePostJobBuyer(maxCategories = 5) {
         return;
       }
 
-      // For all other intents, ask your Next API to craft seller_query.
       try {
         const cat = categoriesRef.current[idx];
          const res = await axios.post(`${NextAPIs.POST_JOB_BUYER_TESTING}`, {
              language,
-             job_query: modelQuery,              // feed the model’s last question/driver
+             job_query: modelQuery,
              prompt_title: promptTitle,
              buyerId: (buyerIds[idx] || "").trim(),
-             intent,                             // the current intent from assistantResponse
+             intent,
              country,
-             // (optional) pass your persisted booleans if you store them per tab
-               // analysis, ASSETS_URLS, JOB_LOCATION, JOB_BUDGET
+
                });
         const { intent: nextIntent, job_query: nextJobQuery } = res.data.response || {};
           if (!nextIntent || nextJobQuery === undefined) {
@@ -306,7 +316,7 @@ export default function usePostJobBuyer(maxCategories = 5) {
              device_id: deviceId,
            buyerId: (buyerIds[idx] || "").trim(),
             intent: nextIntent,
-           job_query: nextJobQuery,
+           job_query: resolveJobQueryForIntent(idx, nextIntent, nextJobQuery),
            };
          socketsRef.current[idx] && socketsRef.current[idx].emit(SOCKET_SEND_EVENT, message);
         addLog(message, "sent", catLabel());
@@ -395,7 +405,7 @@ export default function usePostJobBuyer(maxCategories = 5) {
                device_id: deviceId,
              buyerId: (buyerIds[idx] || "").trim(),
                intent,
-               job_query,   // send the assistant’s next question
+               job_query: resolveJobQueryForIntent(idx, intent, job_query),   // send the assistant’s next question
              };
            socketsRef.current[idx] && socketsRef.current[idx].emit(SOCKET_SEND_EVENT, message);
         addLog(message, "sent", category);

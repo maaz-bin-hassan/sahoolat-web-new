@@ -112,8 +112,10 @@ INTENT ANSWER GUIDE (echo intent; set "job_query" accordingly)
    • Keep it a single concise string (no arrays here).
 
 9) JOB_LOCATION
-   • Return city and area in the exact format "City,Area" (e.g., "Karachi,North Nazimabad", "Lahore,Gulberg").
-   • Do **not** include LAT/LON.
+   • Return a JSON object in job_query with keys:
+     {"JOB_LOCATION":"City,Area","LAT":<number>,"LON":<number>}
+   • "JOB_LOCATION" must be "City,Area" (e.g., "Islamabad,Soan Garden").
+   • If LAT/LON are unknown, use 0 (integers or floats are fine).
 
 10) JOB_BUDGET
     • Return a numeric PKR value only (e.g., 15000). No symbols, commas, or words.
@@ -139,7 +141,8 @@ Incoming:
   intent=JOB_LOCATION
   modelQuery="Where is the job located?"
 Answer:
-  {"intent":"JOB_LOCATION","job_query":"Karachi,North Nazimabad"}
+  {"intent":"JOB_LOCATION","job_query":{"JOB_LOCATION":"Islamabad,Soan Garden","LAT":50,"LON":30}}
+
 
 Incoming:
   intent=PAYMENT_TYPE
