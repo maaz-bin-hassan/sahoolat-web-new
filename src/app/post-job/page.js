@@ -124,7 +124,7 @@ function PostJobBuyerInner() {
         <div className="max-w-full mx-auto h-full grid grid-rows-[auto,1fr] gap-4 p-6">
           <div>
             <h1 className="text-3xl font-bold text-center mb-4">
-              Post Job Buyer (Auto)
+              Smart Job Post Buyer (Auto)
             </h1>
             {runningName && (
               <div className="max-w-4xl mx-auto">

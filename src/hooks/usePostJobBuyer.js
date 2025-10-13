@@ -5,8 +5,8 @@ import { io } from "socket.io-client";
 import axios from "axios";
 import { NextAPIs, ThirdPartyAPIs } from "@/utils/const";
 
-const promptTitle = "SIGNUP_BUYER";
-const country = "Pakistan";
+const promptTitle = "POST_A_JOB_WHEN_BUYER";
+const country = "PK";
 const language = "en";
 
 const generateDeviceId = () =>
@@ -17,6 +17,9 @@ export default function usePostJobBuyer(maxCategories = 5) {
   const [categories, setCategories] = useState([""]);
   const categoriesRef = useRef(categories);
   useEffect(() => { categoriesRef.current = categories; }, [categories]);
+
+  const SOCKET_SEND_EVENT = "job-post-buyer";
+  const SOCKET_RECV_EVENT = "post-job-response";
 
   const [activeTab, setActiveTab] = useState(0);
   const [committed, setCommitted] = useState([false]);
@@ -217,7 +220,7 @@ export default function usePostJobBuyer(maxCategories = 5) {
     const catLabel = () => categoriesRef.current[idx] || `Category ${idx + 1}`;
 
     socket.on("connect", () => {
-      addLog(`✅ Connected to ${ThirdPartyAPIs.SIGNUP_BUYER_CHAT} (session ${deviceId})`, "system", catLabel());
+      addLog(`✅ Connected to ${ThirdPartyAPIs.POST_JOB_BUYER} (session ${deviceId})`, "system", catLabel());
       setStatusAt(idx, "running");
     });
 
@@ -230,7 +233,7 @@ export default function usePostJobBuyer(maxCategories = 5) {
       setStatusAt(idx, "error");
     });
 
-    socket.on("buyer-signup-response", async (data) => {
+    socket.on(SOCKET_RECV_EVENT, async (data) => {
       addLog(data, "received", catLabel());
 
       const assistantResponse = data?.assistantResponse;
@@ -264,19 +267,15 @@ export default function usePostJobBuyer(maxCategories = 5) {
       if (intent === "COMPLETE_INFORMATION") {
         addLog(`🎉 "COMPLETE_INFORMATION" recognized. Sending "✅"`, "system", catLabel());
         const message = {
-          language,
-          prompt_title: promptTitle,
-          country,
-          device_id: deviceId,
-          seller_query: "✅",
-          intent,
-          // Optional extras attached without breaking server
-          extras: {
-            image_url: imageUrls[idx] || null,
-            buyer_id: buyerIds[idx] || null,
-          },
-        };
-        socketsRef.current[idx] && socketsRef.current[idx].emit("signup-buyer", message);
+            language,
+            prompt_title: promptTitle,
+            country,
+            device_id: deviceId,
+            buyerId: ("342eb5c4-4297-45da-bc2d-96184a7c8891").trim(),
+            intent,              // "COMPLETE_INFORMATION"
+            job_query: "✅",
+      };
+        socketsRef.current[idx] && socketsRef.current[idx].emit(SOCKET_SEND_EVENT, message);
         addLog(message, "sent", catLabel());
         return;
       }
@@ -284,34 +283,47 @@ export default function usePostJobBuyer(maxCategories = 5) {
       // For all other intents, ask your Next API to craft seller_query.
       try {
         const cat = categoriesRef.current[idx];
-        const res = await axios.post(NextAPIs.BUYER_AUTOMATE_TESTING, {
-          intent,
-          modelQuery,
-          category: cat,
-          // NEW: pass extras through to your backend/LLM
-          image_url: imageUrls[idx] || null,
-          buyer_id: buyerIds[idx] || null,
-        });
+         const res = await axios.post(`${NextAPIs.POST_JOB_BUYER_TESTING}`, {
+             language,
+             job_query: modelQuery,              // feed the model’s last question/driver
+             prompt_title: promptTitle,
+             buyerId: ("342eb5c4-4297-45da-bc2d-96184a7c8891").trim(),
+             intent,                             // the current intent from assistantResponse
+             country,
+             // (optional) pass your persisted booleans if you store them per tab
+               // analysis, ASSETS_URLS, JOB_LOCATION, JOB_BUDGET
+               });
+        const { intent: nextIntent, job_query: nextJobQuery } = res.data.response || {};
+          if (!nextIntent || nextJobQuery === undefined) {
+             addLog("❌ Missing intent/modelQuery in LLM response.", "error", catLabel());
+             return;
+           }
 
-        const { seller_query } = res.data.response || {};
-        if (!seller_query) {
-          addLog("❌ Missing seller_query in LLM response.", "error", catLabel());
-          return;
-        }
+        // const message = {
+        //   language,
+        //   prompt_title: promptTitle,
+        //   country,
+        //   device_id: deviceId,
+        //   buyerId: (buyerIds[idx] || "").trim(),
+        //   intent,
+        //   // IMPORTANT: For job system, send job_query (not seller_query)
+        //   job_query: res?.data?.response?.modelQuery || modelQuery || "",
+        //   // (Optional) include current booleans if you manage them on the client
+        //   // analysis,
+        //   // ASSETS_URLS, JOB_LOCATION, JOB_BUDGET
+        // };
+        // socketsRef.current[idx] && socketsRef.current[idx].emit(SOCKET_SEND_EVENT, message);
 
-        const message = {
-          language,
-          prompt_title: promptTitle,
-          country,
-          device_id: deviceId,
-          seller_query,
-          intent,
-          extras: {
-            image_url: imageUrls[idx] || null,
-            buyer_id: buyerIds[idx] || null,
-          },
-        };
-        socketsRef.current[idx] && socketsRef.current[idx].emit("signup-buyer", message);
+         const message = {
+               language,
+             prompt_title: promptTitle,
+             country,
+             device_id: deviceId,
+           buyerId: ("342eb5c4-4297-45da-bc2d-96184a7c8891").trim(),
+            intent: nextIntent,
+           job_query: nextJobQuery,
+           };
+         socketsRef.current[idx] && socketsRef.current[idx].emit(SOCKET_SEND_EVENT, message);
         addLog(message, "sent", catLabel());
       } catch (err) {
         console.error(err);
@@ -347,7 +359,7 @@ export default function usePostJobBuyer(maxCategories = 5) {
     try {
       const sessionRes = await axios.post(ThirdPartyAPIs.CREATE_SESSION, {
         device_finger_print: generateDeviceId(),
-        session_type: "SIGNUP_BUYER",
+        session_type: "POST_A_JOB_WHEN_BUYER",
       });
       const deviceId = sessionRes?.data?.data?.device_finger_print;
       setDeviceIds((prev) => {
@@ -356,25 +368,28 @@ export default function usePostJobBuyer(maxCategories = 5) {
         return copy;
       });
 
-      const socket = io(ThirdPartyAPIs.SIGNUP_BUYER_CHAT, {
+      const socket = io(ThirdPartyAPIs.POST_JOB_BUYER, {
         transports: ["websocket"],
-        query: { device_finger_print: deviceId },
+        query: { device_finger_print: 'zain' },
       });
       socketsRef.current[idx] = socket;
       registerSocketListeners(socket, idx, deviceId);
 
       // INITIAL LLM bootstrap call (now includes extras)
-      const res = await axios.post(NextAPIs.BUYER_AUTOMATE_TESTING, {
-        intent: "sign_up",
-        modelQuery: `I am a buyer who is looking for the ${category} profession to hire on Sahoolat AI.`,
-        category,
-        image_url: imageUrls[idx] || null,
-        buyer_id: buyerIds[idx] || null,
-      });
+       const res = await axios.post(`${NextAPIs.POST_JOB_BUYER_TESTING}`, {
+           language,
+           job_query: `I want to post a job for ${category}.`,
+           prompt_title: promptTitle,
+         buyerId: ("342eb5c4-4297-45da-bc2d-96184a7c8891").trim(),
+           intent: "JOB_TITLE",       // first turn always starts here
+           country,
 
+
+         });
       addLog(`🤖 OpenAI Response: ${JSON.stringify(res.data.response)}`, "openai", category);
 
-      const { intent, seller_query } = res.data.response || {};
+      const { intent, job_query } = res.data.response || {};
+
       if (intent === "UNDER_REVIEW") {
         addLog("🚫 Skipping socket emission because intent is UNDER_REVIEW", "system", category);
         setStatusAt(idx, "done");
@@ -387,23 +402,20 @@ export default function usePostJobBuyer(maxCategories = 5) {
         return;
       }
 
-      if (intent && seller_query) {
-        const message = {
-          language,
-          prompt_title: promptTitle,
-          country,
-          device_id: deviceId,
-          seller_query,
-          intent,
-          extras: {
-            image_url: imageUrls[idx] || null,
-            buyer_id: buyerIds[idx] || null,
-          },
-        };
-        socketsRef.current[idx] && socketsRef.current[idx].emit("signup-buyer", message);
+      if (intent && job_query !== undefined) {
+           const message = {
+                 language,
+               prompt_title: promptTitle,
+               country,
+               device_id: deviceId,
+             buyerId: ("342eb5c4-4297-45da-bc2d-96184a7c8891").trim(),
+               intent,
+               job_query,   // send the assistant’s next question
+             };
+           socketsRef.current[idx] && socketsRef.current[idx].emit(SOCKET_SEND_EVENT, message);
         addLog(message, "sent", category);
       } else {
-        addLog("❌ Intent or seller_query not found in OpenAI response.", "error", category);
+        addLog("❌ Missing intent/modelQuery in OpenAI response.", "error", category);
         setStatusAt(idx, "error");
         setIsLocked(false);
         setCurrentRunningIndex(null);

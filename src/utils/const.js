@@ -5,13 +5,15 @@ const BASE_URL_SMART_SERVICE = process.env.NEXT_PUBLIC_BASE_URL_SMART_SERVICE;
 export const ThirdPartyAPIs = {
   CREATE_SESSION: `${BASE_URL_SMART_SERVICE}/api/sessions/create`,
   SIGNUP_SELLER_CHAT: `${BASE_URL_SMART_SERVICE}/signUpSellerChat`,
-  SIGNUP_BUYER_CHAT:  `${BASE_URL_SMART_SERVICE}/signUpBuyerChat`
+  SIGNUP_BUYER_CHAT:  `${BASE_URL_SMART_SERVICE}/signUpBuyerChat`,
+  POST_JOB_BUYER: `${BASE_URL_SMART_SERVICE}/jobPost`
 }
 
 
 export const NextAPIs = {
   AUTOMATE_TESTING_CLIENT: `/api/automate-test`,
   BUYER_AUTOMATE_TESTING:`/api/buyer-automate-test`,
+  POST_JOB_BUYER_TESTING:`/api/post-job-automate`,
 
   PRIVACY_POLICY_API: "/api/privacy-policy",
   USER_GUIDELINES_API: "/api/user-guidelines",
