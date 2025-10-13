@@ -299,21 +299,6 @@ export default function usePostJobBuyer(maxCategories = 5) {
              return;
            }
 
-        // const message = {
-        //   language,
-        //   prompt_title: promptTitle,
-        //   country,
-        //   device_id: deviceId,
-        //   buyerId: (buyerIds[idx] || "").trim(),
-        //   intent,
-        //   // IMPORTANT: For job system, send job_query (not seller_query)
-        //   job_query: res?.data?.response?.modelQuery || modelQuery || "",
-        //   // (Optional) include current booleans if you manage them on the client
-        //   // analysis,
-        //   // ASSETS_URLS, JOB_LOCATION, JOB_BUDGET
-        // };
-        // socketsRef.current[idx] && socketsRef.current[idx].emit(SOCKET_SEND_EVENT, message);
-
          const message = {
                language,
              prompt_title: promptTitle,
@@ -370,7 +355,7 @@ export default function usePostJobBuyer(maxCategories = 5) {
 
       const socket = io(ThirdPartyAPIs.POST_JOB_BUYER, {
         transports: ["websocket"],
-        query: { device_finger_print: 'zain' },
+        query: { device_finger_print: deviceId },
       });
       socketsRef.current[idx] = socket;
       registerSocketListeners(socket, idx, deviceId);
