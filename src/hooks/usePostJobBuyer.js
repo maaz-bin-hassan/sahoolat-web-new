@@ -271,7 +271,7 @@ export default function usePostJobBuyer(maxCategories = 5) {
             prompt_title: promptTitle,
             country,
             device_id: deviceId,
-            buyerId: ("342eb5c4-4297-45da-bc2d-96184a7c8891").trim(),
+            buyerId: (buyerIds[idx] || "").trim(),
             intent,              // "COMPLETE_INFORMATION"
             job_query: "✅",
       };
@@ -287,7 +287,7 @@ export default function usePostJobBuyer(maxCategories = 5) {
              language,
              job_query: modelQuery,              // feed the model’s last question/driver
              prompt_title: promptTitle,
-             buyerId: ("342eb5c4-4297-45da-bc2d-96184a7c8891").trim(),
+             buyerId: (buyerIds[idx] || "").trim(),
              intent,                             // the current intent from assistantResponse
              country,
              // (optional) pass your persisted booleans if you store them per tab
@@ -304,7 +304,7 @@ export default function usePostJobBuyer(maxCategories = 5) {
              prompt_title: promptTitle,
              country,
              device_id: deviceId,
-           buyerId: ("342eb5c4-4297-45da-bc2d-96184a7c8891").trim(),
+           buyerId: (buyerIds[idx] || "").trim(),
             intent: nextIntent,
            job_query: nextJobQuery,
            };
@@ -365,7 +365,7 @@ export default function usePostJobBuyer(maxCategories = 5) {
            language,
            job_query: `I want to post a job for ${category}.`,
            prompt_title: promptTitle,
-         buyerId: ("342eb5c4-4297-45da-bc2d-96184a7c8891").trim(),
+         buyerId: (buyerIds[idx] || "").trim(),
            intent: "JOB_TITLE",       // first turn always starts here
            country,
 
@@ -393,7 +393,7 @@ export default function usePostJobBuyer(maxCategories = 5) {
                prompt_title: promptTitle,
                country,
                device_id: deviceId,
-             buyerId: ("342eb5c4-4297-45da-bc2d-96184a7c8891").trim(),
+             buyerId: (buyerIds[idx] || "").trim(),
                intent,
                job_query,   // send the assistant’s next question
              };
