@@ -9,8 +9,6 @@ export async function POST(req) {
 
   try {
     const { intent, modelQuery, category } = await req.json();
-    console.log("this is intent :", intent);
-    console.log("this is modelQuery 123:", modelQuery);
 
     // If a new category is provided, update the persisted value.
     // Otherwise, use the persisted category.
