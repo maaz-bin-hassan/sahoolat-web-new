@@ -77,12 +77,14 @@ INTENT ANSWER GUIDE (echo intent; set "job_query" accordingly)
    • Avoid iOS/Android or niche software unless context already asked for it.
 
 2) JOB_CATEGORY
-   • Return **one** label only from a neutral, multi-domain set:
+   • Return **only** one exact label (no sentences or explanations) from this fixed list:
      "Home repair","Installation","Maintenance","Cleaning",
      "Event services","Photography & video","Design & creative",
      "IT & software","Marketing","Writing & translation",
      "Education & tutoring","Transport & logistics",
      "Legal & tax","Health & wellness".
+   • Do **not** include any extra words, punctuation, or context — only the chosen label.
+   • Never start with phrases like “The job category is” or “It falls under”. Just output the label.
 
 3) DESCRIPTION  (≥ 70 words)
    • Write one natural buyer paragraph (not a list) covering:
@@ -116,6 +118,7 @@ INTENT ANSWER GUIDE (echo intent; set "job_query" accordingly)
      {"JOB_LOCATION":"City,Area","LAT":<number>,"LON":<number>}
    • "JOB_LOCATION" must be "City,Area" (e.g., "Islamabad,Soan Garden").
    • If LAT/LON are unknown, use 0 (integers or floats are fine).
+   • Do not forget the format of JOB_LOCATION!
 
 10) JOB_BUDGET
     • Return a numeric PKR value only (e.g., 15000). No symbols, commas, or words.
