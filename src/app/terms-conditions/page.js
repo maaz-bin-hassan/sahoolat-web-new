@@ -2,8 +2,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { NextAPIs } from "@/utils/const";
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
 import Link from 'next/link';
 
 
@@ -30,7 +28,6 @@ export default function TermsConditions() {
 
   return (
     <>
-      <Header/>
       <section className="w-full pb-16 text-gray-800">
         <div className="bg-gradient-to-r from-teal-400 to-orange-400 py-12 px-4 text-center text-white">
           <h2 className="text-3xl md:text-5xl font-extrabold mb-4">
@@ -72,7 +69,6 @@ export default function TermsConditions() {
           ))}
         </div>
       </section>
-      <Footer/>
     </>
   );
 }

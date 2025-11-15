@@ -1,8 +1,6 @@
 'use client';
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
 import { NextAPIs } from '@/utils/const';
 
 export default function HowItWorks() {
@@ -25,7 +23,6 @@ export default function HowItWorks() {
 
   return (
     <>
-      <Header/>
       <section className="w-full pb-16 text-gray-800">
         {/* Mission Header  */}
         <div className="bg-gradient-to-r from-teal-400 to-orange-400 py-12 px-4 text-center text-white">
@@ -61,7 +58,6 @@ export default function HowItWorks() {
         </div>
 
       </section>
-      <Footer/>
     </>
   );
 }

@@ -3,8 +3,6 @@
 import { NextAPIs } from "@/utils/const";
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
 
 export default function HowItWorks() {
   const [guidelinesTitle, setGuidelinesTitle] = useState('');
@@ -24,7 +22,6 @@ export default function HowItWorks() {
 
   return (
     <>
-      <Header/>
       <section className="w-full pb-16 text-gray-800">
         <div className="bg-gradient-to-r from-teal-400 to-orange-400 py-12 px-4 text-center text-white">
           <h2 className="text-3xl md:text-5xl font-extrabold mb-4">
@@ -56,9 +53,7 @@ export default function HowItWorks() {
                     Get it done!
                 </span>
         </div>
-
       </section>
-      <Footer/>
     </>
   );
 }
