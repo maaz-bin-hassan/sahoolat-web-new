@@ -20,8 +20,10 @@ export const metadata = {
   metadataBase: new URL("https://www.sahoolatai.com"),
   title: "Sahoolat AI - Find Skilled Experts or Get Hired Instantly",
   description:
-    "Sahoolat AI connects users with skilled professionals and service providers using voice-based AI. Find experts or get hired instantly with just your voice!",
+    "Sahoolat AI Web connects users (professionals/needy) to web interface by scanning the QR code from Mobile App. Through this with skilled professionals and service providers using voice-based AI. Find experts or get hired instantly with just your voice!",
   keywords: [
+    "Web Sahoolat AI",
+    "Sahoolat AI Web",
     "Sahoolat AI",
     "AI-powered hiring",
     "find experts",
@@ -30,7 +32,7 @@ export const metadata = {
     "voice-based AI",
     "instant job matching",
   ],
-  authors: [{ name: "Sahoolat AI Team", url: "https://www.sahoolatai.com" }],
+  authors: [{ name: "Sahoolat AI Team", url: "https://web.sahoolatai.com" }],
   robots: {
     index: true,
     follow: true,
@@ -38,17 +40,17 @@ export const metadata = {
   },
   openGraph: {
     type: "website",
-    url: "https://www.sahoolatai.com",
-    title: "Sahoolat AI - Hire & Get Hired Instantly",
+    url: "https://web.sahoolatai.com",
+    title: "Sahoolat AI Web - Hire & Get Hired Instantly",
     description:
-      "Sahoolat AI helps users connect with skilled professionals and job seekers using AI-powered voice-based matching.",
-    siteName: "Sahoolat AI",
+      "Sahoolat AI Web helps users connect with skilled professionals and job seekers using AI-powered voice-based matching.",
+    siteName: "Sahoolat AI Web",
     images: [
       {
-        url: "https://www.sahoolatai.com/assets/og-image.png",
+        url: "https://web.sahoolatai.com/assets/og-image.png",
         width: 1200,
         height: 630,
-        alt: "Sahoolat AI - AI-powered job matching platform",
+        alt: "Sahoolat AI Web - AI-powered job matching platform",
       },
     ],
   },
@@ -116,10 +118,6 @@ export default function RootLayout({ children }) {
     <body
       className={`${geistSans.variable} ${geistMono.variable} antialiased bg-[#F2F6F7]`}
     >
-    {/* Chatbot script */}
-    <div className="z-[500]">
-      <Script src="https://sahoolat-chatbot.vercel.app/chatbot.js" strategy="lazyOnload" />
-    </div>
 
     {/* Google Translate (optional performance improvement) */}
     <GoogleTranslate />
