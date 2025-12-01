@@ -1,10 +1,10 @@
 import { Poppins } from "next/font/google";
 import "./globals.css";
-import Header from "@/components/SiteLayout/Header";
-import Footer from "@/components/SiteLayout/Footer";
+import Header from "../components/SiteLayout/Header";
+import Footer from "../components/SiteLayout/Footer";
 import { ThemeProvider } from "next-themes";
-import ScrollToTop from "@/components/ScrollToTop";
-import Aoscompo from "@/utils/aos";
+import ScrollToTop from "../components/ScrollToTop";
+import Aoscompo from "../utils/aos";
 import { Metadata } from "next";
 
 const poppins = Poppins({ 
