@@ -5,7 +5,7 @@ import { Icon } from "@iconify/react";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Image from "next/image";
-import { getImagePrefix } from "../../../utils/utils";
+import { getImagePrefix } from "@/utils/utils";
 
 const faqData = [
   {
@@ -42,51 +42,6 @@ const faqData = [
   },
 ];
 
-// Simple FAQ matching function (client-side, no API needed)
-const findAnswer = (question: string): string => {
-  const lowerQuestion = question.toLowerCase();
-  
-  // Find the best matching FAQ
-  for (const faq of faqData) {
-    const keywords = faq.question.toLowerCase().split(" ");
-    const matchCount = keywords.filter(word => 
-      word.length > 3 && lowerQuestion.includes(word)
-    ).length;
-    
-    if (matchCount >= 2 || lowerQuestion.includes(faq.question.toLowerCase().substring(0, 20))) {
-      return faq.answer;
-    }
-  }
-  
-  // Check for specific keywords
-  if (lowerQuestion.includes("what") && lowerQuestion.includes("sahoolat")) {
-    return faqData[0].answer;
-  }
-  if (lowerQuestion.includes("how") && (lowerQuestion.includes("work") || lowerQuestion.includes("use"))) {
-    return faqData[1].answer;
-  }
-  if (lowerQuestion.includes("free") || lowerQuestion.includes("cost") || lowerQuestion.includes("price")) {
-    return faqData[2].answer;
-  }
-  if (lowerQuestion.includes("find") || lowerQuestion.includes("provider") || lowerQuestion.includes("expert")) {
-    return faqData[3].answer;
-  }
-  if (lowerQuestion.includes("data") || lowerQuestion.includes("privacy") || lowerQuestion.includes("secure") || lowerQuestion.includes("protect")) {
-    return faqData[4].answer;
-  }
-  if (lowerQuestion.includes("payment") || lowerQuestion.includes("pay") || lowerQuestion.includes("easypaisa") || lowerQuestion.includes("jazzcash")) {
-    return faqData[5].answer;
-  }
-  if (lowerQuestion.includes("download") || lowerQuestion.includes("install") || lowerQuestion.includes("app") || lowerQuestion.includes("application")) {
-    return faqData[6].answer;
-  }
-  if (lowerQuestion.includes("invest") || lowerQuestion.includes("investor") || lowerQuestion.includes("ceo") || lowerQuestion.includes("meeting")) {
-    return faqData[7].answer;
-  }
-  
-  return "I'm sorry, I couldn't find a specific answer to your question. Please try asking about: how Sahoolat AI works, pricing, finding service providers, data protection, payment methods, or downloading the app. You can also contact us at <a href='mailto:support@sahoolat.ai' class='text-primary underline'>support@sahoolat.ai</a>";
-};
-
 interface Message {
   type: "user" | "bot";
   text: string;
@@ -107,7 +62,6 @@ const FAQChatbot = () => {
   const messagesContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    // Initialize fingerprint and create session
     if (typeof window !== "undefined") {
       const fp = localStorage.getItem("fingerprint") || `fp-${Date.now()}`;
       localStorage.setItem("fingerprint", fp);
@@ -130,7 +84,7 @@ const FAQChatbot = () => {
 
   const sendMessage = async (message: string) => {
     if (!message.trim()) return;
-    
+
     setMessages((prev) => [...prev, { type: "user", text: message }]);
     setLoading(true);
     setInput("");
@@ -166,19 +120,19 @@ const FAQChatbot = () => {
         toastClassName="bg-white shadow-card-hover"
       />
 
-      <section className="min-h-screen bg-gradient-to-br from-secondary/30 via-white to-primary/10 pt-32 pb-8">
+      <section className="min-h-screen bg-gradient-to-br from-secondary/30 via-white to-primary/10 pt-32 pb-20">
         <div className="container mx-auto lg:max-w-screen-xl px-4">
           {/* Header */}
           <motion.div 
             initial={{ y: -30, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.5 }}
-            className="text-center mb-4"
+            className="text-center mb-8"
           >
-            <h1 className="text-3xl md:text-4xl font-bold text-midnight_text mb-2">
+            <h1 className="text-4xl md:text-5xl font-bold text-midnight_text mb-4">
               💬 Ask <span className="text-primary">Sahoolat</span><span className="text-orange">.AI</span>
             </h1>
-            <p className="text-dark_grey text-base">
+            <p className="text-dark_grey text-lg">
               Get instant answers to your questions about our platform
             </p>
           </motion.div>
@@ -192,8 +146,8 @@ const FAQChatbot = () => {
           >
             <div className="bg-white rounded-3xl shadow-card-hover border-2 border-secondary overflow-hidden">
               {/* Chat Header */}
-              <div className="bg-primary px-4 py-3 flex items-center gap-3">
-                <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center">
+              <div className="bg-primary px-6 py-4 flex items-center gap-3">
+                <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center">
                   <Icon icon="mdi:robot-happy" className="text-primary" width="24" />
                 </div>
                 <div>
@@ -209,7 +163,7 @@ const FAQChatbot = () => {
               {/* Messages Area */}
               <div 
                 ref={messagesContainerRef}
-                className="h-[55vh] overflow-y-auto p-4 space-y-3 bg-gradient-to-b from-secondary/10 to-white"
+                className="h-[50vh] overflow-y-auto p-6 space-y-4 bg-gradient-to-b from-secondary/10 to-white scroll-smooth"
               >
                 {messages.map((msg, index) => (
                   <motion.div
@@ -284,17 +238,17 @@ const FAQChatbot = () => {
 
               {/* Quick Questions */}
               {showShortcuts && (
-                <div className="px-4 py-3 bg-secondary/20 border-t border-secondary">
-                  <p className="text-dark_grey text-xs mb-2 font-medium">
+                <div className="px-6 py-4 bg-secondary/20 border-t border-secondary">
+                  <p className="text-dark_grey text-sm mb-3 font-medium">
                     ⚡ Quick Questions:
                   </p>
-                  <div className="flex flex-wrap gap-3">
+                  <div className="flex flex-wrap gap-2">
                     {faqData.slice(0, 6).map(({ question }, index) => (
                       <motion.button
                         key={index}
                         whileHover={{ scale: 1.02 }}
                         whileTap={{ scale: 0.98 }}
-                        className="px-3 py-3 rounded-full bg-white border border-primary/20 hover:border-primary hover:bg-primary hover:text-white text-midnight_text font-medium text-xs transition-all duration-300 shadow-sm"
+                        className="px-4 py-2 rounded-full bg-white border-2 border-primary/20 hover:border-primary hover:bg-primary hover:text-white text-midnight_text font-medium text-xs md:text-sm transition-all duration-300 shadow-sm"
                         onClick={() => sendMessage(question)}
                       >
                         {question}
@@ -306,7 +260,7 @@ const FAQChatbot = () => {
 
               {/* Input Area */}
               <form
-                className="px-4 py-3 bg-white border-t-2 border-secondary flex items-center gap-2"
+                className="px-6 py-4 bg-white border-t-2 border-secondary flex items-center gap-3"
                 onSubmit={(e) => {
                   e.preventDefault();
                   sendMessage(input);
