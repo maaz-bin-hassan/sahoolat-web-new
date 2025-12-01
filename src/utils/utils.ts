@@ -1,7 +1,6 @@
 const getImagePrefix = () => {
-  return process.env.NODE_ENV === "production"
-    ? "/SahoolatAi/"
-    : "";
+  // For Vercel deployment, always use root path
+  return "/";
 };
 
 export { getImagePrefix };
