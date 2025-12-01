@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { createSession } from '@/utils/sessionManager';
+import { createSession } from '../../../utils/sessionManager';
 
 // Optional: whitelist specific domains only
 const allowedOrigins = [

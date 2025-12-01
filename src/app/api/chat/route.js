@@ -1,7 +1,7 @@
 import {NextResponse} from "next/server";
-import {getSession, updateSession} from "@/utils/sessionManager";
+import {getSession, updateSession} from "../../../utils/sessionManager";
 import OpenAI from "openai";
-import {SYSTEM_PROMPT} from "@/utils/SystemPrompts";
+import {SYSTEM_PROMPT} from "../../../utils/SystemPrompts";
 
 // Initialize OpenAI
 const openai = new OpenAI({
