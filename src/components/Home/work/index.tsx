@@ -7,9 +7,9 @@ import { getImagePrefix } from "../../../utils/utils";
 const Work = () => {
   const processSteps = [
     {
-      icon: "mdi:microphone",
-      title: "Voice Request",
-      text: "Speak your needs clearly and let AI understand your requirements",
+      icon: "mdi:pencil-box",
+      title: "Write Your Request",
+      text: "Describe your requirements and let the bot understand your needs",
       position: "left-top",
       iconBg: "bg-primary",
     },
