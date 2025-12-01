@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { getImagePrefix } from "@/utils/utils";
+import { getImagePrefix } from "../../../utils/utils";
 import Image from "next/image";
 import { Icon } from "@iconify/react";
 import { motion } from "framer-motion";

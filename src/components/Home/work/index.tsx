@@ -2,7 +2,7 @@
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { Icon } from "@iconify/react";
-import { getImagePrefix } from "@/utils/utils";
+import { getImagePrefix } from "../../../utils/utils";
 
 const Work = () => {
   const processSteps = [

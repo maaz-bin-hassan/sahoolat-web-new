@@ -2,7 +2,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import { Icon } from "@iconify/react";
-import { getImagePrefix } from "@/utils/utils";
+import { getImagePrefix } from "../../../utils/utils";
 import { motion } from "framer-motion";
 
 const Upgrade = () => {

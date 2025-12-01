@@ -5,7 +5,7 @@ import { Icon } from "@iconify/react";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Image from "next/image";
-import { getImagePrefix } from "@/utils/utils";
+import { getImagePrefix } from "../../../utils/utils";
 
 const faqData = [
   {

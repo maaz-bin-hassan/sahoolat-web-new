@@ -2,7 +2,7 @@
 import Image from "next/image";
 import { motion, useInView } from "framer-motion";
 import { useRef, useState } from "react";
-import { getImagePrefix } from "@/utils/utils";
+import { getImagePrefix } from "../../../utils/utils";
 import { Icon } from "@iconify/react";
 
 const TimeLine = () => {
