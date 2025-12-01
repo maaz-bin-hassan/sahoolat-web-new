@@ -7,7 +7,7 @@ export const LogoConfiguration = () => {
           1. Change Logo over here :{" "}
           <span className="font-semibold text-base overflow-x-auto">
             {" "}
-            src/components/Layout/Header/Logo/index.tsx
+            src/components/SiteLayout/Header/Logo/index.tsx
           </span>{" "}
         </p>
         <div className="py-4 px-3 rounded-md bg-dark_grey mt-8">

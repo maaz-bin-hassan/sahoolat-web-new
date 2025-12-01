@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import toast from "react-hot-toast";
-import Logo from "@/components/Layout/Header/Logo";
+import Logo from "@/components/SiteLayout/Header/Logo";
 import { CryptoData } from "@/app/api/data"; // Adjust import as necessary
 
 interface Crypto {
