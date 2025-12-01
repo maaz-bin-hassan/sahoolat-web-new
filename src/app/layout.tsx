@@ -1,9 +1,9 @@
 import { Poppins } from "next/font/google";
 import "./globals.css";
-import Header from "@/components/Layout/Header/index";
-import Footer from "@/components/Layout/Footer/index";
+import Header from "@/components/Layout/Header";
+import Footer from "@/components/Layout/Footer";
 import { ThemeProvider } from "next-themes";
-import ScrollToTop from "@/components/ScrollToTop/index";
+import ScrollToTop from "@/components/ScrollToTop";
 import Aoscompo from "@/utils/aos";
 import { Metadata } from "next";
 
