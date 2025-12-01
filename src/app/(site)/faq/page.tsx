@@ -209,7 +209,7 @@ const FAQChatbot = () => {
               {/* Messages Area */}
               <div 
                 ref={messagesContainerRef}
-                className="h-[35vh] overflow-y-auto p-4 space-y-3 bg-gradient-to-b from-secondary/10 to-white"
+                className="h-[55vh] overflow-y-auto p-4 space-y-3 bg-gradient-to-b from-secondary/10 to-white"
               >
                 {messages.map((msg, index) => (
                   <motion.div
