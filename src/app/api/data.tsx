@@ -192,3 +192,60 @@ export const CryptoData: { name: string; price: number }[] = [
   { name: "Litecoin LTC/USD", price: 61504.54 },
 ];
 
+export const pricedeta: {
+  icon: string;
+  title: string;
+  short: string;
+  price: string;
+  mark: string;
+  background: string;
+  padding: string;
+  width: number;
+  height: number;
+}[] = [
+  {
+    icon: "/images/icons/icon-electrician.svg",
+    title: "Electrician",
+    short: "Services",
+    price: "Starting Rs. 500",
+    mark: "Popular",
+    background: "bg-primary/20",
+    padding: "p-3",
+    width: 32,
+    height: 32,
+  },
+  {
+    icon: "/images/icons/icon-plumber.svg",
+    title: "Plumber",
+    short: "Services",
+    price: "Starting Rs. 400",
+    mark: "Popular",
+    background: "bg-orange/20",
+    padding: "p-3",
+    width: 32,
+    height: 32,
+  },
+  {
+    icon: "/images/icons/icon-carpenter.svg",
+    title: "Carpenter",
+    short: "Services",
+    price: "Starting Rs. 600",
+    mark: "Available",
+    background: "bg-green/20",
+    padding: "p-3",
+    width: 32,
+    height: 32,
+  },
+  {
+    icon: "/images/icons/icon-mechanic.svg",
+    title: "Mechanic",
+    short: "Services",
+    price: "Starting Rs. 800",
+    mark: "Available",
+    background: "bg-blue/20",
+    padding: "p-3",
+    width: 32,
+    height: 32,
+  },
+];
+
