@@ -101,11 +101,31 @@ const FAQChatbot = () => {
   ]);
   const [input, setInput] = useState("");
   const [showShortcuts, setShowShortcuts] = useState(true);
+  const [fingerprint, setFingerprint] = useState("");
   const [loading, setLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const messagesContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    // Initialize fingerprint and create session
+    if (typeof window !== "undefined") {
+      const fp = localStorage.getItem("fingerprint") || `fp-${Date.now()}`;
+      localStorage.setItem("fingerprint", fp);
+      setFingerprint(fp);
+
+      fetch("/api/create-session", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ fingerprint: fp }),
+      });
+    }
+  }, []);
+
+  useEffect(() => {
+    // Scroll only within the messages container, not the whole page
+    if (messagesContainerRef.current) {
+      messagesContainerRef.current.scrollTop = messagesContainerRef.current.scrollHeight;
+    }
   }, [messages]);
 
   const sendMessage = async (message: string) => {
@@ -116,12 +136,26 @@ const FAQChatbot = () => {
     setInput("");
     setShowShortcuts(false);
 
-    // Simulate a small delay for natural feel
-    await new Promise((resolve) => setTimeout(resolve, 800));
+    try {
+      const res = await fetch("/api/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ fingerprint, message }),
+      });
 
-    const response = findAnswer(message);
-    setMessages((prev) => [...prev, { type: "bot", text: response }]);
-    setLoading(false);
+      if (!res.ok) throw new Error("Network response was not ok");
+
+      const { response } = await res.json();
+      setMessages((prev) => [...prev, { type: "bot", text: response }]);
+    } catch (error) {
+      toast.error("Network issue occurred. Please try again!");
+      setMessages((prev) => [
+        ...prev,
+        { type: "bot", text: "Sorry, I encountered an error. Please try again." },
+      ]);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -132,19 +166,19 @@ const FAQChatbot = () => {
         toastClassName="bg-white shadow-card-hover"
       />
 
-      <section className="min-h-screen bg-gradient-to-br from-secondary/30 via-white to-primary/10 pt-32 pb-20">
+      <section className="min-h-screen bg-gradient-to-br from-secondary/30 via-white to-primary/10 pt-32 pb-8">
         <div className="container mx-auto lg:max-w-screen-xl px-4">
           {/* Header */}
           <motion.div 
             initial={{ y: -30, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.5 }}
-            className="text-center mb-8"
+            className="text-center mb-4"
           >
-            <h1 className="text-4xl md:text-5xl font-bold text-midnight_text mb-4">
+            <h1 className="text-3xl md:text-4xl font-bold text-midnight_text mb-2">
               💬 Ask <span className="text-primary">Sahoolat</span><span className="text-orange">.AI</span>
             </h1>
-            <p className="text-dark_grey text-lg">
+            <p className="text-dark_grey text-base">
               Get instant answers to your questions about our platform
             </p>
           </motion.div>
@@ -158,8 +192,8 @@ const FAQChatbot = () => {
           >
             <div className="bg-white rounded-3xl shadow-card-hover border-2 border-secondary overflow-hidden">
               {/* Chat Header */}
-              <div className="bg-primary px-6 py-4 flex items-center gap-3">
-                <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center">
+              <div className="bg-primary px-4 py-3 flex items-center gap-3">
+                <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center">
                   <Icon icon="mdi:robot-happy" className="text-primary" width="24" />
                 </div>
                 <div>
@@ -173,7 +207,10 @@ const FAQChatbot = () => {
               </div>
 
               {/* Messages Area */}
-              <div className="h-[50vh] overflow-y-auto p-6 space-y-4 bg-gradient-to-b from-secondary/10 to-white">
+              <div 
+                ref={messagesContainerRef}
+                className="h-[35vh] overflow-y-auto p-4 space-y-3 bg-gradient-to-b from-secondary/10 to-white"
+              >
                 {messages.map((msg, index) => (
                   <motion.div
                     key={index}
@@ -247,17 +284,17 @@ const FAQChatbot = () => {
 
               {/* Quick Questions */}
               {showShortcuts && (
-                <div className="px-6 py-4 bg-secondary/20 border-t border-secondary">
-                  <p className="text-dark_grey text-sm mb-3 font-medium">
+                <div className="px-4 py-3 bg-secondary/20 border-t border-secondary">
+                  <p className="text-dark_grey text-xs mb-2 font-medium">
                     ⚡ Quick Questions:
                   </p>
-                  <div className="flex flex-wrap gap-2">
+                  <div className="flex flex-wrap gap-3">
                     {faqData.slice(0, 6).map(({ question }, index) => (
                       <motion.button
                         key={index}
                         whileHover={{ scale: 1.02 }}
                         whileTap={{ scale: 0.98 }}
-                        className="px-4 py-2 rounded-full bg-white border-2 border-primary/20 hover:border-primary hover:bg-primary hover:text-white text-midnight_text font-medium text-xs md:text-sm transition-all duration-300 shadow-sm"
+                        className="px-3 py-3 rounded-full bg-white border border-primary/20 hover:border-primary hover:bg-primary hover:text-white text-midnight_text font-medium text-xs transition-all duration-300 shadow-sm"
                         onClick={() => sendMessage(question)}
                       >
                         {question}
@@ -269,7 +306,7 @@ const FAQChatbot = () => {
 
               {/* Input Area */}
               <form
-                className="px-6 py-4 bg-white border-t-2 border-secondary flex items-center gap-3"
+                className="px-4 py-3 bg-white border-t-2 border-secondary flex items-center gap-2"
                 onSubmit={(e) => {
                   e.preventDefault();
                   sendMessage(input);
