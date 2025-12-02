@@ -120,19 +120,19 @@ const FAQChatbot = () => {
         toastClassName="bg-white shadow-card-hover"
       />
 
-      <section className="min-h-screen bg-gradient-to-br from-secondary/30 via-white to-primary/10 pt-32 pb-20">
+      <section className="min-h-screen bg-white pt-28 md:pt-24 pb-10">
         <div className="container mx-auto lg:max-w-screen-xl px-4">
           {/* Header */}
           <motion.div 
             initial={{ y: -30, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.5 }}
-            className="text-center mb-8"
+            className="text-center mb-4 px-2"
           >
-            <h1 className="text-4xl md:text-5xl font-bold text-midnight_text mb-4">
+            <h1 className="text-2xl sm:text-3xl md:text-5xl font-bold text-midnight_text mb-2 md:mb-4">
               💬 Ask <span className="text-primary">Sahoolat</span><span className="text-orange">.AI</span>
             </h1>
-            <p className="text-dark_grey text-lg">
+            <p className="text-dark_grey text-sm md:text-lg">
               Get instant answers to your questions about our platform
             </p>
           </motion.div>
@@ -144,26 +144,26 @@ const FAQChatbot = () => {
             transition={{ duration: 0.5, delay: 0.2 }}
             className="max-w-4xl mx-auto"
           >
-            <div className="bg-white rounded-3xl shadow-card-hover border-2 border-secondary overflow-hidden">
+            <div className="bg-white rounded-2xl md:rounded-3xl shadow-card-hover border-2 border-secondary overflow-hidden">
               {/* Chat Header */}
-              <div className="bg-primary px-6 py-4 flex items-center gap-3">
-                <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center">
-                  <Icon icon="mdi:robot-happy" className="text-primary" width="24" />
+              <div className="bg-primary px-4 md:px-6 py-3 md:py-4 flex items-center gap-2 md:gap-3">
+                <div className="w-8 h-8 md:w-10 md:h-10 bg-white rounded-full flex items-center justify-center">
+                  <Icon icon="mdi:robot-happy" className="text-primary" width="20" />
                 </div>
                 <div>
-                  <h2 className="text-white font-semibold">Sahoolat AI Assistant</h2>
-                  <p className="text-white/70 text-sm">Always here to help</p>
+                  <h2 className="text-white font-semibold text-sm md:text-base">Sahoolat AI Assistant</h2>
+                  <p className="text-white/70 text-xs md:text-sm">Always here to help</p>
                 </div>
-                <div className="ml-auto flex items-center gap-2">
+                <div className="ml-auto flex items-center gap-1 md:gap-2">
                   <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
-                  <span className="text-white/70 text-sm">Online</span>
+                  <span className="text-white/70 text-xs md:text-sm">Online</span>
                 </div>
               </div>
 
               {/* Messages Area */}
               <div 
                 ref={messagesContainerRef}
-                className="h-[50vh] overflow-y-auto p-6 space-y-4 bg-gradient-to-b from-secondary/10 to-white scroll-smooth"
+                className="h-[30vh] md:h-[40vh] overflow-y-auto p-3 md:p-5 space-y-3 md:space-y-5 bg-gradient-to-b from-secondary/10 to-white scroll-smooth"
               >
                 {messages.map((msg, index) => (
                   <motion.div
@@ -171,13 +171,13 @@ const FAQChatbot = () => {
                     initial={{ y: 20, opacity: 0 }}
                     animate={{ y: 0, opacity: 1 }}
                     transition={{ duration: 0.3 }}
-                    className={`flex items-start gap-3 ${
+                    className={`flex items-start gap-2 md:gap-3 ${
                       msg.type === "user" ? "flex-row-reverse" : ""
                     }`}
                   >
                     {/* Avatar */}
                     <div
-                      className={`w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 ${
+                      className={`w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center flex-shrink-0 ${
                         msg.type === "user"
                           ? "bg-orange"
                           : "bg-primary"
@@ -186,13 +186,13 @@ const FAQChatbot = () => {
                       <Icon
                         icon={msg.type === "user" ? "mdi:account" : "mdi:robot-happy"}
                         className="text-white"
-                        width="20"
+                        width="18"
                       />
                     </div>
 
                     {/* Message Bubble */}
                     <div
-                      className={`max-w-[75%] px-5 py-3 rounded-2xl shadow-card ${
+                      className={`max-w-[80%] md:max-w-[75%] px-3 md:px-5 py-2 md:py-3 rounded-2xl shadow-card ${
                         msg.type === "user"
                           ? "bg-primary text-white rounded-tr-sm"
                           : "bg-white text-midnight_text rounded-tl-sm border border-secondary"
@@ -200,7 +200,7 @@ const FAQChatbot = () => {
                     >
                       <span
                         dangerouslySetInnerHTML={{ __html: msg.text }}
-                        className="text-sm md:text-base leading-relaxed"
+                        className="text-xs md:text-base leading-relaxed"
                       />
                     </div>
                   </motion.div>
@@ -211,12 +211,12 @@ const FAQChatbot = () => {
                   <motion.div
                     initial={{ y: 20, opacity: 0 }}
                     animate={{ y: 0, opacity: 1 }}
-                    className="flex items-start gap-3"
+                    className="flex items-start gap-2 md:gap-3"
                   >
-                    <div className="w-10 h-10 rounded-full bg-primary flex items-center justify-center">
-                      <Icon icon="mdi:robot-happy" className="text-white" width="20" />
+                    <div className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-primary flex items-center justify-center">
+                      <Icon icon="mdi:robot-happy" className="text-white" width="18" />
                     </div>
-                    <div className="bg-white px-5 py-4 rounded-2xl rounded-tl-sm shadow-card border border-secondary">
+                    <div className="bg-white px-3 md:px-5 py-3 md:py-4 rounded-2xl rounded-tl-sm shadow-card border border-secondary">
                       <div className="flex items-center gap-2">
                         <div className="flex gap-1">
                           {[0, 1, 2].map((i) => (
@@ -238,17 +238,17 @@ const FAQChatbot = () => {
 
               {/* Quick Questions */}
               {showShortcuts && (
-                <div className="px-6 py-4 bg-secondary/20 border-t border-secondary">
-                  <p className="text-dark_grey text-sm mb-3 font-medium">
+                <div className="px-3 md:px-4 py-2 md:py-3 bg-secondary/20 border-t border-secondary">
+                  <p className="text-dark_grey text-[10px] md:text-xs mb-1.5 md:mb-2 font-medium">
                     ⚡ Quick Questions:
                   </p>
-                  <div className="flex flex-wrap gap-2">
-                    {faqData.slice(0, 6).map(({ question }, index) => (
+                  <div className="flex flex-wrap gap-1">
+                    {faqData.map(({ question }, index) => (
                       <motion.button
                         key={index}
                         whileHover={{ scale: 1.02 }}
                         whileTap={{ scale: 0.98 }}
-                        className="px-4 py-2 rounded-full bg-white border-2 border-primary/20 hover:border-primary hover:bg-primary hover:text-white text-midnight_text font-medium text-xs md:text-sm transition-all duration-300 shadow-sm"
+                        className="px-2 md:px-3 py-1 md:py-1.5 rounded-full bg-white border border-primary/20 hover:border-primary hover:bg-primary hover:text-white text-midnight_text font-medium text-[9px] md:text-xs transition-all duration-300 shadow-sm"
                         onClick={() => sendMessage(question)}
                       >
                         {question}
@@ -260,7 +260,7 @@ const FAQChatbot = () => {
 
               {/* Input Area */}
               <form
-                className="px-6 py-4 bg-white border-t-2 border-secondary flex items-center gap-3"
+                className="px-3 md:px-4 py-2 md:py-3 bg-white border-t-2 border-secondary flex items-center gap-2"
                 onSubmit={(e) => {
                   e.preventDefault();
                   sendMessage(input);
@@ -271,8 +271,8 @@ const FAQChatbot = () => {
                     type="text"
                     value={input}
                     onChange={(e) => setInput(e.target.value)}
-                    placeholder="Type your question here..."
-                    className="w-full px-5 py-3 rounded-full border-2 border-secondary focus:border-primary focus:outline-none transition-colors bg-secondary/20 text-midnight_text placeholder:text-dark_grey"
+                    placeholder="Type your question..."
+                    className="w-full px-3 md:px-4 py-2 md:py-2.5 rounded-full border-2 border-secondary focus:border-primary focus:outline-none transition-colors bg-secondary/20 text-midnight_text placeholder:text-dark_grey text-xs md:text-sm"
                     disabled={loading}
                   />
                 </div>
@@ -281,12 +281,12 @@ const FAQChatbot = () => {
                   whileTap={{ scale: 0.95 }}
                   type="submit"
                   disabled={loading || input.trim() === ""}
-                  className="bg-primary hover:bg-primary/90 disabled:bg-dark_grey disabled:cursor-not-allowed text-white p-4 rounded-full shadow-button transition-all duration-300"
+                  className="bg-primary hover:bg-primary/90 disabled:bg-dark_grey disabled:cursor-not-allowed text-white p-2.5 md:p-3 rounded-full shadow-button transition-all duration-300"
                 >
                   {loading ? (
-                    <div className="animate-spin rounded-full h-5 w-5 border-t-2 border-white" />
+                    <div className="animate-spin rounded-full h-4 w-4 md:h-5 md:w-5 border-t-2 border-white" />
                   ) : (
-                    <Icon icon="mdi:send" width="20" height="20" />
+                    <Icon icon="mdi:send" className="w-4 h-4 md:w-5 md:h-5" />
                   )}
                 </motion.button>
               </form>
@@ -297,9 +297,9 @@ const FAQChatbot = () => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.5 }}
-              className="text-center mt-8"
+              className="text-center mt-3 md:mt-4"
             >
-              <p className="text-dark_grey">
+              <p className="text-dark_grey text-xs md:text-base">
                 Can't find what you're looking for?{" "}
                 <a
                   href="mailto:support@sahoolat.ai"

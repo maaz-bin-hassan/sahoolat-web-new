@@ -76,7 +76,7 @@ const Hero = () => {
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: -100, opacity: 0 }}
             transition={{ duration: 0.3 }}
-            className="fixed top-32 right-4 z-50"
+            className="fixed top-20 md:top-32 right-2 md:right-4 z-30 hidden md:block"
           >
             <div className="bg-white shadow-card-hover rounded-2xl px-6 py-4 border-2 border-primary relative">
               {/* Close Button */}
@@ -113,61 +113,61 @@ const Hero = () => {
       </AnimatePresence>
 
       <section
-        className="relative md:pt-40 md:pb-28 py-20 overflow-hidden z-1 bg-background"
+        className="relative md:pt-40 md:pb-28 pt-28 pb-20 overflow-hidden z-1 bg-background"
         id="main-banner"
       >
         <div className="container mx-auto lg:max-w-screen-xl px-4">
           <div className="grid grid-cols-12 items-center">
             <motion.div {...leftAnimation} className="lg:col-span-7 col-span-12 lg:text-left text-center">
               {/* Sahoolat.AI Brand */}
-              <h1 className="lg:text-86 md:text-70 text-54 mb-8 font-extrabold font-[family-name:var(--font-poppins)] tracking-tight italic">
+              <h1 className="lg:text-86 md:text-70 text-4xl sm:text-54 mb-4 md:mb-8 font-extrabold font-[family-name:var(--font-poppins)] tracking-tight italic">
                 <span className="text-primary">Sahoolat</span><span className="text-orange">.AI</span>
               </h1>
               
               {/* Tagline */}
-              <h2 className="font-bold lg:text-44 md:text-36 text-28 mb-6 font-[family-name:var(--font-poppins)]">
+              <h2 className="font-bold lg:text-44 md:text-36 text-xl sm:text-28 mb-4 md:mb-6 font-[family-name:var(--font-poppins)]">
                 <span className="text-orange">Your Voice,</span> <span className="text-primary">Your Solution</span>
                 <span className="text-orange inline-block ml-2">✨</span>
               </h2>
               
               {/* Subtext */}
-              <p className="text-primary text-24 mb-10 font-bold">
+              <p className="text-primary text-base sm:text-xl md:text-24 mb-6 md:mb-10 font-bold">
                 Find Skilled Experts or Get Hired – Just by Speaking!
               </p>
               
-              <div className="flex items-center lg:justify-start justify-center gap-6 mb-10">
+              <div className="flex flex-col sm:flex-row items-center lg:justify-start justify-center gap-3 sm:gap-6 mb-6 md:mb-10">
                 <Link
                   href="#how-it-works"
-                  className="bg-primary border-2 border-primary rounded-xl text-18 font-semibold hover:bg-transparent hover:text-primary text-white py-3.5 px-8 shadow-button transition-all duration-300 hover:shadow-card-hover"
+                  className="bg-primary border-2 border-primary rounded-xl text-sm sm:text-18 font-semibold hover:bg-transparent hover:text-primary text-white py-2.5 sm:py-3.5 px-6 sm:px-8 shadow-button transition-all duration-300 hover:shadow-card-hover w-full sm:w-auto text-center"
                 >
                   Experience Now
                 </Link>
                 <Link
                   href="#"
-                  className="bg-white border-2 border-primary rounded-xl text-18 font-semibold hover:bg-primary hover:text-white text-primary py-3.5 px-8 shadow-card transition-all duration-300 hover:shadow-card-hover"
+                  className="bg-white border-2 border-primary rounded-xl text-sm sm:text-18 font-semibold hover:bg-primary hover:text-white text-primary py-2.5 sm:py-3.5 px-6 sm:px-8 shadow-card transition-all duration-300 hover:shadow-card-hover w-full sm:w-auto text-center"
                 >
                   Book a Call
                 </Link>
               </div>
-              <div className="flex items-center lg:justify-start justify-center gap-4 mt-10">
+              <div className="flex flex-col sm:flex-row items-center lg:justify-start justify-center gap-3 sm:gap-4 mt-6 md:mt-10">
                 <Link 
                   href="#" 
-                  className="flex items-center gap-3 bg-midnight_text text-white px-6 py-3 rounded-xl hover:bg-primary transition-all duration-300 shadow-card hover:shadow-card-hover hover:scale-105"
+                  className="flex items-center gap-2 sm:gap-3 bg-midnight_text text-white px-4 sm:px-6 py-2.5 sm:py-3 rounded-xl hover:bg-primary transition-all duration-300 shadow-card hover:shadow-card-hover hover:scale-105 w-full sm:w-auto justify-center"
                 >
-                  <Icon icon="mdi:apple" width="28" height="28" />
+                  <Icon icon="mdi:apple" className="w-6 h-6 sm:w-7 sm:h-7" />
                   <div className="text-left">
-                    <p className="text-xs opacity-80">Download on the</p>
-                    <p className="text-lg font-semibold -mt-1">App Store</p>
+                    <p className="text-[10px] sm:text-xs opacity-80">Download on the</p>
+                    <p className="text-sm sm:text-lg font-semibold -mt-1">App Store</p>
                   </div>
                 </Link>
                 <Link 
                   href="#" 
-                  className="flex items-center gap-3 bg-midnight_text text-white px-6 py-3 rounded-xl hover:bg-primary transition-all duration-300 shadow-card hover:shadow-card-hover hover:scale-105"
+                  className="flex items-center gap-2 sm:gap-3 bg-midnight_text text-white px-4 sm:px-6 py-2.5 sm:py-3 rounded-xl hover:bg-primary transition-all duration-300 shadow-card hover:shadow-card-hover hover:scale-105 w-full sm:w-auto justify-center"
                 >
-                  <Icon icon="mdi:google-play" width="28" height="28" />
+                  <Icon icon="mdi:google-play" className="w-6 h-6 sm:w-7 sm:h-7" />
                   <div className="text-left">
-                    <p className="text-xs opacity-80">GET IT ON</p>
-                    <p className="text-lg font-semibold -mt-1">Google Play</p>
+                    <p className="text-[10px] sm:text-xs opacity-80">GET IT ON</p>
+                    <p className="text-sm sm:text-lg font-semibold -mt-1">Google Play</p>
                   </div>
                 </Link>
               </div>
