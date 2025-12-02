@@ -133,7 +133,7 @@ const Hero = () => {
           <div className="grid grid-cols-12 items-center">
             <motion.div {...leftAnimation} className="lg:col-span-7 col-span-12 lg:text-left text-center">
               {/* Sahoolat.AI Brand */}
-              <h1 className="lg:text-86 md:text-70 text-4xl sm:text-54 mb-4 md:mb-8 font-extrabold font-[family-name:var(--font-poppins)] tracking-tight italic">
+              <h1 className="lg:text-86 md:text-70 text-4xl sm:text-54 mb-4 md:mb-8 font-extrabold font-[family-name:var(--font-poppins)] tracking-tight">
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-teal-600 md:text-primary">Sahoolat</span><span className="text-orange">.AI</span>
               </h1>
               
