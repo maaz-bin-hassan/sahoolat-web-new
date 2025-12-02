@@ -116,7 +116,17 @@ const Hero = () => {
         className="relative md:pt-40 md:pb-28 pt-20 pb-16 overflow-hidden z-1 bg-gradient-to-br from-white via-secondary/30 to-primary/10 md:bg-background"
         id="main-banner"
       >
-        <div className="container mx-auto lg:max-w-screen-xl px-3 md:px-4">
+        {/* Full Section Faded Handshake Background */}
+        <div className="absolute inset-0 w-full h-full overflow-hidden pointer-events-none">
+          <Image
+            src={`${getImagePrefix()}images/hero/handshake.png`}
+            alt=""
+            fill
+            className="object-cover object-[center_20%] opacity-30"
+          />
+        </div>
+        
+        <div className="container mx-auto lg:max-w-screen-xl px-3 md:px-4 relative z-10">
           <div className="grid grid-cols-12 items-center">
             <motion.div {...leftAnimation} className="lg:col-span-7 col-span-12 lg:text-left text-center">
               {/* Sahoolat.AI Brand */}
@@ -178,13 +188,26 @@ const Hero = () => {
               {...rightAnimation}
               className="lg:col-span-5 col-span-12 lg:block hidden"
             >
-            <div className="flex justify-end">
+            <div className="flex justify-end relative">
               <Image
                 src={`${getImagePrefix()}images/hero/banner-image.png`}
                 alt="Sahoolat AI App"
                 width={500}
                 height={500}
               />
+              {/* Floating Wallet */}
+              <motion.div
+                animate={{ y: [0, -15, 0] }}
+                transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+                className="absolute -right-21 top-2/3"
+              >
+                <Image
+                  src={`${getImagePrefix()}images/hero/wallet.png`}
+                  alt="Wallet"
+                  width={260}
+                  height={160}
+                />
+              </motion.div>
             </div>
           </motion.div>
         </div>

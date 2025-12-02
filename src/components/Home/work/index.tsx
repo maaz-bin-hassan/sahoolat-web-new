@@ -113,7 +113,7 @@ const Work = () => {
             </motion.div>
           </div>
 
-          {/* Center - Phone Mockup */}
+          {/* Center - iPhone Mockup */}
           <motion.div
             whileInView={{ scale: 1, opacity: 1 }}
             initial={{ scale: 0.8, opacity: 0 }}
@@ -121,84 +121,35 @@ const Work = () => {
             viewport={{ once: true }}
             className="relative z-10"
           >
-            {/* Phone Frame */}
+            {/* iPhone Frame */}
             <div className="relative">
-              <div className="w-[280px] h-[560px] bg-gradient-to-b from-gray-800 to-gray-900 rounded-[3rem] p-2 shadow-2xl border-4 border-gray-700">
-                <div className="w-full h-full bg-midnight_text rounded-[2.5rem] overflow-hidden relative">
-                  {/* Phone Notch */}
-                  <div className="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-6 bg-gray-800 rounded-b-2xl z-20"></div>
+              <div className="w-[280px] h-[580px] bg-gradient-to-b from-[#1a1a1a] to-[#0a0a0a] rounded-[3rem] p-[10px] shadow-2xl border border-gray-700/50">
+                {/* iPhone Inner Frame */}
+                <div className="w-full h-full bg-black rounded-[2.4rem] overflow-hidden relative border border-gray-800">
+                  {/* Dynamic Island */}
+                  <div className="absolute top-3 left-1/2 -translate-x-1/2 w-24 h-7 bg-black rounded-full z-30"></div>
                   
-                  {/* Phone Screen Content */}
-                  <div className="p-4 pt-10 h-full flex flex-col">
-                    {/* Header */}
-                    <div className="flex items-center justify-between mb-6">
-                      <Icon icon="mdi:arrow-left" className="text-white/60" width="20" />
-                      <span className="text-white font-semibold">Sahoolat.AI</span>
-                      <Icon icon="mdi:dots-vertical" className="text-white/60" width="20" />
-                    </div>
-                    
-                    {/* Chat Animation */}
-                    <div className="flex-1 flex flex-col justify-start overflow-hidden">
-                      {/* Chat Messages */}
-                      <div className="space-y-3 mb-4">
-                        {/* User Message */}
-                        <div className="flex justify-end">
-                          <div className="bg-primary text-white px-3 py-2 rounded-2xl rounded-br-sm text-xs max-w-[80%]">
-                            I need a plumber nearby
-                          </div>
-                        </div>
-                        {/* AI Response */}
-                        <div className="flex justify-start">
-                          <div className="bg-white/10 text-white px-3 py-2 rounded-2xl rounded-bl-sm text-xs max-w-[80%]">
-                            🔍 Finding experts nearby...
-                          </div>
-                        </div>
-                        {/* Expert Found */}
-                        <div className="flex justify-start">
-                          <div className="bg-orange/20 text-white px-3 py-2 rounded-2xl rounded-bl-sm text-xs max-w-[85%]">
-                            ✅ Found 3 plumbers within 2km!
-                          </div>
-                        </div>
-                      </div>
-                      
-                      {/* Typing Indicator */}
-                      <div className="flex items-center gap-1 px-2">
-                        <span className="text-white/60 text-xs">Chatting</span>
-                        <div className="flex gap-1">
-                          {[0,1,2].map((i) => (
-                            <div 
-                              key={i} 
-                              className="w-1.5 h-1.5 bg-primary rounded-full animate-bounce"
-                              style={{ animationDelay: `${i * 0.15}s` }}
-                            ></div>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Bottom Actions */}
-                    <div className="flex items-center justify-center gap-4 pb-4">
-                      <button className="bg-primary text-white px-6 py-2 rounded-full text-sm font-medium">
-                        Find Experts
-                      </button>
-                    </div>
-                  </div>
+                  {/* Screen Content - Chat Screenshot */}
+                  <Image
+                    src={`${getImagePrefix()}images/work/screenshot.jpg`}
+                    alt="Sahoolat AI Chat Interface"
+                    fill
+                    className="object-cover object-[center_-25%]"
+                  />
                 </div>
               </div>
 
-              {/* Floating Service Icons */}
-              {floatingIcons.map((item, index) => (
-                <motion.div
-                  key={index}
-                  whileInView={{ scale: 1, opacity: 1 }}
-                  initial={{ scale: 0, opacity: 0 }}
-                  transition={{ duration: 0.4, delay: 0.5 + index * 0.1 }}
-                  viewport={{ once: true }}
-                  className={`absolute ${item.position} ${item.color} w-10 h-10 rounded-full flex items-center justify-center shadow-lg`}
-                >
-                  <Icon icon={item.icon} width="20" height="20" className="text-white" />
-                </motion.div>
-              ))}
+              {/* iPhone Side Button (Power) */}
+              <div className="absolute -right-[2px] top-28 w-[3px] h-12 bg-gray-700 rounded-l-sm"></div>
+              
+              {/* iPhone Side Buttons (Volume) */}
+              <div className="absolute -left-[2px] top-24 w-[3px] h-8 bg-gray-700 rounded-r-sm"></div>
+              <div className="absolute -left-[2px] top-36 w-[3px] h-12 bg-gray-700 rounded-r-sm"></div>
+              <div className="absolute -left-[2px] top-52 w-[3px] h-12 bg-gray-700 rounded-r-sm"></div>
+
+              
+                
+              
             </div>
           </motion.div>
 

@@ -64,7 +64,7 @@ const Upgrade = () => {
               height="48"
               className="text-primary mx-auto mb-6"
             />
-            <p className="text-midnight_text text-24 mb-8 italic font-medium">
+            <p className="text-midnight_text text-24 mb-8 font-medium">
               "{testimonials[currentTestimonial].text}"
             </p>
             <p className="text-primary text-21 font-bold">

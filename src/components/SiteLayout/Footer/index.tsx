@@ -76,12 +76,9 @@ const Footer: FC = () => {
             <ul className="grid grid-cols-2 gap-x-4">
               {popularServices?.slice(0, 8).map((item, index) => (
                 <li key={index} className="pb-3">
-                  <Link
-                    href={item.herf}
-                    className="text-dark_grey hover:text-primary text-16 font-medium transition-colors"
-                  >
+                  <span className="text-dark_grey text-16 font-medium">
                     {item.label}
-                  </Link>
+                  </span>
                 </li>
               ))}
             </ul>
