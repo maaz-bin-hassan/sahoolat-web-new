@@ -139,13 +139,13 @@ const Hero = () => {
               
               {/* Tagline */}
               <h2 className="font-bold lg:text-44 md:text-36 text-xl sm:text-28 mb-4 md:mb-6 font-[family-name:var(--font-poppins)]">
-                <span className="text-orange">Your Voice,</span> <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-teal-600 md:text-primary">Your Solution</span>
+                <span className="text-orange">Your Problem,</span> <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-teal-600 md:text-primary">Our Solution</span>
                 <span className="text-orange inline-block ml-2">✨</span>
               </h2>
               
               {/* Subtext */}
               <p className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-teal-600 md:text-primary text-base sm:text-xl md:text-24 mb-6 md:mb-10 font-bold">
-                Find Skilled Experts or Get Hired – Just by Speaking!
+                Find Skilled Experts or Get Hired!
               </p>
               
               <div className="flex flex-col sm:flex-row items-center lg:justify-start justify-center gap-3 sm:gap-6 mb-6 md:mb-10">
