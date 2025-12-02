@@ -1,0 +1,13 @@
+<svg width="195" height="55" viewBox="0 0 195 55" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="logoGradientWhite" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#007b7f;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#b2e3e3;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  <circle cx="22" cy="27.5" r="20" fill="url(#logoGradientWhite)"/>
+  <text x="22" y="35" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#ffffff" text-anchor="middle">S</text>
+  <text x="50" y="35" font-family="Arial, sans-serif" font-size="22" font-weight="bold" fill="white">Sahoolat</text>
+  <text x="145" y="35" font-family="Arial, sans-serif" font-size="22" font-weight="bold" fill="#b2e3e3">.Ai</text>
+</svg>
+  
