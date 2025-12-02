@@ -113,10 +113,10 @@ const Hero = () => {
       </AnimatePresence>
 
       <section
-        className="relative md:pt-40 md:pb-28 pt-28 pb-20 overflow-hidden z-1 bg-background"
+        className="relative md:pt-40 md:pb-28 pt-20 pb-16 overflow-hidden z-1 bg-background"
         id="main-banner"
       >
-        <div className="container mx-auto lg:max-w-screen-xl px-4">
+        <div className="container mx-auto lg:max-w-screen-xl px-3 md:px-4">
           <div className="grid grid-cols-12 items-center">
             <motion.div {...leftAnimation} className="lg:col-span-7 col-span-12 lg:text-left text-center">
               {/* Sahoolat.AI Brand */}

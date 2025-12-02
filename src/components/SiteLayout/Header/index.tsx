@@ -53,12 +53,12 @@ const Header: React.FC = () => {
 
   return (
     <header
-      className={`fixed top-0 z-40 w-full py-4 transition-all duration-300 ${
+      className={`fixed top-0 z-40 w-full py-2 md:py-4 transition-all duration-300 ${
         sticky ? "shadow-lg bg-white" : "shadow-none bg-white"
       }`}
     >
-      <div className="lg:py-0 py-2">
-        <div className="container mx-auto lg:max-w-screen-xl md:max-w-screen-md flex items-center justify-between px-4">
+      <div className="lg:py-0 py-1 md:py-2">
+        <div className="container mx-auto lg:max-w-screen-xl md:max-w-screen-md flex items-center justify-between px-3 md:px-4">
           <Logo />
           <nav className="hidden lg:flex flex-grow items-center gap-8 justify-center">
             {headerData.map((item, index) => (

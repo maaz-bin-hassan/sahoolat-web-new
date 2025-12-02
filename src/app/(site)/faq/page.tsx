@@ -120,8 +120,8 @@ const FAQChatbot = () => {
         toastClassName="bg-white shadow-card-hover"
       />
 
-      <section className="min-h-screen bg-white pt-28 md:pt-24 pb-10">
-        <div className="container mx-auto lg:max-w-screen-xl px-4">
+      <section className="min-h-screen bg-white pt-20 md:pt-24 pb-10 overflow-x-hidden">
+        <div className="container mx-auto lg:max-w-screen-xl px-3 md:px-4">
           {/* Header */}
           <motion.div 
             initial={{ y: -30, opacity: 0 }}
