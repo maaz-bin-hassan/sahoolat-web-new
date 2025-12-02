@@ -18,7 +18,7 @@ const Footer: FC = () => {
               Your smart gateway to effortless service.
             </p>
             <div className="flex gap-4 items-center relative z-10">
-              <a href="https://web.facebook.com/profile.php?id=61578982266283" target="_blank" rel="noopener noreferrer" className="group bg-secondary p-2.5 rounded-full hover:bg-primary transition-all shadow-card cursor-pointer inline-flex items-center justify-center">
+              <a href="https://web.facebook.com/profile.php?id=61578982266283" target="_blank" rel="noopener noreferrer" aria-label="Visit our Facebook page" className="group bg-secondary p-2.5 rounded-full hover:bg-primary transition-all shadow-card cursor-pointer inline-flex items-center justify-center">
                 <Icon
                   icon="fa6-brands:facebook-f"
                   width="18"
@@ -26,7 +26,7 @@ const Footer: FC = () => {
                   className="text-primary group-hover:text-white pointer-events-none"
                 />
               </a>
-              <a href="https://whatsapp.com/channel/0029Vb644EF5EjxxxDZa9o0Z" target="_blank" rel="noopener noreferrer" className="group bg-secondary p-2.5 rounded-full hover:bg-primary transition-all shadow-card cursor-pointer inline-flex items-center justify-center">
+              <a href="https://whatsapp.com/channel/0029Vb644EF5EjxxxDZa9o0Z" target="_blank" rel="noopener noreferrer" aria-label="Join our WhatsApp channel" className="group bg-secondary p-2.5 rounded-full hover:bg-primary transition-all shadow-card cursor-pointer inline-flex items-center justify-center">
                 <Icon
                   icon="fa6-brands:whatsapp"
                   width="18"
@@ -34,7 +34,7 @@ const Footer: FC = () => {
                   className="text-primary group-hover:text-white pointer-events-none"
                 />
               </a>
-              <a href="#" className="group bg-secondary p-2.5 rounded-full hover:bg-primary transition-all shadow-card cursor-pointer inline-flex items-center justify-center">
+              <a href="#" aria-label="Follow us on Instagram" className="group bg-secondary p-2.5 rounded-full hover:bg-primary transition-all shadow-card cursor-pointer inline-flex items-center justify-center">
                 <Icon
                   icon="fa6-brands:instagram"
                   width="18"
@@ -42,7 +42,7 @@ const Footer: FC = () => {
                   className="text-primary group-hover:text-white pointer-events-none"
                 />
               </a>
-              <a href="#" className="group bg-secondary p-2.5 rounded-full hover:bg-primary transition-all shadow-card cursor-pointer inline-flex items-center justify-center">
+              <a href="#" aria-label="Follow us on X (Twitter)" className="group bg-secondary p-2.5 rounded-full hover:bg-primary transition-all shadow-card cursor-pointer inline-flex items-center justify-center">
                 <Icon
                   icon="fa6-brands:x-twitter"
                   width="18"
@@ -118,7 +118,7 @@ const Footer: FC = () => {
                 placeholder="Enter Email"
                 className="bg-background border-2 border-secondary py-3 text-midnight_text rounded-xl w-full px-4 text-14 focus:border-primary focus:outline-none transition-all"
               />
-              <button className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-primary p-2 rounded-lg">
+              <button aria-label="Subscribe to newsletter" className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-primary p-2 rounded-lg">
                 <Icon
                   icon="tabler:send"
                   width="16"

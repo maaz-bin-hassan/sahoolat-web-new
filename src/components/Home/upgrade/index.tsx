@@ -74,12 +74,14 @@ const Upgrade = () => {
             <div className="flex justify-center gap-4 mt-8">
               <button
                 onClick={prevTestimonial}
+                aria-label="Previous testimonial"
                 className="bg-secondary p-3 rounded-full hover:bg-primary hover:text-white transition-all"
               >
                 <Icon icon="mdi:chevron-left" width="24" height="24" className="text-primary hover:text-white" />
               </button>
               <button
                 onClick={nextTestimonial}
+                aria-label="Next testimonial"
                 className="bg-secondary p-3 rounded-full hover:bg-primary hover:text-white transition-all"
               >
                 <Icon icon="mdi:chevron-right" width="24" height="24" className="text-primary hover:text-white" />
