@@ -122,6 +122,9 @@ const Hero = () => {
             src={`${getImagePrefix()}images/hero/handshake.png`}
             alt=""
             fill
+            priority
+            sizes="100vw"
+            quality={75}
             className="object-cover object-[center_20%] opacity-30"
           />
         </div>
@@ -194,6 +197,8 @@ const Hero = () => {
                 alt="Sahoolat AI App"
                 width={500}
                 height={500}
+                priority
+                sizes="(max-width: 1024px) 0vw, 500px"
               />
               {/* Floating Wallet */}
               <motion.div
@@ -206,6 +211,8 @@ const Hero = () => {
                   alt="Wallet"
                   width={260}
                   height={160}
+                  loading="lazy"
+                  sizes="260px"
                 />
               </motion.div>
             </div>

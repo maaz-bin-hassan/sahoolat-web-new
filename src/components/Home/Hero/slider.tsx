@@ -52,6 +52,7 @@ const CardSlider = () => {
                     alt="icon"
                     width={item.width}
                     height={item.height}
+                    loading="lazy"
                   />
                 </div>
                 <p className="text-white text-xs font-normal ">

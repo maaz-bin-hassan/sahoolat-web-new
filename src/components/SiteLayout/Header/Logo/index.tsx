@@ -9,6 +9,8 @@ const Logo: React.FC = () => {
         alt="Sahoolat.AI Logo"
         width={48}
         height={48}
+        priority
+        sizes="(max-width: 768px) 32px, 48px"
         className="w-8 h-8 md:w-12 md:h-12"
       />
       <span className="font-bold text-lg md:text-2xl">
