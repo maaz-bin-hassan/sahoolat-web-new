@@ -113,7 +113,7 @@ const Hero = () => {
       </AnimatePresence>
 
       <section
-        className="relative md:pt-40 md:pb-28 pt-20 pb-16 overflow-hidden z-1 bg-background"
+        className="relative md:pt-40 md:pb-28 pt-20 pb-16 overflow-hidden z-1 bg-gradient-to-br from-white via-secondary/30 to-primary/10 md:bg-background"
         id="main-banner"
       >
         <div className="container mx-auto lg:max-w-screen-xl px-3 md:px-4">
@@ -121,17 +121,17 @@ const Hero = () => {
             <motion.div {...leftAnimation} className="lg:col-span-7 col-span-12 lg:text-left text-center">
               {/* Sahoolat.AI Brand */}
               <h1 className="lg:text-86 md:text-70 text-4xl sm:text-54 mb-4 md:mb-8 font-extrabold font-[family-name:var(--font-poppins)] tracking-tight italic">
-                <span className="text-primary">Sahoolat</span><span className="text-orange">.AI</span>
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-teal-600 md:text-primary">Sahoolat</span><span className="text-orange">.AI</span>
               </h1>
               
               {/* Tagline */}
               <h2 className="font-bold lg:text-44 md:text-36 text-xl sm:text-28 mb-4 md:mb-6 font-[family-name:var(--font-poppins)]">
-                <span className="text-orange">Your Voice,</span> <span className="text-primary">Your Solution</span>
+                <span className="text-orange">Your Voice,</span> <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-teal-600 md:text-primary">Your Solution</span>
                 <span className="text-orange inline-block ml-2">✨</span>
               </h2>
               
               {/* Subtext */}
-              <p className="text-primary text-base sm:text-xl md:text-24 mb-6 md:mb-10 font-bold">
+              <p className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-teal-600 md:text-primary text-base sm:text-xl md:text-24 mb-6 md:mb-10 font-bold">
                 Find Skilled Experts or Get Hired – Just by Speaking!
               </p>
               
